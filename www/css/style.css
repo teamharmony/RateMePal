@@ -1,0 +1,352 @@
+*{    
+	margin:0;
+	padding:0;	
+}
+body{
+	font-size: 12px;
+	font-style: normal;
+	font-family:arial,sans-serif;;
+    background: #ffffff;
+}
+/* ===========================Login Page================================ */
+.rmpBox{
+	margin:auto;
+	left:0;
+	top:0;
+	background:#ffffff;
+}
+.cmmingsoonBox{
+	margin:auto;
+	left:0;
+	top:0;
+	background:#ffffff;
+}
+.title_div{
+	height:10px;
+}
+.logoBox{
+	text-align:center;
+	padding: 10px 0 10px;
+}
+.logoBox>img{
+    width: 36%;
+}
+.logoTxt{
+	text-align:center;
+	margin-top:-33px;
+}
+.logoTxt>img{
+	width:30%;
+}
+.LoginBox{
+	text-align:center;
+	margin-top:10px;
+}
+.userNamebox{
+	position:relative;
+}
+.userNamebox>img {
+    width: 20px;
+    position: absolute;
+    right: 9%;
+    top: 37%;
+}
+.passwordbox{
+	position:relative;
+}
+.passwordbox>img {
+    width: 13px;
+    position: absolute;
+    right: 9.5%;
+    top: 42%;
+}
+.userNamebox>input{
+	text-indent:10px;
+	margin-top:10px;
+	border-radius:3px;
+	font-size:14px;
+    height: 40px;
+    width: 85%;
+}
+.passwordbox>input{
+	text-indent:10px;
+	font-size:14px;
+	margin-top:18px;
+	border-radius:3px;
+    height: 40px;
+    width: 85%;
+}
+.loginbtnDiv{
+	text-align:center;
+	width:100%;
+}
+
+.loginButton{
+    text-align: center;
+    margin: 18px auto;
+    background-color: #139502;
+    border-radius: 3px;
+    width: 86%;
+    color: #ffffff;
+    font-size: 19px;
+    padding: 14px 0;
+	border:0;
+	outline:0;
+}
+.linkDiv{
+	text-align: center;
+	width: 100%;
+}
+.linkDiv>.rightSpan{
+	float: right;
+    margin-right: 7%;
+	font-size:11px;
+	color:blue;
+}
+.linkDiv>.leftSpan{
+    float: left;
+    margin-left: 7%;
+	font-size:11px;
+	color:blue;
+}
+.leftSpan>a,.rightSpan>a{
+	text-decoration: none;
+}
+.lineDiv{
+	margin-top:30px;
+	text-align: center;
+}
+.lineDiv>img{
+	text-align: center;
+	width:86%;
+}
+.lineDivTxt{
+	text-align: center;
+	margin-top: -15px;
+}
+.loginTxtSpan{
+	font-size:20px;
+}
+.FGLbtnDiv{
+	text-align:center;
+	width:100%;
+	position: relative;
+}
+
+.FGLButton{
+    text-align: center;
+    margin: 10px auto;
+    background-color: #E7EBEE;
+    border-radius: 3px;
+    width: 86%;
+    color: #000000;
+    font-size: 14px;
+    padding: 14px 0;
+	border:0;
+	outline:0;
+	font-size:15px;
+}
+.fblogo{
+	width: 16px;
+    position: absolute;
+    left: 34%;
+    bottom: 38.5%;
+}
+.googlelogo{
+    width: 21px;
+    position: absolute;
+    left: 34%;
+    bottom: 36%;
+}
+.linkedinlogo{
+    width: 19px;
+    position: absolute;
+    left: 34%;
+    bottom: 37.5%;
+}
+/* ===========================Create Account Page================================ */
+
+.createAccTitle{
+	height: 50px;
+    background-color: #202065;
+	position:relative;
+	
+}
+.titleTxtSpan{
+    font-size: 22px;
+    color: #ffffff;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+}
+.Namebox>input{
+	text-indent:10px;
+	margin-top:15px;
+	border-radius:3px;
+	font-size:14px;
+    height: 40px;
+    width: 85%;
+}
+.Namebox,.emailbox{
+	position: relative;
+}
+.Namebox>img {
+    width: 20px;
+    position: absolute;
+    right: 9%;
+    top: 48%;
+}
+.confirmPasswordbox>input{
+	text-indent:10px;
+	font-size:14px;
+	margin-top:18px;
+	border-radius:3px;
+    height: 40px;
+    width: 85%;
+}
+.confirmPasswordbox{
+	position:relative;
+}
+.confirmPasswordbox>img {
+    width: 13px;
+    position: absolute;
+    right: 9.5%;
+    top: 42%;
+}
+.emailbox>input{
+	text-indent:10px;
+	margin-top:15px;
+	border-radius:3px;
+	font-size:14px;
+    height: 40px;
+    width: 85%;
+}
+.emailbox>img {
+    width: 20px;
+    position: absolute;
+    right: 9%;
+    top: 51%;
+}
+.uploadImgDiv{
+	margin-top: 15px;
+    width: 100%;
+    text-align: center;
+}
+.uploadImgDiv>span{
+	font-weight:bold;
+	font-size:15px;
+}
+.uploadImgDiv>input{
+    padding-right: 13px;
+}
+#backToLogin{
+    width: 35px;
+	position: absolute;
+    top: 8%;
+    left: 0%;
+}
+/* ===========================forgot password pop-up================================ */
+.forgotPassPopUpBody {
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    z-index: 1000;
+}
+
+.ForgotPassDiv {
+	left: 50%;
+    top: 31%;
+    position: relative;
+    width: 93%;
+    height: 40%;
+    background-color: rgb(255, 255, 255);
+    webkit-box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    margin-left: -46.5%;
+    margin-top: -2%;
+}
+.firsth2{
+	text-align:center;
+	padding-top: 23px;
+}
+.secondh2{
+	text-align:center;
+	margin-top:5px;
+}
+.popupEmailbox>input{
+	text-indent: 10px;
+    margin-top: 30px;
+    border-radius: 3px;
+    font-size: 14px;
+    height: 40px;
+    width: 93%;
+    margin-left: 3%;
+}
+.popupEmailbox>img{   
+	width: 20px;
+    position: absolute;
+    right: 6%;
+    top: 60%;
+}
+.popupEmailbox{
+	position: relative;
+}
+.submitCancelDiv{
+	display:inline-block;
+	background-color:#F2F2F2;
+    width: 100%;
+    height: 17%;
+    margin-top: 64px;
+}
+.cancelBtn{
+	display:inline-block;
+	width: 49%;
+    text-align: center;
+    padding-top: 4%;
+	font-size:17px;
+	color:#76B3E4;
+	font-weight: bold;
+	position:relative;
+}
+.submitBtn{
+	display: inline-block;
+    width: 49%;
+    text-align: center;
+    padding-top: 4%;
+    font-size: 17px;
+    border-left: 2px solid #E2CDCD;
+    color: #76B3E4;
+    height: 62%;
+	font-weight: bold;
+	position:relative;
+}
+.cancelBtnspan{
+	position: absolute;
+    bottom: 50%;
+    left: 29%;
+}
+.submitBtnspan{
+	position: absolute;
+    bottom: 14%;
+    left: 29%;
+}
+.commingsoon{
+	position: absolute;
+    top: 42%;
+    left: 24%;
+}
+.logout{
+	font-size:11px;
+	color:blue;
+}
+.logOutLink{
+	position: absolute;
+    top: 48%;
+    left: 42%;
+}
