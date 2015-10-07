@@ -3,71 +3,62 @@
 <head>
   <title>Page Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--<link rel="stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />-->
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
   
   <script src="lib/jquery-2.1.1.min.js"></script>
   <script src="js/app.js"></script>
-  <!--<script src="lib/jquery.mobile-1.4.5.min.js"></script>-->
+  <script src="lib/jquery.mobile-1.4.5.min.js"></script> 
+  
 </head>
 
 <body>
-	<div class="loginPage" style="display:block;" data-role="page">
-		<div class="title_div">
-		
-		</div>
-		<div class="logoBox"> 
-			<img src="images/Logo_RMP.png"/>
-		</div>
-		<div class="logoTxt">
-			<img src="images/logo_txt.png"/>
-		</div>
-		<div class="LoginBox">
-			<div class="userNamebox">
-				<input type="text" id="userName" name="userName" placeholder="User Name" value="admin" utocomplete="off" >
-				<img src="images/user.png"/>
+	<div data-role="page" id="page-login" class="loginPage">
+		<div role="main" class="ui-content">
+			<div class="logoBox"> 
+				<img src="images/Logo_RMP.png"/>
 			</div>
-			<div class="passwordbox">
-				<input type="password" id="loginPassword" name="loginPassword" placeholder="Password" value="admin" autocomplete="off" >
-				<img src="images/password.png"/>
+			<div class="logoTxt">
+				<img src="images/logo_txt.png"/>
 			</div>
-			<div class="loginbtnDiv" onclick="showLoginNext()">
-				<button class="loginButton">LOGIN</button>
+			<div class="LoginBox">
+				<div class="userNamebox">
+					<input type="text" id="userName" name="userName" placeholder="User Name" value="admin" autocomplete="off" >
+					<img src="images/user.png"/>
+				</div>
+				<div class="passwordbox">
+					<input type="password" id="loginPassword" name="loginPassword" placeholder="Password" value="admin" autocomplete="off" >
+					<img src="images/password.png"/>
+				</div>
+				<div class="loginbtnDiv">
+					<button class="loginButton">LOGIN</button>
+				</div>
 			</div>
-		</div>
-		<div class="linkDiv">
-			<span class="leftSpan" onclick="showCreateAccount()"><a>CREATE ACCOUNT</a></span>
-			<span class="rightSpan" onclick="showPopup()"><a>FORGOT PASSWORD</a></span>
-		</div>
-		<div class="lineDiv">
-			<img src="images/line.png"/>
-		</div>
-		<div class="lineDivTxt">
-			<span class="loginTxtSpan">Login With</span>
-		</div>
-		<div class="FGLbtnDiv">
-			<img class="fblogo" src="images/facebook.png"/>
-			<button class="FGLButton">Facebook</button>
-		</div>
-		<div class="FGLbtnDiv">
-			<img class="googlelogo" src="images/google+.png"/>
-			<button class="FGLButton">Google+</button>
-		</div>
-		<div class="FGLbtnDiv">
-			<img class="linkedinlogo" src="images/linkedin.png"/>
-			<button class="FGLButton">Linkedin</button>
-		</div>
-	</div>
-	
-		<!-----------------------------------------cooming soon page ------------------------------------------>
-		<div class="cmmingsoonBox" style="display:none;">
-			<h1 class="commingsoon">Comming Soon....</h1>
-			<div class="logOutLink">
-				<span class="logout" onclick="logout()"><a>LOGOUT</a></span>
+			<div class="linkDiv">
+				<span class="leftSpan" ><a href="#page-createAccount" data-role="button">CREATE ACCOUNT</a></span>
+				<span class="rightSpan" ><a href="#page-forgot" data-rel="popup" data-position-to="window" data-role="button">FORGOT PASSWORD</a></span>
+			</div>
+			<div class="lineDiv">
+				<img src="images/line.png"/>
+			</div>
+			<div class="lineDivTxt">
+				<span class="loginTxtSpan">Login With</span>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="fblogo" src="images/facebook.png"/>
+				<button class="FGLButton">Facebook</button>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="googlelogo" src="images/google+.png"/>
+				<button class="FGLButton">Google+</button>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="linkedinlogo" src="images/linkedin.png"/>
+				<button class="FGLButton">Linkedin</button>
 			</div>
 		</div>
 		<!-----------------------------------------forgot password pop-up ------------------------------------------>
-		<div class="forgotPassPopUpBody" id="forgotPassPopUpBody" style="display:none;">
+		<div data-role="popup" id="page-forgot" class="forgotPassPopUpBody" data-overlay-theme="b" data-theme="b" data-dismissible="false" >
 			<div class="ForgotPassDiv">
 				<h2 class="firsth2">A temporary password wii be</h2>
 				<h2 class="secondh2">send your registered email id</h2>
@@ -89,12 +80,14 @@
 				</div>
 			</div>
 		</div>
-	<!-----------------------------------------Create Account ------------------------------------------>
-		<div class="createAccountPage" style="display:none;">
-			<div class="createAccTitle">
-				<span class="titleTxtSpan"> Rate me pal</span>
-				<span onclick="showLogin()"><img id="backToLogin" src="images/Back.png"/></span>
-			</div>
+	</div>
+			
+	<div date-role="page" id="page-createAccount" class="createAccountPage" >
+		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="createAccTitle">
+			<span class="titleTxtSpan"> Rate me pal</span>
+			<span onclick="showLogin()"><img id="backToLogin" src="images/Back.png"/></span>
+		</div>
+		<div role="main" class="ui-content">
 			<div class="logoBox"> 
 				<img src="images/Logo_RMP.png"/>
 			</div>
@@ -130,14 +123,14 @@
 
 				</div>
 				<div class="loginbtnDiv">
-					<button class="loginButton" onclick="showLoinAfterCreate()">CREATE ACCOUNT</button>
+					<button class="loginButton" >CREATE ACCOUNT</button>
 				</div>
 			</div>
 		</div>
-<div data-role="page">
+		
+	</div>
   
-</div>
-  
-<script src="cordova.js"></script>  
+	<script src="cordova.js"></script>
+ 
 </body>
 </html>
