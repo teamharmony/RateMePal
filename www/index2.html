@@ -1,0 +1,136 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  
+  <script src="lib/jquery-2.1.1.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="lib/jquery.mobile-1.4.5.min.js"></script> 
+  
+</head>
+
+<body>
+	<div data-role="page" id="page-login" class="loginPage">
+		<div data-role="main" class="ui-content">
+			<div class="logoBox"> 
+				<img src="images/Logo_RMP.png"/>
+			</div>
+			<div class="logoTxt">
+				<img src="images/logo_txt.png"/>
+			</div>
+			<div class="LoginBox">
+				<div class="userNamebox">
+					<input type="text" id="userName" name="userName" placeholder="User Name" value="admin" autocomplete="off" >
+					<img src="images/user.png"/>
+				</div>
+				<div class="passwordbox">
+					<input type="password" id="loginPassword" name="loginPassword" placeholder="Password" value="admin" autocomplete="off" >
+					<img src="images/password.png"/>
+				</div>
+				<div class="loginbtnDiv">
+					<button class="loginButton">LOGIN</button>
+				</div>
+			</div>
+			<div class="linkDiv">
+				<span class="leftSpan" ><a href="#page-createAccount" data-role="button">CREATE ACCOUNT</a></span>
+				<span class="rightSpan" ><a href="#page-forgot" data-rel="popup" data-position-to="window" data-role="button">FORGOT PASSWORD</a></span>
+			</div>
+			<div class="lineDiv">
+				<img src="images/line.png"/>
+			</div>
+			<div class="lineDivTxt">
+				<span class="loginTxtSpan">Login With</span>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="fblogo" src="images/facebook.png"/>
+				<button class="FGLButton">Facebook</button>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="googlelogo" src="images/google+.png"/>
+				<button class="FGLButton">Google+</button>
+			</div>
+			<div class="FGLbtnDiv">
+				<img class="linkedinlogo" src="images/linkedin.png"/>
+				<button class="FGLButton">Linkedin</button>
+			</div>
+		</div>
+		<!-----------------------------------------forgot password pop-up ------------------------------------------>
+		<div data-role="popup" id="page-forgot" class="forgotPassPopUpBody" data-overlay-theme="b" data-theme="b" data-dismissible="false" >
+			<div class="ForgotPassDiv">
+				<h2 class="firsth2">A temporary password wii be</h2>
+				<h2 class="secondh2">send your registered email id</h2>
+					<div class="popupEmailbox">
+						<input type="text" id="emailbox" name="email" placeholder="User Name" autocomplete="off" >
+						<img src="images/email.png"/>
+					</div>
+				<div class="submitCancelDiv">
+					<div class="cancelBtn" onclick="hidePopup()">
+						<span class="cancelBtnspan">
+							CANCEL
+						</span>
+					</div>
+						<div class="submitBtn">
+						<span class="submitBtnspan">
+							SUBMIT
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+			
+	<div date-role="page" id="page-createAccount" class="createAccountPage" >
+		<div data-role="header" data-position="fixed" data-tap-toggle="false" class="createAccTitle">
+			<span class="titleTxtSpan"> Rate me pal</span>
+			<span ><img id="backToLogin" src="images/Back.png"/></span>
+		</div>
+		<div data-role="main" class="ui-content">
+			<div class="logoBox"> 
+				<img src="images/Logo_RMP.png"/>
+			</div>
+			<div class="logoTxt">
+				<img src="images/logo_txt.png"/>
+			</div>
+			<div class="LoginBox">
+				<div class="userNamebox">
+					<input type="text" id="userName" name="userName" value="admin123" placeholder="User Name" autocomplete="off" >
+					<img src="images/user.png"/>
+				</div>
+				<div class="Namebox">
+					<input type="text" id="Namebox" name="Name" value="admin" placeholder="Name" autocomplete="off" >
+					<img src="images/user.png"/>
+				</div>
+				<div class="emailbox">
+					<input type="text" id="emailbox" name="email" value="admin@admin.com" placeholder="Email" autocomplete="off" >
+					<img src="images/email.png"/>
+				</div>
+				<div class="passwordbox">
+					<input type="password" id="loginPassword" name="loginPassword" value="admin123" placeholder="Password" autocomplete="off" >
+					<img src="images/password.png"/>
+				</div>
+				<div class="confirmPasswordbox">
+					<input type="password" id="confirmPasswordbox" name="confirmPasswordbox" value="admin123" placeholder="Confirm Password" autocomplete="off" >
+					<img src="images/password.png"/>
+				</div>
+				<div class="uploadImgDiv">
+					
+					<input type='file' onchange="readURL(this);" />
+					
+					<img id="blah" src="#" alt="your image" style="visibility:hidden;" />
+
+				</div>
+				<div class="loginbtnDiv">
+					<button class="loginButton" >CREATE ACCOUNT</button>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+  
+	<script src="cordova.js"></script>
+ 
+</body>
+</html>

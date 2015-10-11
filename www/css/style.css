@@ -1,6 +1,6 @@
-*{    
-	margin:0;
-	padding:0;	
+@import url(../fonts/font.css);
+*{
+	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 body{
 	font-size: 12px;
