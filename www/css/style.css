@@ -8,6 +8,16 @@ body{
 	font-family:arial,sans-serif;;
     background: #ffffff;
 }
+.ui-icon-fb-icon {
+	background-image: url('../images/facebook.png');
+}
+.ui-icon-gl-icon {
+	background-image: url('../images/google+.png');
+}
+.ui-icon-ln-icon {
+	background-image: url('../images/linkedin.png');
+}
+
 /* ===========================Login Page================================ */
 .rmpBox{
 	margin:auto;
