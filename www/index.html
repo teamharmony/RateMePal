@@ -15,7 +15,7 @@
 </head>
 
 <body>
-	<div data-role="page" id="page-login">
+	<div data-role="page" id="page-login" class="loginPage">
 		<div data-role="main" class="ui-content">
 			<div class="logoDiv"> 
 				<img src="images/Logo_RMP.png"/>
@@ -36,7 +36,7 @@
 			</div>
 			<div class="buttonDiv">
 				<a href="#page-signup" class="createAccBtn" data-inline="true" data-role="button">CREATE ACCOUNT</a>
-				<a href="#page-forgot" class="forgotPassBtn" data-rel="popup" data-position-to="window" data-role="button" data-inline="true">FORGOT PASSWORD</a>
+				<a href="#page-forgot" class="forgotPassBtn" data-role="button" data-inline="true">FORGOT PASSWORD</a>
 			</div>
 			<div class="lineDiv">
 				<img src="images/line.png"/>
@@ -49,40 +49,25 @@
 				<a href="#" data-role="button" data-inline="true" data-icon="gl-icon" class="socialBtn">Google+</a>
 				<a href="#" data-role="button" data-inline="true" data-icon="ln-icon" class="socialBtn">LinkedIn</a>
 			</div>
-			
-			<!--<div class="FGLbtnDiv">
-				<img class="fblogo" src="images/facebook.png"/>
-				<button class="FGLButton">Facebook</button>
-			</div>
-			<div class="FGLbtnDiv">
-				<img class="googlelogo" src="images/google+.png"/>
-				<button class="FGLButton">Google+</button>
-			</div>
-			<div class="FGLbtnDiv">
-				<img class="linkedinlogo" src="images/linkedin.png"/>
-				<button class="FGLButton">Linkedin</button>
-			</div>-->
 		</div>
-		
-		<div data-role="popup" id="page-forgot" class="forgotPopup" data-dismissible="false" >
-			<div data-role="header" class="headerDiv">
-				<h1>Forgot Password</h1>
-			</div>
-			<div data-role="main" class="ui-content">
-				<h2>A temporary password wii be send your registered email id</h2>
-				<div class="emailDiv">
-					<input type="text" id="email" name="email" placeholder="User Name" autocomplete="off" >
-					<img src="images/email.png"/>
-				</div>
-				<div class="submitCancelDiv">
-					<a href="#" id="btnForgotCancel" data-role="button" data-inline="true">Cancel</a>
-					<a href="#" id="btnForgotSubmit" data-role="button" data-inline="true">Submit</a>
-				</div>
-			</div>
+	</div>
+	
+	<div data-role="page" id="page-forgot" class="forgotPage" >
+		<div data-role="header" class="headerDiv">
+			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span> </a>
+			<h1>Forgot Password</h1>
 		</div>
-	</div> 
+		<div data-role="main" class="ui-content">
+			<h2>A temporary password wii be send your registered email id</h2>
+			<div class="emailDiv">
+				<input type="text" id="email" name="email" placeholder="User Name" autocomplete="off" >
+				<img src="images/email.png"/>
+			</div>
+			<a href="#" id="btnForgotSubmit" data-role="button" data-inline="true">Submit</a>
+		</div>
+	</div>
 
-	<div data-role="page" id="page-signup">
+	<div data-role="page" id="page-signup" class="signupPage">
 		<div data-role="header" class="headerDiv">
 			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span> </a>
 			<h1>Sign Up !!</h1>

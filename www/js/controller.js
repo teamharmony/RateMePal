@@ -10,8 +10,12 @@ var controller = function(){
 				_self.login();
 			});
 			
-			$(document).delegate("#page-forgot", "popupbeforeposition", function() {
-				
+			$(document).delegate("#page-signup", "pagebeforeshow", function() {
+				_self.signup();
+			});
+			
+			$(document).delegate("#page-forgot", "pagebeforeshow", function() {
+				_self.forgot();
 			});
 		},
 		
@@ -27,8 +31,7 @@ var controller = function(){
 				var context = event.data[0];
 				_self.loading(true);
 				function loginSuccess(){
-					_self.isResetPassRequired();
-					_self.getMessageMeeting();
+					
 					loginBy = "normal";
 				};
 				
@@ -45,14 +48,13 @@ var controller = function(){
 				var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
 				authentication.loginWithPassword(context.$username.val(), context.$password.val());
 			});
-			
 		},
 		
 		loading: function(showOrHide){
 			setTimeout(function(){
 				var flag = showOrHide ? "show" : "hide";
 				$.mobile.loading(flag);
-			}, 1);
+			}, 0);
 		}
 	};
 	
