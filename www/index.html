@@ -79,6 +79,7 @@
 			<div class="logoTxt">
 				<img src="images/logo_txt.png"/>
 			</div>
+			<p id="error" class="displayNone"></p>
 			<form method="POST" id="formSignup" class="formSignup">
 				<div class="usernameDiv">
 					<input type="text" id="inpUsername" name="username" placeholder="UserName" autocomplete="off" >
@@ -109,6 +110,9 @@
 					<button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
 						<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
 					</button>
+				</div>
+				<div class="visibleDiv">
+					<label class="makeVisible"><input id="visible" type="checkbox" name="visible">Make me visible </label>
 				</div>
 				<div class="loginbtnDiv">
 					<button type="submit" class="loginButton" >CREATE ACCOUNT</button>
