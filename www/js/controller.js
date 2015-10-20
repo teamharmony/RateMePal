@@ -6,17 +6,21 @@ var controller = function(){
 		init: function(){
 			_self = this;
 			
-			$(document).delegate("#page-login", "pagebeforeshow", function() {
-				_self.login();
-			});
-			
 			$(document).delegate("#page-signup", "pagebeforeshow", function() {
 				_self.signup();
+			});
+			
+			$(document).delegate("#page-login", "pagebeforeshow", function() {
+				_self.login();
 			});
 			
 			$(document).delegate("#page-forgot", "pagebeforeshow", function() {
 				_self.forgot();
 			});
+		},
+		
+		signup: function(){
+			
 		},
 		
 		login: function(){
