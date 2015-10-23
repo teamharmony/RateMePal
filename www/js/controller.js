@@ -1,5 +1,5 @@
 var controller = function(){
-	var hostUrl = "http://gazidevworks.org:8080/ResourceMgmt",
+	var hostUrl = "http://localhost:8080/ResourceMgmt",
 		clientId = "meetMePal";
 		
 	var controller = {
@@ -8,16 +8,42 @@ var controller = function(){
 			_self = this;
 			
 			$(document).delegate("#page-signup", "pagebeforeshow", function() {
-				_self.signup();
+				//_self.signup();
 			});
 			
 			$(document).delegate("#page-login", "pagebeforeshow", function() {
-				_self.login();
+				//_self.checkLogin();
 			});
 			
 			$(document).delegate("#page-forgot", "pagebeforeshow", function() {
-				_self.forgot();
+				//_self.forgot();
 			});
+		},
+		
+		checkLogin: function(){
+			if(window.localStorage.rmp_lobin_by === "App"){
+				if(window.localStorage.rmplogin_refresh_token){
+					function loginSuccess(){
+						$.mobile.navigate('#page-home');
+						loginBy = "normal";
+					}
+					
+					function refreshTokenFailure(){
+						_self.loading(false);
+						$.mobile.navigate("#page-login");
+					};
+					
+					function passwordFailure(){
+						_self.loading(false);
+						$.mobile.navigate("#page-login");
+					};
+					
+					var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
+					authentication.loginWithRefreshToken(window.localStorage.rmplogin_refresh_token);
+				}
+			} else {
+				_self.login();
+			}
 		},
 		
 		signup: function(){
@@ -189,6 +215,10 @@ var controller = function(){
 				var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
 				authentication.loginWithPassword(context.$username.val(), context.$password.val());
 			});
+		},
+		
+		forgot: function(){
+			
 		},
 		
 		loading: function(showOrHide){

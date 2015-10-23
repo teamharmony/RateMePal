@@ -4,15 +4,15 @@
 	function loginSuccess(o) {
 		var that = this;
 		
-		window.localStorage.login_refresh_token = o.refreshToken.value;
 		window.bearerToken = o.value;
 		//window.refresh_token = o.refreshToken.value;
 		//store the refreshToken in localStorage
-				
+		window.localStorage.rmplogin_refresh_token = o.refreshToken.value;
+		window.localStorage.rmp_lobin_by = "App";
 		//This function ensures we always have a valid bearer token.
 		bearerTimeout = setTimeout(function(){
 			clearTimeout(bearerTimeout);
-			that.loginWithRefreshToken(window.localStorage.login_refresh_token);
+			that.loginWithRefreshToken(window.localStorage.rmplogin_refresh_token);
 		}, o.expiresIn * 1000 - 100);
 		
 		//clear the timer if not cleared by unloading time.

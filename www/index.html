@@ -6,6 +6,7 @@
   <link rel="old stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />
   <link rel="newest stylesheet" type="text/css" href="css/style.css" />
   
+  
   <script src="lib/jquery-2.1.1.min.js"></script>
   <script src="js/controller.js"></script>
   <script src="js/app.js"></script>
@@ -25,30 +26,29 @@
 			</div>
 			<div class="loginDiv">
 				<div class="usernameDiv">
-					<input type="text" id="username" name="username" placeholder="User Name" autocomplete="off" >
-					<img src="images/user.png"/>
+					<input type="text" id="username" name="username" placeholder="User Name" class="inputStyle username" autocomplete="off" >
+					<!--<img src="images/user.png" class="inputImg username" />-->
 				</div>
 				<div class="passwordDiv">
-					<input type="password" id="password" name="password" placeholder="Password" autocomplete="off" >
-					<img src="images/password.png"/>
+					<input type="password" id="password" name="password" placeholder="Password" class="inputStyle password" autocomplete="off" >
+					<!--<img src="images/password.png" class="inputImg password" />-->
 				</div>
 				<a id="btnLogin" data-role="button" class="loginBtn" data-transition="slide" data-direction="forward">Login</a>
 			</div>
 			<div class="buttonDiv">
-				<a href="#page-signup" class="createAccBtn" data-inline="true" data-role="button">CREATE ACCOUNT</a>
-				<a href="#page-forgot" class="forgotPassBtn" data-role="button" data-inline="true">FORGOT PASSWORD</a>
+				<a href="#page-signup" class="createAccBtn" data-inline="true" >Create Account</a> <br> <br>
+				<a href="#page-forgot" class="forgotPassBtn" data-inline="true">Forgot Password?</a>
 			</div>
-			<div class="lineDiv">
-				<img src="images/line.png"/>
-			</div>
-			<div class="lineDivTxt">
-				<span class="loginTxtSpan">Login With</span>
-			</div>
-			<div class="socialBtnDiv">
-				<a href="#" data-role="button" data-inline="true" data-icon="fb-icon" class="socialBtn">Facebook</a>
-				<a href="#" data-role="button" data-inline="true" data-icon="gl-icon" class="socialBtn">Google+</a>
-				<a href="#" data-role="button" data-inline="true" data-icon="ln-icon" class="socialBtn">LinkedIn</a>
-			</div>
+			<div class="footerBlock">
+        <div class="lineDivTxt">
+          <span class="loginTxtSpan"> -: Login With :- </span>
+        </div>
+        <div class="socialBtnDiv">
+          <a href="#" data-role="button" data-inline="true" data-icon="fb-icon" class="socialBtn"></a>
+          <a href="#" data-role="button" data-inline="true" data-icon="gl-icon" class="socialBtn"></a>
+          <a href="#" data-role="button" data-inline="true" data-icon="ln-icon" class="socialBtn"></a>
+        </div>
+      </div>
 		</div>
 	</div>
 	
@@ -69,58 +69,62 @@
 
 	<div data-role="page" id="page-signup" class="signupPage">
 		<div data-role="header" class="headerDiv">
-			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span> </a>
+			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> 
+      <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
 			<h1>Sign Up !!</h1>
 		</div>
-		<div data-role="main" class="ui-content">
+		<div data-role="main" class="ui-content not-front">
 			<div class="logoDiv"> 
 				<img src="images/Logo_RMP.png"/>
 			</div>
 			<div class="logoTxt">
 				<img src="images/logo_txt.png"/>
 			</div>
-			<p id="error" class="displayNone"></p>
 			<form method="POST" id="formSignup" class="formSignup">
 				<div class="usernameDiv">
 					<input type="text" id="inpUsername" name="username" placeholder="UserName" autocomplete="off" >
-					<img src="images/user.png"/>
+					<!--<img src="images/user.png"/>-->
 				</div>
 				<div class="nameDiv">
 					<input type="text" id="inpName" name="name" placeholder="Name" autocomplete="off" >
-					<img src="images/user.png"/>
+					<!--<img src="images/user.png"/>-->
 				</div>
 				<div class="emailDiv">
 					<input type="text" id="inpEmail" name="email" placeholder="Email" autocomplete="off" >
-					<img src="images/email.png"/>
+					<!--<img src="images/email.png"/>-->
 				</div>
 				<div class="passwordDiv">
 					<input type="password" id="inpPassword" name="password" placeholder="Password" autocomplete="off" >
-					<img src="images/password.png"/>
+					<!--<img src="images/password.png"/>-->
 				</div>
 				<div class="confirmPasswordDiv">
 					<input type="password" id="inpConfirmPass" name="confirmPassword" placeholder="Confirm Password" autocomplete="off" >
-					<img src="images/password.png"/>
+					<!--<img src="images/password.png"/>-->
 				</div>
 				<div class="telephoneDiv">
 					<input type="tel" id="inpTelephone" name="contact" placeholder="Contact No" autocomplete="off" >
-					<img src=""/>
+					<!--<img src=""/>-->
 				</div>
-				<div class="profilePhoto">
-					<img id="imgSignupDisp" data-inline="true" width="100px" height="95px" src="./images/defaultImg.png" alt=""/>
-					<button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
-						<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
-					</button>
-				</div>
-				<div class="visibleDiv">
-					<label class="makeVisible"><input id="visible" type="checkbox" name="visible">Make me visible </label>
-				</div>
+        <div class="profilePic">
+          <div class="profilePhoto">
+            <img id="imgSignupDisp" data-inline="true" width="100px" height="95px" src="./images/defaultImg.png" alt=""/>
+            <button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
+              <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+            </button>
+          </div>
+        </div>
 				<div class="loginbtnDiv">
-					<button type="submit" class="loginButton" >CREATE ACCOUNT</button>
+					<button type="submit" class="loginButton" >Create Account </button>
 				</div>
 			</form>
 		</div>
 	</div> 
   
+	<div data-role="page" id="page-home" class="homePage">
+		<div data-role="main" class="ui-content">
+			<p>COMING SOON</p>
+		</div>
+	</div>
 	<script src="cordova.js"></script>
  
 </body>

@@ -1,22 +1,52 @@
 @import url(../fonts/font.css);
+@import url(//fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic);
+@import url(//fonts.googleapis.com/css?family=Roboto:400,300,500,400italic,700,900);
+
 *{
 	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
-body{
-	font-size: 12px;
-	font-style: normal;
-	font-family:arial,sans-serif;;
-    background: #ffffff;
+
+body, input, select, textarea, button, .ui-btn,h1,h2,h3,h4,h5,h6 {
+	font-family: "RobotoDraft","Roboto","Helvetica Neue",sans-serif;
+	font-weight: 400;
 }
-.ui-icon-fb-icon {
+body{
+	font-size: .889em;
+	font-style: normal;
+  background: #ffffff;
+}
+.socialBtn {
+    background-color: transparent;
+    /* background-repeat: round; */
+    background-size: cover;
+    background-position: 0px 0px;
+    border: none;
+    cursor: pointer;
+    height: 45px;
+    width: 45px;
+		padding:2px 5px;
+}
+
+.socialBtn.ui-btn-icon-left:after { display:none }
+.ui-btn.ui-icon-fb-icon {
 	background-image: url('../images/facebook.png');
 }
-.ui-icon-gl-icon {
+.ui-btn.ui-icon-gl-icon {
+ background-color:#ffffff;
 	background-image: url('../images/google+.png');
+	    background-size: 45px;
+    background-repeat: no-repeat;
+    background-position:center;
 }
-.ui-icon-ln-icon {
+.ui-btn.ui-icon-ln-icon {
+ background-color:#006599;
 	background-image: url('../images/linkedin.png');
+	    background-size: 45px;
+    background-repeat: no-repeat;
+    background-position:center;
 }
+.footerBlock, .buttonDiv { padding:10px; text-align:center }
+.createAccBtn.ui-link, .forgotPassBtn.ui-link { font-weight:300}
 
 /* ===========================Login Page================================ */
 .rmpBox{
@@ -34,19 +64,25 @@ body{
 .title_div{
 	height:10px;
 }
-.logoBox{
+.logoDiv{
 	text-align:center;
-	padding: 10px 0 10px;
+	padding: 0px 0 10px 0;
 }
-.logoBox>img{
-    width: 36%;
+.logoDiv>img{
+    width: 210px;
 }
 .logoTxt{
 	text-align:center;
 	margin-top:-33px;
 }
 .logoTxt>img{
-	width:30%;
+	width: 140px;
+}
+.not-front .logoDiv>img{
+    width: 120px;
+}
+.not-front .logoTxt>img{
+	width: 90px;
 }
 .LoginBox{
 	text-align:center;
@@ -55,124 +91,98 @@ body{
 .userNamebox{
 	position:relative;
 }
-.userNamebox>img {
-    width: 20px;
-    position: absolute;
-    right: 9%;
-    top: 37%;
+.ui-input-text, .ui-input-search ,
+textarea.ui-input-text.ui-textinput-autogrow {  
+	background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555;
+		
+		 }
+.ui-input-text:focus, .ui-input-search input:focus 	{  
+	border: 1px solid #66afe9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    outline: 0 none;
 }
-.passwordbox{
-	position:relative;
+.ui-input-text > .inputStyle { 
+	height: 3em;
+    background-position: 98% center;
+    background-repeat: no-repeat;
+    font-size: 0.889em;
+    padding: .5em 2.2em .5em 1em;
+    line-height: normal; 
 }
-.passwordbox>img {
-    width: 13px;
-    position: absolute;
-    right: 9.5%;
-    top: 42%;
-}
-.userNamebox>input{
-	text-indent:10px;
-	margin-top:10px;
-	border-radius:3px;
-	font-size:14px;
-    height: 40px;
-    width: 85%;
-}
-.passwordbox>input{
-	text-indent:10px;
-	font-size:14px;
-	margin-top:18px;
-	border-radius:3px;
-    height: 40px;
-    width: 85%;
-}
-.loginbtnDiv{
-	text-align:center;
-	width:100%;
-}
+.inputStyle.username { background-image: url(../images/user.png); background-size: 19px;}
+.inputStyle.password {background-image: url(../images/password.png); background-size: 13px; }
 
-.loginButton{
+/***************** buttons ********************/
+.ui-btn.loginBtn, .ui-btn.loginButton{ 
+ background:#4ba614;
+ border:1px solid #34740e;
+ color:#fff;
+ text-shadow:0 1px 0 #333;
+ font-weight:600;
+}
+.ui-btn.loginBtn:hover,
+.ui-btn.loginButton:hover{ 
+ background:#34740e;
+ border:1px solid #4ba614;
+ color:#fff;
+ text-shadow:0 1px 0 #333;
+ font-weight:600;
+}
+/* button upload*/
+.profilePic {
     text-align: center;
-    margin: 18px auto;
-    background-color: #139502;
-    border-radius: 3px;
-    width: 86%;
-    color: #ffffff;
-    font-size: 19px;
-    padding: 14px 0;
-	border:0;
-	outline:0;
 }
-.linkDiv{
+.profilePhoto {
+	display: inline-block;
 	text-align: center;
-	width: 100%;
-}
-.linkDiv>.rightSpan{
-	float: right;
-    margin-right: 7%;
-	font-size:11px;
-	color:blue;
-}
-.linkDiv>.leftSpan{
-    float: left;
-    margin-left: 7%;
-	font-size:11px;
-	color:blue;
-}
-.leftSpan>a,.rightSpan>a{
-	text-decoration: none;
-}
-.lineDiv{
-	margin-top:30px;
-	text-align: center;
-}
-.lineDiv>img{
-	text-align: center;
-	width:86%;
-}
-.lineDivTxt{
-	text-align: center;
-	margin-top: -15px;
-}
-.loginTxtSpan{
-	font-size:20px;
-}
-.FGLbtnDiv{
-	text-align:center;
-	width:100%;
 	position: relative;
 }
-
-.FGLButton{
-    text-align: center;
-    margin: 10px auto;
-    background-color: #E7EBEE;
-    border-radius: 3px;
-    width: 86%;
-    color: #000000;
-    font-size: 14px;
-    padding: 14px 0;
-	border:0;
-	outline:0;
-	font-size:15px;
+.profilePic img {
+    border-radius: 0;
+    box-shadow: 1px 1px 2px #ccc;
 }
-.fblogo{
-	width: 16px;
+.iconBtn.btnUpload {
+	    height: 28px !important;
+    width: 28px !important;
     position: absolute;
-    left: 34%;
-    bottom: 38.5%;
+    right: 0;
+    bottom: 4px;
+    margin: 0;
+    border-radius: 0;
+    opacity: 0.8;
+    border-top-left-radius: 7px;
+    font-size: 15px;
+    padding-top: 5px;
+    padding-left: 6px;
 }
-.googlelogo{
-    width: 21px;
-    position: absolute;
-    left: 34%;
-    bottom: 36%;
-}
-.linkedinlogo{
-    width: 19px;
-    position: absolute;
-    left: 34%;
-    bottom: 37.5%;
+/* header */
+.ui-header.headerDiv {     
+height: 55px;
+    padding: 10px;
+    box-sizing: border-box; 
+		background:#1b6aac;
+} 
+.ui-header .ui-title { 
+	color:#fff; 
+	text-shadow: 0 1px 0 #333;
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: .02rem;
+		 }
+.ui-page-theme-a .ui-header .backBtn.ui-btn{ 
+    background-color: #1b6aac;
+    border-color: transparent;
+    color: #fff;
+    text-shadow: 0 1px 0 #333;
+		    margin-top: 5px;
+    margin-left: 5px;
+    font-size: 1rem;
+    padding: .5rem .7rem;
+		box-shadow:none;
 }
 /* ===========================Create Account Page================================ */
 
@@ -360,3 +370,4 @@ body{
     top: 48%;
     left: 42%;
 }
+*/
