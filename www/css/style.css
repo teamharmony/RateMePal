@@ -91,6 +91,7 @@ body{
 .userNamebox{
 	position:relative;
 }
+.ui-page-theme-a .ui-body-inherit { border-color: #CBCFDD;}
 .ui-input-text, .ui-input-search ,
 textarea.ui-input-text.ui-textinput-autogrow {  
 	background-color: #fff;
@@ -100,7 +101,7 @@ textarea.ui-input-text.ui-textinput-autogrow {
     color: #555;
 		
 		 }
-.ui-input-text:focus, .ui-input-search input:focus 	{  
+.ui-page-theme-a .ui-focus, .ui-input-search input:focus 	{  
 	border: 1px solid #66afe9;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
     outline: 0 none;
@@ -117,7 +118,9 @@ textarea.ui-input-text.ui-textinput-autogrow {
 .inputStyle.password {background-image: url(../images/password.png); background-size: 13px; }
 
 /***************** buttons ********************/
-.ui-btn.loginBtn, .ui-btn.loginButton{ 
+.ui-btn.loginBtn,
+.ui-btn.loginButton,
+.ui-btn.btnSumbit { 
  background:#4ba614;
  border:1px solid #34740e;
  color:#fff;
@@ -125,7 +128,8 @@ textarea.ui-input-text.ui-textinput-autogrow {
  font-weight:600;
 }
 .ui-btn.loginBtn:hover,
-.ui-btn.loginButton:hover{ 
+.ui-btn.loginButton:hover,
+.ui-btn.btnSumbit:hover{ 
  background:#34740e;
  border:1px solid #4ba614;
  color:#fff;
@@ -169,10 +173,12 @@ height: 55px;
 .ui-header .ui-title { 
 	color:#fff; 
 	text-shadow: 0 1px 0 #333;
-    font-size: 1rem;
+    font-size: 1em;
     line-height: 1;
-    letter-spacing: .02rem;
-		 }
+    letter-spacing: .02em;
+		text-align: left;
+    margin: 0 46px;
+}
 .ui-page-theme-a .ui-header .backBtn.ui-btn{ 
     background-color: #1b6aac;
     border-color: transparent;
@@ -184,6 +190,7 @@ height: 55px;
     padding: .5rem .7rem;
 		box-shadow:none;
 }
+h2.subTitle { font-size:1em; }
 /* ===========================Create Account Page================================ */
 
 .createAccTitle{

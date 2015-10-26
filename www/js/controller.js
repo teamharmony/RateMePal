@@ -8,15 +8,23 @@ var controller = function(){
 			_self = this;
 			
 			$(document).delegate("#page-signup", "pagebeforeshow", function() {
-				//_self.signup();
+				_self.signup();
 			});
 			
-			$(document).delegate("#page-login", "pagebeforeshow", function() {
-				//_self.checkLogin();
+			$(document).delegate("#page-login", "pagebeforeshow", function(event, data) {
+				if(data.prevPage.length > 0){
+					_self.login();
+				} else {
+					_self.checkLogin();
+				}
 			});
 			
 			$(document).delegate("#page-forgot", "pagebeforeshow", function() {
-				//_self.forgot();
+				_self.forgot();
+			});
+			
+			$(document).delegate("#page-home", "pagebeforeshow", function() {
+				_self.home();
 			});
 		},
 		
@@ -218,6 +226,38 @@ var controller = function(){
 		},
 		
 		forgot: function(){
+			var that = this;
+			this.$forgotPass = $('#page-forgot');
+			this.$inpForgotUsername = $('#inpForgotUsername', this.$forgotPass).val("");
+
+			$('#forgotPassForm').off('submit');
+			$('#forgotPassForm').submit(function(e) {
+				if (that.$inpForgotUsername.val() === "") {
+					alert("Enter username.");
+				} else {
+					_self.loading("show");
+					$.ajax({
+						url : hostUrl.concat("/password/forgot"),
+						type : 'PUT',
+						data : {"username" : that.$inpForgotUsername.val()},
+					}).done(function(data) {
+						_self.loading("hide");
+						$.mobile.navigate('#page-login');
+					});
+				}
+				e.preventDefault();
+			});
+		},
+		
+		home: function(){
+			this.$homePage = $('#page-home');
+			this.$btnLogout = $('#btnLogout', this.$homePage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
+		},
+		
+		logout: function(){
 			
 		},
 		

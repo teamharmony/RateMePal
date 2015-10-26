@@ -40,30 +40,32 @@
 				<a href="#page-forgot" class="forgotPassBtn" data-inline="true">Forgot Password?</a>
 			</div>
 			<div class="footerBlock">
-        <div class="lineDivTxt">
-          <span class="loginTxtSpan"> -: Login With :- </span>
-        </div>
-        <div class="socialBtnDiv">
-          <a href="#" data-role="button" data-inline="true" data-icon="fb-icon" class="socialBtn"></a>
-          <a href="#" data-role="button" data-inline="true" data-icon="gl-icon" class="socialBtn"></a>
-          <a href="#" data-role="button" data-inline="true" data-icon="ln-icon" class="socialBtn"></a>
-        </div>
-      </div>
+				<div class="lineDivTxt">
+				  <span class="loginTxtSpan"> -: Login With :- </span>
+				</div>
+				<div class="socialBtnDiv">
+				  <a href="#" data-role="button" data-inline="true" data-icon="fb-icon" class="socialBtn"></a>
+				  <a href="#" data-role="button" data-inline="true" data-icon="gl-icon" class="socialBtn"></a>
+				  <a href="#" data-role="button" data-inline="true" data-icon="ln-icon" class="socialBtn"></a>
+				</div>
+			</div>
 		</div>
 	</div>
 	
 	<div data-role="page" id="page-forgot" class="forgotPage" >
 		<div data-role="header" class="headerDiv">
-			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> <span aria-hidden="true" class="glyphicon glyphicon-arrow-left"></span> </a>
+			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> 
+      <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
 			<h1>Forgot Password</h1>
 		</div>
 		<div data-role="main" class="ui-content">
-			<h2>A temporary password wii be send your registered email id</h2>
-			<div class="emailDiv">
-				<input type="text" id="email" name="email" placeholder="User Name" autocomplete="off" >
-				<img src="images/email.png"/>
-			</div>
-			<a href="#" id="btnForgotSubmit" data-role="button" data-inline="true">Submit</a>
+			<h2 class="subTitle">A temporary password wii be send your registered email id</h2>
+			<form id="forgotPassForm" class="forgotpassform" method="POST">
+				<div class="emailDiv">
+					<input type="text" id="inpForgotUsername" name="username" placeholder="User Name" autocomplete="off" >
+				</div>
+				<button type="button" id="btnForgotSubmit" class="btnSumbit" data-role="button" >Submit</a>
+			</form>			
 		</div>
 	</div>
 
@@ -105,14 +107,14 @@
 					<input type="tel" id="inpTelephone" name="contact" placeholder="Contact No" autocomplete="off" >
 					<!--<img src=""/>-->
 				</div>
-        <div class="profilePic">
-          <div class="profilePhoto">
-            <img id="imgSignupDisp" data-inline="true" width="100px" height="95px" src="./images/defaultImg.png" alt=""/>
-            <button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
-              <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
-            </button>
-          </div>
-        </div>
+				<div class="profilePic">
+					<div class="profilePhoto">
+						<img id="imgSignupDisp" data-inline="true" width="100px" height="95px" src="./images/defaultImg.png" alt=""/>
+						<button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
+						  <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+						</button>
+					</div>
+				</div>
 				<div class="loginbtnDiv">
 					<button type="submit" class="loginButton" >Create Account </button>
 				</div>
@@ -123,6 +125,7 @@
 	<div data-role="page" id="page-home" class="homePage">
 		<div data-role="main" class="ui-content">
 			<p>COMING SOON</p>
+			<a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a>
 		</div>
 	</div>
 	<script src="cordova.js"></script>
