@@ -14,7 +14,7 @@ var openFB = (function () {
             // By default we store fbtoken in sessionStorage. This can be overridden in init()
             tokenStore = window.sessionStorage,
             fbAppId,
-            baseURL = "http://localhost:8081/instameet/www",
+            baseURL = "http://localhost:8081/RateMePal/www",
             oauthRedirectURL = baseURL + '/oauthcallback.html',
             logoutRedirectURL = baseURL + '/logoutcallback.html',
             // Because the OAuth login spans multiple processes, we need to keep the login callback function as a variable

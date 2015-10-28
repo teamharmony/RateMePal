@@ -8,7 +8,7 @@
 		//window.refresh_token = o.refreshToken.value;
 		//store the refreshToken in localStorage
 		window.localStorage.rmplogin_refresh_token = o.refreshToken.value;
-		window.localStorage.rmp_lobin_by = "App";
+		
 		//This function ensures we always have a valid bearer token.
 		bearerTimeout = setTimeout(function(){
 			clearTimeout(bearerTimeout);
