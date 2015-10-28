@@ -1,7 +1,7 @@
 var controller = function(){
-	var hostUrl = "http://localhost:8080/ResourceMgmt",
+	var hostUrl = "http://gazidevworks.org:8080/RateMePal/",
 		clientId = "meetMePal";
-		
+		//192806734171-uh405irbgbsg3nu04sf0e7rj54a552e3.apps.googleusercontent.com
 	var controller = {
 		_self: null,
 		init: function(){
@@ -171,8 +171,8 @@ var controller = function(){
 					alert("Password and Confirm Password needs to be same.");
 				} else if (that.$username.val() != "" && that.$name.val() != "" && that.$email.val() != "" && that.$password.val() != "" && that.$confirmPass.val() != "" && that.$contact.val() != "" ) {
 					_self.loading(true);
-					var formData = this.$frmSignup[0];
-					if (that.pic !== null) {
+					var formData = that.$frmSignup[0];
+					if (that.pic !== undefined ) {
 						formData.append('profilePic', that.pic);
 					}
 
@@ -192,14 +192,33 @@ var controller = function(){
 				} else {
 					alert("Username, name, email, contact and password can not be empty.");
 				}
+				event.preventDefault();
 			});
 		},
 		
+		validateEmail : function(email) {
+			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(email);
+		},
+		
 		login: function(){
+			openFB.init({appId : '975569862484922', tokenStore: window.localStorage});
+			openGL.init({appId : '192806734171-uh405irbgbsg3nu04sf0e7rj54a552e3.apps.googleusercontent.com', tokenStore: window.localStorage});
+			
 			this.$login = $("#page-login");
+			
 			this.$username = $('#username', this.$login).val("");
 			this.$password = $('#password', this.$login).val("");
+			
 			this.$btnLogin = $('#btnLogin', this.$login);
+			this.$btnFB = $('#btnFB', this.$login);
+			this.$btnGL = $('#btnGL', this.$login);
+			
+			this.$btnFB.off('click');
+			this.$btnFB.on('click', _self.fbLogin);
+			
+			this.$btnGL.off('click');
+			this.$btnGL.on('click', _self.glLogin);
 			
 			this.$btnLogin.off('click');
 			this.$btnLogin.on('click', [this], function(event){
@@ -222,6 +241,40 @@ var controller = function(){
 				
 				var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
 				authentication.loginWithPassword(context.$username.val(), context.$password.val());
+			});
+		},
+		
+		fbLogin: function(){
+			openFB.getLoginStatus(function(response) {
+				if (response.status === "connected") {
+					//_self.fbLogin();
+				} else {
+					openFB.login(function(response) {
+						if (response.status === 'connected') {
+							//_self.fbLogin();
+						} else {
+							alert('Facebook login failed: ' + response.error);
+						}
+					}, {
+						scope : 'email,read_stream'
+					});
+				}
+			});
+		},
+		
+		glLogin: function(){
+			openGL.getLoginStatus(function(response) {
+				if (response.status === "connected") {
+					_self.glLogin();
+				} else {
+					openGL.login(function(response) {
+						if (response.status === 'connected') {
+							_self.glLogin();
+						} else {
+							alert('Google login failed: ' + response.error);
+						}
+					}, {scope: 'openid profile email'});
+				}
 			});
 		},
 		

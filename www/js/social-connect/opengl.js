@@ -15,7 +15,7 @@ var openGL = (function () {
             tokenStore = window.sessionStorage,
             glAppId,
             baseURL = "http://localhost:8081/instameet/www",
-            oauthRedirectURL = baseURL + '/oauthcallback.html',
+            oauthRedirectURL = baseURL + '/oauthcallback1.html',
             logoutRedirectURL = baseURL + '/logoutcallback.html',
             // Because the OAuth login spans multiple processes, we need to keep the login callback function as a variable
             // inside the module instead of keeping it local within the login function.
