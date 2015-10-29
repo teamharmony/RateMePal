@@ -1,7 +1,7 @@
 var controller = function(){
-	var hostUrl = "http://gazidevworks.org:8080/RateMePal/",
+	var hostUrl = "http://gazidevworks.org:8080/RateMePal",
 		clientId = "meetMePal";
-		//192806734171-uh405irbgbsg3nu04sf0e7rj54a552e3.apps.googleusercontent.com
+		
 	var controller = {
 		_self: null,
 		init: function(){
@@ -12,8 +12,11 @@ var controller = function(){
 			});
 			
 			$(document).delegate("#page-login", "pagebeforeshow", function(event, data) {
+				openFB.init({appId : '975569862484922', tokenStore: window.localStorage});
+				openGL.init({appId : '192806734171-uh405irbgbsg3nu04sf0e7rj54a552e3.apps.googleusercontent.com', tokenStore: window.localStorage});
+				
 				if(data.prevPage.length > 0){
-					_self.login();
+					_self.welcome();
 				} else {
 					_self.checkLogin();
 				}
@@ -26,10 +29,11 @@ var controller = function(){
 			$(document).delegate("#page-home", "pagebeforeshow", function() {
 				_self.home();
 			});
+			
 		},
 		
 		checkLogin: function(){
-			if(window.localStorage.rmp_lobin_by === "App"){
+			if(window.localStorage.rmp_lobin_by === "normal"){
 				if(window.localStorage.rmplogin_refresh_token){
 					function loginSuccess(){
 						$.mobile.navigate('#page-home');
@@ -50,7 +54,7 @@ var controller = function(){
 					authentication.loginWithRefreshToken(window.localStorage.rmplogin_refresh_token);
 				}
 			} else {
-				_self.login();
+				_self.welcome();
 			}
 		},
 		
@@ -119,7 +123,7 @@ var controller = function(){
 						}
 					});
 				}
-				e.preventDefault();
+				event.preventDefault();
 			});
 			
 			this.$visible.off('change');
@@ -201,10 +205,7 @@ var controller = function(){
 			return re.test(email);
 		},
 		
-		login: function(){
-			openFB.init({appId : '975569862484922', tokenStore: window.localStorage});
-			openGL.init({appId : '192806734171-uh405irbgbsg3nu04sf0e7rj54a552e3.apps.googleusercontent.com', tokenStore: window.localStorage});
-			
+		welcome: function(){	
 			this.$login = $("#page-login");
 			
 			this.$username = $('#username', this.$login).val("");
@@ -221,37 +222,39 @@ var controller = function(){
 			this.$btnGL.on('click', _self.glLogin);
 			
 			this.$btnLogin.off('click');
-			this.$btnLogin.on('click', [this], function(event){
-				var context = event.data[0];
-				_self.loading(true);
-				function loginSuccess(){
-					
-					loginBy = "normal";
-				};
-				
-				function refreshTokenFailure(){
-					_self.loading(false);
-					$.mobile.navigate("#page-login");
-				};
-				
-				function passwordFailure(){
-					_self.loading(false);
-					alert('Invalid Username and Password');
-				};
-				
-				var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
-				authentication.loginWithPassword(context.$username.val(), context.$password.val());
-			});
+			this.$btnLogin.on('click', jQuery.proxy(_self.onLogin, this));
+		},
+		
+		onLogin: function(event){
+			_self.loading(true);
+			function loginSuccess(){
+				window.localStorage.rmp_lobin_by = "normal";
+				_self.loading(false);
+				$.mobile.navigate("#page-home");
+			};
+			
+			function refreshTokenFailure(){
+				_self.loading(false);
+				$.mobile.navigate("#page-login");
+			};
+			
+			function passwordFailure(){
+				_self.loading(false);
+				alert('Invalid Username and Password');
+			};
+			
+			var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
+			authentication.loginWithPassword(this.$username.val(), this.$password.val());
 		},
 		
 		fbLogin: function(){
 			openFB.getLoginStatus(function(response) {
 				if (response.status === "connected") {
-					//_self.fbLogin();
+					_self.socialLogin('fb');
 				} else {
 					openFB.login(function(response) {
 						if (response.status === 'connected') {
-							//_self.fbLogin();
+							_self.socialLogin('fb');
 						} else {
 							alert('Facebook login failed: ' + response.error);
 						}
@@ -265,17 +268,48 @@ var controller = function(){
 		glLogin: function(){
 			openGL.getLoginStatus(function(response) {
 				if (response.status === "connected") {
-					_self.glLogin();
+					_self.socialLogin('gl');
 				} else {
 					openGL.login(function(response) {
 						if (response.status === 'connected') {
-							_self.glLogin();
+							_self.socialLogin('gl');
 						} else {
 							alert('Google login failed: ' + response.error);
 						}
 					}, {scope: 'openid profile email'});
 				}
 			});
+		},
+		
+		socialLogin: function(sValue){
+			var username, password;
+			if(sValue === 'fb'){
+				username = 'fbAdmin';
+				password = 'fbAdmin';
+			} else if(sValue === 'gl'){
+				username = 'glAdmin';
+				password = 'glAdmin';
+			}
+			_self.loading(true);
+			function loginSuccess(){
+				loginBy = sValue;
+				window.localStorage.rmp_lobin_by = sValue;
+				_self.loading(false);
+				$.mobile.navigate("#page-home");
+			};
+			
+			function refreshTokenFailure(){
+				_self.loading(false);
+				$.mobile.navigate("#page-login");
+			};
+			
+			function passwordFailure(){
+				_self.loading(false);
+				alert('Invalid Username and Password');
+			};
+			
+			var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
+			authentication.loginWithPassword(username, password);
 		},
 		
 		forgot: function(){
