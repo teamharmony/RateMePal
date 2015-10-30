@@ -124,9 +124,66 @@
 	</div> 
   
 	<div data-role="page" id="page-home" class="homePage">
+		<div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
+			<ul>
+				<li><a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a></li>
+			</ul>
+		</div>
+		<div data-role="header" class="headerDiv" data-position="fixed">
+			<a id="leftSideMenu" href="#side-menu" class="iconBtn" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span> </a>
+			<div id="title" class="headTitle">RateMePal</div>
+		</div>
 		<div data-role="main" class="ui-content" >
-			<p>COMING SOON</p>
-			<a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a>
+			<div>
+				<div><img id="imgHomeDisp" data-inline="true" width="100px" height="90px"  src='images/defaultImg.png'/></div>
+				<div>
+					<p id="txtName">NAME</p>
+					<p id="txtDesignation">Designation</p>
+					<p id="txtDesc">Description</p>
+				</div>
+			</div>
+			
+			<div>
+				
+			</div>
+			<div>
+				<div data-role="tabs" id="tabs">
+					<div data-role="navbar">
+						<ul>
+						  <li><a href="#tabPersonal" data-ajax="false">one</a></li>
+						  <li><a href="#tabProfessional" data-ajax="false">two</a></li>
+						</ul>
+					</div>
+					<div id="tabPersonal">
+						<ul data-role="listview" data-inset="true">
+							<li><a href="#">Acura1</a></li>
+							<li><a href="#">Audi1</a></li>
+							<li><a href="#">BMW1</a></li>
+							<li><a href="#">Cadillac11</a></li>
+							<li><a href="#">Ferrari1</a></li>
+						</ul>
+					</div>
+					<div id="tabProfessional">
+						<ul data-role="listview" data-inset="true">
+							<li><a href="#">Acura</a></li>
+							<li><a href="#">Audi</a></li>
+							<li><a href="#">BMW</a></li>
+							<li><a href="#">Cadillac</a></li>
+							<li><a href="#">Ferrari</a></li>
+						</ul>
+					</div>
+				</div>
+				<a id="btnCustomRatingTab" href="#" class="iconBtn" data-iconpos="left"><span aria-hidden="true" class="glyphicon glyphicon-pencil">CUSTOMIZABLE RATING TAB</span> </a>
+			</div>
+		</div>
+		<div data-role="footer" class="footerDiv" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#">One</a></li>
+					<li><a href="#">Two</a></li>
+					<li><a href="#">Three</a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 	
