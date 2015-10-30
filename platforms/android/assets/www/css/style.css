@@ -15,6 +15,16 @@ body{
 	font-style: normal;
   background: #ffffff;
 }
+.invalidState {
+	border: 2px solid red !important;
+}
+
+#error {
+   color: red;
+    position: relative;
+    margin: 0;
+}
+
 .socialBtn {
     background-color: transparent;
     /* background-repeat: round; */
@@ -73,13 +83,14 @@ body{
 }
 .logoTxt{
 	text-align:center;
-	margin-top:-33px;
+	margin-top:-32px;
 }
 .logoTxt>img{
 	width: 140px;
 }
 .not-front .logoDiv>img{
     width: 120px;
+	height: 110px;
 }
 .not-front .logoTxt>img{
 	width: 90px;

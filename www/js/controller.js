@@ -236,11 +236,11 @@ var controller = function(){
 			this.$password = $('#inpPassword', this.$signup).val('');
 			this.$confirmPass = $('#inpConfirmPass', this.$signup).val('');
 			this.$contact = $('#inpTelephone', this.$signup).val('');
-			this.$visible = $('#visible', this.$signup).val(0);
-			this.$imgSignupDisp = $('#imgSignupDisp', this.$signup);
+			this.$imgSignupDisp = $('#imgSignupDisp', this.$signup).attr('src', './images/defaultImg.png');
 			this.$btnSignupUpload = $('#btnSignupUpload', this.$signup);
+			this.$btnSignup = $('#btnSignup', this.$signup);
 			
-			this.$error = $('#error', this.$signup);
+			this.$error = $('#error', this.$signup).text('');
 			
 			this.$username.off('focusout');
 			this.$username.on('focusout', function(event) {
@@ -293,13 +293,7 @@ var controller = function(){
 				}
 				event.preventDefault();
 			});
-			
-			this.$visible.off('change');
-			this.$visible.on('change', function() {
-				var bol = this.$visible.is(":checked") ? 1 : 0;
-				this.$visible.val(bol);
-			});
-			
+						
 			this.$btnSignupUpload.off('click');
 			this.$btnSignupUpload.on('click', function(event){
 				navigator.camera.getPicture(onCapturePhotoSuccess, onCapturePhotoError, {
@@ -308,7 +302,7 @@ var controller = function(){
 				});
 
 				function onCapturePhotoSuccess(imageData) {
-					window.resolveLocalFileSystemURI(imageData, gotFileEntry, onFileSystemURIError);
+					window.resolveLocalFileSystemURL(imageData, gotFileEntry, onFileSystemURIError);
 				}
 
 				function gotFileEntry(fileEntry) {
@@ -337,8 +331,8 @@ var controller = function(){
 				event.preventDefault();
 			});
 			
-			this.$frmSignup.off('submit');
-			this.$frmSignup.on('submit', function(event){
+			this.$btnSignup.off('click');
+			this.$btnSignup.on('click', function(event){
 				if (that.$password.val() !== that.$confirmPass.val()) {
 					alert("Password and Confirm Password needs to be same.");
 				} else if (that.$username.val() != "" && that.$name.val() != "" && that.$email.val() != "" && that.$password.val() != "" && that.$confirmPass.val() != "" && that.$contact.val() != "" ) {
@@ -361,12 +355,31 @@ var controller = function(){
 					}).fail(function(jqXHR, textStatus, errorThrown) {
 						_self.loading(false);
 						alert("Could not register user. Please contact your administrator.");
+						//alert(jqXHR + ":" + textStatus + ":" + errorThrown);
+						//alert(jqXHR.responseJSON);
 					});
 				} else {
 					alert("Username, name, email, contact and password can not be empty.");
 				}
 				event.preventDefault();
 			});
+		},
+		
+		dataURItoBlob : function(dataURI) {
+			var byteString = atob(dataURI.split(',')[1]);
+
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+			var ab = new ArrayBuffer(byteString.length);
+			var ia = new Uint8Array(ab);
+			for (var i = 0; i < byteString.length; i++) {
+				ia[i] = byteString.charCodeAt(i);
+			}
+
+			var bb = new Blob([ab], {
+				"type" : mimeString
+			});
+			return bb;
 		},
 		
 		validateEmail : function(email) {

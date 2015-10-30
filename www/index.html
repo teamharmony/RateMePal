@@ -1,8 +1,13 @@
 <!DOCTYPE html> 
 <html>
 <head>
-  <title>Page Title</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rate Me Pal</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src *; script-src * 'unsafe-eval' 'unsafe-inline'; connect-src *; img-src *; style-src * 'unsafe-inline' ; media-src *;">
+<!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"> -->
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+ <!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <link rel="old stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />
   <link rel="newest stylesheet" type="text/css" href="css/style.css" />
   
@@ -55,13 +60,12 @@
 	</div>
 	
 	<div data-role="page" id="page-forgot" class="forgotPage" >
-		<div data-role="header" class="headerDiv">
-			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> 
-      <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
+		<div data-role="header" class="headerDiv" data-position="fixed">
+			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
 			<h1>Forgot Password</h1>
 		</div>
 		<div data-role="main" class="ui-content">
-			<h2 class="subTitle">A temporary password wii be send your registered email id</h2>
+			<h2 class="subTitle">A temporary password wii be send your registered email address.</h2>
 			<form id="forgotPassForm" class="forgotpassform" method="POST">
 				<div class="emailDiv">
 					<input type="text" id="inpForgotUsername" name="username" placeholder="User Name" autocomplete="off" >
@@ -73,9 +77,8 @@
 	</div>
 
 	<div data-role="page" id="page-signup" class="signupPage">
-		<div data-role="header" class="headerDiv">
-			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> 
-      <span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
+		<div data-role="header" class="headerDiv" data-position="fixed">
+			<a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
 			<h1>Sign Up !!</h1>
 		</div>
 		<div data-role="main" class="ui-content not-front">
@@ -107,21 +110,21 @@
 				</div>
 				<div class="profilePic">
 					<div class="profilePhoto">
-						<img id="imgSignupDisp" data-inline="true" width="100px" height="95px" src="./images/defaultImg.png" alt=""/>
+						<img id="imgSignupDisp" data-inline="true" width="100px" height="90px" src="./images/defaultImg.png" alt=""/>
 						<button id="btnSignupUpload" data-inline="true" class="iconBtn btnUpload" >
 						  <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
 						</button>
 					</div>
 				</div>
 				<div class="loginbtnDiv">
-					<button type="submit" class="loginButton" >Create Account </button>
+					<button type="submit" id="btnSignup" class="loginButton" >Create Account </button>
 				</div>
 			</form>
 		</div>
 	</div> 
   
 	<div data-role="page" id="page-home" class="homePage">
-		<div data-role="main" class="ui-content">
+		<div data-role="main" class="ui-content" >
 			<p>COMING SOON</p>
 			<a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a>
 		</div>
