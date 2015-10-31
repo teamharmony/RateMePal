@@ -131,7 +131,7 @@
 		</div>
 		<div data-role="header" class="headerDiv" data-position="fixed">
 			<a id="leftSideMenu" href="#side-menu" class="iconBtn" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span> </a>
-			<div id="title" class="headTitle">RateMePal</div>
+			<h1>RateMePal</h1>
 		</div>
 		<div data-role="main" class="ui-content" >
 			<div>
@@ -146,12 +146,13 @@
 			<div>
 				
 			</div>
+			
 			<div>
 				<div data-role="tabs" id="tabs">
 					<div data-role="navbar">
 						<ul>
-						  <li><a href="#tabPersonal" data-ajax="false">one</a></li>
-						  <li><a href="#tabProfessional" data-ajax="false">two</a></li>
+						  <li><a href="#tabPersonal" data-ajax="false">Personal</a></li>
+						  <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
 						</ul>
 					</div>
 					<div id="tabPersonal">
@@ -173,16 +174,70 @@
 						</ul>
 					</div>
 				</div>
-				<a id="btnCustomRatingTab" href="#" class="iconBtn" data-iconpos="left"><span aria-hidden="true" class="glyphicon glyphicon-pencil">CUSTOMIZABLE RATING TAB</span> </a>
+				<a id="btnCustomRatingTab" href="#page-customizeRatingTab" class="iconBtn" data-iconpos="left"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> CUSTOMIZABLE RATING TAB </a>
 			</div>
 		</div>
 		<div data-role="footer" class="footerDiv" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#">One</a></li>
-					<li><a href="#">Two</a></li>
-					<li><a href="#">Three</a></li>
+					<li><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> Home</a></li>
+					<li><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> Rate</a></li>
+					<li><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> Insta</a></li>
+					<li><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> Friends</a></li>
+					<li><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Invite</a></li>
 				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="page-customizeRatingTab" class="customRatingPage">
+		<div data-role="header" class="headerDiv" data-position="fixed">
+			<a href="#page-home" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
+			<h1>CUSTOMIZABLE RATING TAB</h1>
+		</div>
+		
+		<div data-role="main" class="ui-content" >
+			<div>
+				<div><img id="imgHomeDisp" data-inline="true" width="100px" height="90px"  src='images/defaultImg.png'/></div>
+				<div>
+					<p id="txtName">NAME</p>
+					<p id="txtDesignation">Designation</p>
+					<div>
+					
+					</div>
+					<p id="txtDesc">Description</p>
+				</div>
+			</div>
+			
+			<div>
+				<div data-role="tabs" id="tabs">
+					<div data-role="navbar">
+						<ul>
+						  <li><a href="#tabPersonal" data-ajax="false">Personal</a></li>
+						  <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
+						</ul>
+					</div>
+					<div id="tabPersonal">
+						<ul data-role="listview" data-inset="true">
+							<li><a href="#">Acura1</a></li>
+							<li><a href="#">Audi1</a></li>
+							<li><a href="#">BMW1</a></li>
+							<li><a href="#">Cadillac11</a></li>
+							<li><a href="#">Ferrari1</a></li>
+						</ul>
+					</div>
+					<div id="tabProfessional">
+						<ul data-role="listview" data-inset="true">
+							<li><a href="#">Acura</a></li>
+							<li><a href="#">Audi</a></li>
+							<li><a href="#">BMW</a></li>
+							<li><a href="#">Cadillac</a></li>
+							<li><a href="#">Ferrari</a></li>
+						</ul>
+					</div>
+					<a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">ADD</a>
+					<a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">SAVE</a>
+				</div>
 			</div>
 		</div>
 	</div>
