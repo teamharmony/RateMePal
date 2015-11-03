@@ -41,8 +41,6 @@
                 <div class="buttonDiv">
                     <a href="#page-signup" class="createAccBtn" data-inline="true" >Create Account</a> <br> <br>
                     <a href="#page-forgot" class="forgotPassBtn" data-inline="true">Forgot Password?</a>
-                    <button type="submit" id="createAccBtn" class="createAccBtn" data-role="button"> Create Account</button>
-                    <button type="submit" id="forgotPassBtn" class="forgotPassBtn" data-role="button"> Forgot Password?</button>
                 </div>
                 <div class="footerBlock">
                     <div class="lineDivTxt">
@@ -117,6 +115,7 @@
                 </form>
             </div>
         </div>
+		
         <div data-role="page" id="page-home" class="homePage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
                 <ul>
@@ -173,15 +172,16 @@
             <div data-role="footer" class="footerDiv" data-position="fixed">
                 <div data-role="navbar">
                     <ul>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#page-home" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
                         <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
                         <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
                         <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
+		
         <div data-role="page" id="page-customizeRatingTab" class="customRatingPage">
             <div data-role="header" class="headerDiv" data-position="fixed">
                 <a href="#page-home" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
@@ -199,7 +199,7 @@
                 </div>
                 <div class="UserRatingBar"> User Rating bar</div>
                 <div>
-                    <div class="skillsTab" data-role="tabs" id="tabs">
+                    <div class="skillsTab" data-role="tabs" id="ratingTabs">
                         <div data-role="navbar">
                             <ul>
                                 <li><a href="#tabPersonal" data-ajax="false">Personal</a></li>
@@ -231,6 +231,63 @@
                     </button>
                     <!-- <a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">ADD</a>
                         <a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">SAVE</a> -->
+                </div>
+            </div>
+        </div>
+		
+		<div data-role="page" id="page-friends" class="friendsPage">
+            <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
+                <ul>
+                    <li><a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a></li>
+                </ul>
+            </div>
+            <div data-role="header" class="headerDiv" data-position="fixed">
+                <a id="leftSideMenu" href="#side-menu" class="iconBtn backBtn" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span> </a>
+                <h1>RateMePal</h1>
+            </div>
+            <div data-role="main" class="ui-content" >
+                <div>
+                    <div class="friendTabs" data-role="tabs" id="friendTabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#tabFriends" data-ajax="false">Friends</a></li>
+                                <li><a href="#tabPeopleSearch" data-ajax="false">People Search</a></li>
+                            </ul>
+                        </div>
+                        <div id="tabFriends" class="tabFriends">
+							<input type="text" id="txtFriend" placeholder="Search by Name">
+							<span>134 User Found</span>
+                            <ul data-role="listview" data-inset="true">
+                                <li> <span class="skills"> Acura1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Audi1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> BMW1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Cadillac11</span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                            </ul>
+                        </div>
+                        <div id="tabPeopleSearch" class="tabPeopleSearch">
+							<input type="text" id="txtPeopleSearch" placeholder="Search by Name">
+							<span>134 User Found</span>
+                            <ul data-role="listview" data-inset="true">
+                                <li> <span class="skills"> Professional Acura1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Professional Audi1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Professional BMW1 </span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Professional Cadillac11</span> <span class="skillRating"> rating bar</span></li>
+                                <li> <span class="skills"> Professional Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-role="footer" class="footerDiv" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                        <li class="NavItem"><a href="#page-home" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
+                    </ul>
                 </div>
             </div>
         </div>
