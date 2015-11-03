@@ -23,6 +23,8 @@ body{
    color: red;
     position: relative;
     margin: 0;
+		height: 16px;
+		font-size:0.7em;
 }
 
 .socialBtn {
@@ -107,7 +109,7 @@ body{
 textarea.ui-input-text.ui-textinput-autogrow {  
 	background-color: #fff;
     background-image: none;
-    border-radius: 4px;
+    border-radius: 3px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     color: #555;
 		
@@ -118,7 +120,7 @@ textarea.ui-input-text.ui-textinput-autogrow {
     outline: 0 none;
 }
 .ui-input-text > .inputStyle { 
-	height: 3em;
+	height: 2.75em;
     background-position: 98% center;
     background-repeat: no-repeat;
     font-size: 0.889em;
@@ -136,7 +138,7 @@ textarea.ui-input-text.ui-textinput-autogrow {
  border:1px solid #34740e;
  color:#fff;
  text-shadow:0 1px 0 #333;
- font-weight:600;
+ font-weight:400;
 }
 .ui-btn.loginBtn:hover,
 .ui-btn.loginButton:hover,
@@ -145,8 +147,33 @@ textarea.ui-input-text.ui-textinput-autogrow {
  border:1px solid #4ba614;
  color:#fff;
  text-shadow:0 1px 0 #333;
- font-weight:600;
 }
+/* button add, save */
+.ui-btn.loginBtn,
+.ui-btn.loginButton,
+.ui-btn.btnSumbit,
+.btnAdd.ui-btn.ui-corner-all,
+.btnSave.ui-btn.ui-corner-all,
+.btnCustomRatingTab.ui-btn.ui-corner-all,
+.createAccBtn.ui-btn.ui-corner-all,
+.forgotPassBtn.ui-btn.ui-corner-all { 
+	border-radius: 3em;
+	box-shadow: none;
+  padding:.5em 1em;
+}
+.btnAdd.ui-btn.ui-corner-all { 
+	color: green; 
+font-size: 1em;
+    padding: .4em 1em;
+}
+.btnCustomRatingTab.ui-btn.ui-corner-all,
+.createAccBtn.ui-btn.ui-corner-all,
+.forgotPassBtn.ui-btn.ui-corner-all { 
+	color: #1b6aac; 
+font-size: 1em;
+    padding: .4em 1em;
+}
+
 /* button upload*/
 .profilePic {
     text-align: center;
@@ -364,6 +391,7 @@ h2.subTitle { font-size:1em; }
 	font-weight: bold;
 	position:relative;
 }
+
 .cancelBtnspan{
 	position: absolute;
     bottom: 50%;
@@ -388,4 +416,109 @@ h2.subTitle { font-size:1em; }
     top: 48%;
     left: 42%;
 }
-*/
+/* User Profile */
+.UserProfileDetails { 
+/* border:1px solid red;*/
+	display: -webkit-flex;
+	display: flex;
+ }
+.UserProfileImg{
+	-webkit-flex-shrink:0;
+	flex-shrink:0;
+}
+.UserProfilePic { 
+width: 65px;
+ height: 65px;
+ border-radius: 50%;
+ border: 1px solid #cecece;
+}
+.UserProfileName { 
+ -webkit-flex:auto;
+ flex:auto;
+     padding: 0 10px;
+		 overflow: hidden
+}
+.UserProfileName > p { 
+padding:3px 0; 
+margin:0;  
+white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+		}
+.UserName { 
+font-size: 1.25em;
+   
+}
+.UserDesignation { 
+font-size: .8em;
+color:#aaaaaa;
+}
+.UserProfileDesc { 
+    font-size: .8em;
+color:#bbbbbb;
+}
+.UserRatingBar {  
+	/*border:1px solid green;*/
+	display: -webkit-flex;
+	display: flex; 
+}
+.userRating { 
+ -webkit-flex:auto;
+ flex:auto;
+}
+.shareRating { 
+-webkit-flex-shrink:0;
+	flex-shrink:0;
+}
+/* tabs */
+.ui-content .ui-navbar li > .ui-btn { 
+     padding: .6em 1em;
+}
+.ui-content .ui-navbar li:first-child .ui-btn { 
+border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+.ui-content .ui-navbar li:last-child .ui-btn { 
+border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+.skillsTab { 
+ margin-top: 10px;
+ }
+ .skillsTab .ui-listview { 
+  box-shadow:none;
+	background: transparent;
+ }
+.skillsTab .ui-listview > li { 
+	display: -webkit-flex;
+	display: flex; 
+	border:0;
+	border-bottom:1px solid #eeeeee;
+	background: transparent;
+}
+.skillsTab .ui-listview .skills { 
+ -webkit-flex:auto;
+ flex:auto;
+ white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.skillsTab .ui-listview .skillRating { 
+-webkit-flex-shrink:0;
+	flex-shrink:0;
+}
+
+.skillsTab .ui-listview .skillRating .glyphicon { 
+ color: red;
+}
+
+
+/* footer */
+.footerDiv .navLink { 
+ display:block;
+ font-size: 0.8em;
+ font-weight: 400;
+}
+.footerDiv .NavItem .glyphicon{ 
+ font-size:1.5em;
+}
