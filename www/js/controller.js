@@ -38,7 +38,24 @@ var controller = function () {
 			});
 
 		},
+		
+		home : function () {
+			this.$homePage = $('#page-home');
+			this.$btnLogout = $('#btnLogout', this.$homePage);
+			this.$btnHome = $('#btnHome', this.$homePage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
+		},
 
+		logout : function () {
+			window.localStorage.removeItem('rmp_lobin_by');
+			window.localStorage.removeItem('rmplogin_refresh_token');
+			window.localStorage.removeItem('fbtoken');
+			window.localStorage.removeItem('gltoken');
+			$.mobile.navigate("#page-login");
+		},
+		
 		welcome : function () {
 			this.$login = $("#page-login");
 
@@ -219,22 +236,6 @@ var controller = function () {
 				}
 				e.preventDefault();
 			});
-		},
-
-		home : function () {
-			this.$homePage = $('#page-home');
-			this.$btnLogout = $('#btnLogout', this.$homePage);
-
-			this.$btnLogout.off('click');
-			this.$btnLogout.on('click', _self.logout);
-		},
-
-		logout : function () {
-			window.localStorage.removeItem('rmp_lobin_by');
-			window.localStorage.removeItem('rmplogin_refresh_token');
-			window.localStorage.removeItem('fbtoken');
-			window.localStorage.removeItem('gltoken');
-			$.mobile.navigate("#page-login");
 		},
 
 		signup : function () {

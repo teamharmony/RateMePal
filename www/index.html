@@ -115,7 +115,6 @@
                 </form>
             </div>
         </div>
-		
         <div data-role="page" id="page-home" class="homePage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
                 <ul>
@@ -143,8 +142,8 @@
                     <div class="skillsTab" data-role="tabs" id="tabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabPersonal" data-ajax="false">Personal</a></li>
-                                <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
+                                <li><a href="#tabPersonal" class="ui-btn-active" >Personal</a></li>
+                                <li><a href="#tabProfessional" >Professional</a></li>
                             </ul>
                         </div>
                         <div id="tabPersonal" class="tabPersonal">
@@ -166,22 +165,21 @@
                             </ul>
                         </div>
                     </div>
-                    <button type="submit" id="btnCustomRatingTab" class="btnCustomRatingTab" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Customize Rating Tab</button>
+                    <a href="#page-customizeRatingTab" id="btnCustomRatingTab" class="btnCustomRatingTab" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Customize Rating Tab</a>
                 </div>
             </div>
             <div data-role="footer" class="footerDiv" data-position="fixed">
                 <div data-role="navbar">
                     <ul>
-                        <li class="NavItem"><a href="#page-home" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
-                        <li class="NavItem"><a href="#page-friends" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
+                        <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
-		
         <div data-role="page" id="page-customizeRatingTab" class="customRatingPage">
             <div data-role="header" class="headerDiv" data-position="fixed">
                 <a href="#page-home" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
@@ -202,7 +200,7 @@
                     <div class="skillsTab" data-role="tabs" id="ratingTabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabPersonal" data-ajax="false">Personal</a></li>
+                                <li><a href="#tabPersonal" class="ui-btn-active"  data-ajax="false">Personal</a></li>
                                 <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
                             </ul>
                         </div>
@@ -234,8 +232,7 @@
                 </div>
             </div>
         </div>
-		
-		<div data-role="page" id="page-friends" class="friendsPage">
+        <div data-role="page" id="page-friends" class="friendsPage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
                 <ul>
                     <li><a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a></li>
@@ -250,30 +247,151 @@
                     <div class="friendTabs" data-role="tabs" id="friendTabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabFriends" data-ajax="false">Friends</a></li>
-                                <li><a href="#tabPeopleSearch" data-ajax="false">People Search</a></li>
+                                <li><a href="#tabFriends" class="ui-btn-active">Friends</a></li>
+                                <li><a href="#tabPeopleSearch" >People Search</a></li>
                             </ul>
                         </div>
-                        <div id="tabFriends" class="tabFriends">
-							<input type="text" id="txtFriend" placeholder="Search by Name">
-							<span>134 User Found</span>
+                        <div id="tabFriends" class="skillsTab tabFriends">
+                            <div class="searchResult">
+                                <input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
+                                <a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
+                            </div>
+                            <div class="searchResultCount">134 User Found</div>
                             <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Acura1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Audi1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> BMW1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Cadillac11</span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
-                        <div id="tabPeopleSearch" class="tabPeopleSearch">
-							<input type="text" id="txtPeopleSearch" placeholder="Search by Name">
-							<span>134 User Found</span>
+                        <div id="tabPeopleSearch" class="skillsTab tabPeopleSearch">
+                            <div class="searchResult">
+                                <input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
+                                <a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
+                            </div>
+                            <div class="searchResultCount">134 User Found</div>
                             <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Professional Acura1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Audi1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional BMW1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Cadillac11</span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                            <span class="connect"> + Connect </span> 
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                            <span class="requestSent">  Request Sent </span> 
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                            <span class="connect"> + Connect </span> 
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                            <span class="requestSent">  Request Sent </span> 
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                            <span class="connect"> + Connect </span> 
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -282,15 +400,27 @@
             <div data-role="footer" class="footerDiv" data-position="fixed">
                 <div data-role="navbar">
                     <ul>
-                        <li class="NavItem"><a href="#page-home" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
-                        <li class="NavItem"><a href="#page-friends" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
-                        <li class="NavItem"><a href="#" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
+                        <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
+        <script>
+            $("a[data-role=tab]").each(function () {
+				var anchor = $(this);
+				anchor.bind("click", function () {
+					$.mobile.changePage(anchor.attr("href"), {
+						transition: "none",
+						changeHash: true
+					});
+					return false;
+				});
+            });
+        </script>
         <script src="cordova.js"></script>
     </body>
 </html>
