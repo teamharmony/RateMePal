@@ -9,7 +9,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
         <link rel="old stylesheet" href="lib/jquery.mobile-1.4.5.min.css" />
+		<link rel="new stylesheet" href="lib/jquery.raty.css" />
         <link rel="newest stylesheet" type="text/css" href="css/style.css" />
+		
         <script src="lib/jquery-2.1.1.min.js"></script>
         <script src="js/controller.js"></script>
         <script src="js/app.js"></script>
@@ -17,6 +19,7 @@
         <script type="text/javascript" src="js/social-connect/openfb.js"></script>
         <script type="text/javascript" src="js/social-connect/opengl.js"></script>
         <script src="lib/jquery.mobile-1.4.5.min.js"></script> 
+		<script src="lib/jquery.raty.js"></script> 
     </head>
     <body>
         <div data-role="page" id="page-login" class="loginPage">
@@ -54,6 +57,7 @@
                 </div>
             </div>
         </div>
+		
         <div data-role="page" id="page-forgot" class="forgotPage" >
             <div data-role="header" class="headerDiv" data-position="fixed">
                 <a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
@@ -69,6 +73,7 @@
                 </form>
             </div>
         </div>
+		
         <div data-role="page" id="page-signup" class="signupPage">
             <div data-role="header" class="headerDiv" data-position="fixed">
                 <a href="#page-login" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
@@ -115,6 +120,7 @@
                 </form>
             </div>
         </div>
+		
         <div data-role="page" id="page-home" class="homePage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
                 <ul>
@@ -135,15 +141,15 @@
                     </div>
                 </div>
                 <div class="UserRatingBar">
-                    <div class="userRating"> User Rating bar </div>
+                    <div id="userOverallRating" class="userRating"></div>
                     <span class="shareRating"> Share >> </span> 
                 </div>
                 <div>
                     <div class="skillsTab" data-role="tabs" id="tabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabPersonal" class="ui-btn-active" >Personal</a></li>
-                                <li><a href="#tabProfessional" >Professional</a></li>
+                                <li><a href="#tabPersonal" class="ui-btn-active" data-ajax="false">Personal</a></li>
+                                <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
                             </ul>
                         </div>
                         <div id="tabPersonal" class="tabPersonal">
@@ -165,7 +171,7 @@
                             </ul>
                         </div>
                     </div>
-                    <a href="#page-customizeRatingTab" id="btnCustomRatingTab" class="btnCustomRatingTab" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Customize Rating Tab</a>
+                    <a href="#page-customRating" id="btnCustomRatingTab" class="btnCustomRatingTab" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Customize Rating Tab</a>
                 </div>
             </div>
             <div data-role="footer" class="footerDiv" data-position="fixed">
@@ -180,7 +186,7 @@
                 </div>
             </div>
         </div>
-        <div data-role="page" id="page-customizeRatingTab" class="customRatingPage">
+        <div data-role="page" id="page-customRating" class="customRatingPage">
             <div data-role="header" class="headerDiv" data-position="fixed">
                 <a href="#page-home" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
                 <h1>Customize Rating Tab</h1>
@@ -200,31 +206,32 @@
                     <div class="skillsTab" data-role="tabs" id="ratingTabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabPersonal" class="ui-btn-active"  data-ajax="false">Personal</a></li>
-                                <li><a href="#tabProfessional" data-ajax="false">Professional</a></li>
+                                <li><a id="btnCustomPersonalTab" href="#tabCustomPersonal" class="ui-btn-active" data-ajax="false">Personal</a></li>
+                                <li><a id="btnCustomProfessionalTab" href="#tabCustomProfessional" data-ajax="false">Professional</a></li>
                             </ul>
                         </div>
-                        <div id="tabPersonal" class="tabPersonal">
-                            <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Acura1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>
+                        <div id="tabCustomPersonal" class="tabPersonal">
+                            <ul id="customPersonalList" data-role="listview" data-inset="true">
+                                <!--<li> <span class="skills"> Acura1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>
                                 <li> <span class="skills"> Audi1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
                                 <li> <span class="skills"> BMW1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
                                 <li> <span class="skills"> Cadillac11</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
-                                <li> <span class="skills"> Ferrari1</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
+                                <li> <span class="skills"> Ferrari1</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>-->
                             </ul>
                         </div>
-                        <div id="tabProfessional" class="tabProfessional">
-                            <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Professional Acura1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
+                        <div id="tabCustomProfessional" class="tabProfessional">
+                            <ul id="customProfessionalList" data-role="listview" data-inset="true">
+                                <!-- <li> <span class="skills"> Professional Acura1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
                                 <li> <span class="skills"> Professional Audi1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
                                 <li> <span class="skills"> Professional BMW1 </span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
                                 <li> <span class="skills"> Professional Cadillac11</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
-                                <li> <span class="skills"> Professional Ferrari1</span> <span class="skillRating"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li>
+                                <li> <span class="skills"> Professional Ferrari1</span> <span class="skillRating"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></span></li> -->
                             </ul>
                         </div>
                     </div>
-                    <button type="submit" id="btnAdd" class="btnAdd" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add another field</button>
-                    <button type="submit" id="btnSave" class="btnSumbit btnSave" data-role="button">
+					<input id="inpParameterName" type="text" placeholder="Parameter Name"></input>
+                    <button id="btnAddParameter" class="btnAdd" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add another field</button>
+                    <button id="btnSaveParameter" class="btnSumbit btnSave" data-role="button">
                         <!-- <span aria-hidden="true" class="glyphicon glyphicon-ok-sign"></span> --> Save 
                     </button>
                     <!-- <a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">ADD</a>
@@ -420,6 +427,19 @@
 					return false;
 				});
             });
+			
+			$(document).on('pagecontainerbeforeshow', function() {
+				var activePage = $.mobile.pageContainer.pagecontainer("getActivePage");
+				$('[data-role="tabs"] ul:first', activePage).each(function(){
+					var ul = this;
+					var as = $('a', ul);
+					$(as).click(function(){
+						$(as).removeClass('ui-btn-active');
+						$(this).addClass('ui-btn-active');
+					});
+					$(as).first().click();
+				});
+			});
         </script>
         <script src="cordova.js"></script>
     </body>

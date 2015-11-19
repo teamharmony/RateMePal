@@ -1,5 +1,5 @@
 var controller = function () {
-	var hostUrl = "http://gazidevworks.org:8080/RateMePal",
+	var hostUrl = "http://localhost:8080/RateMePalMidTier",
 	clientId = "rateMePal";
 
 	var controller = {
@@ -36,7 +36,68 @@ var controller = function () {
 			$(document).delegate("#page-home", "pagebeforeshow", function () {
 				_self.home();
 			});
-
+		
+			$(document).delegate("#page-customRating", "pagebeforeshow", function () {
+				_self.customRating();
+			});
+		},
+		
+		customRating: function(){
+			var that = this, addParameterArr = [], rmParameterArr = [];
+			this.$customRatingPage = $('#page-customRating');
+			this.$addCustomParameter = $('#btnAddParameter', this.$customRatingPage);
+			this.$saveCustomParameter = $('#btnSaveParameter', this.$customRatingPage);
+			this.$customPersonalList = $('#customPersonalList', this.$customRatingPage);
+			this.$customProfessionalList = $('#customProfessionalList', this.$customRatingPage);
+			this.$inpParameterName = $('#inpParameterName', this.$customRatingPage).val('');
+			
+			function removePara(paraId){
+				for(var i=0; i < addParameterArr.length; i++){
+					if(paraId === addParameterArr[i].id){
+						rmParameterArr.push(addParameterArr[i]);
+						addParameterArr.splice(i, 1);
+						break;
+					}
+				}
+			};
+			
+			this.$customPersonalList.on('click','li .skillRating span', function(event){
+				var id = event.currentTarget.parentNode.parentNode.id;
+				$('#' + id).remove();
+				removePara(id);
+			});
+			
+			this.$customProfessionalList.on('click','li .skillRating span', function(event){
+				var id = event.currentTarget.parentNode.parentNode.id;
+				$('#' + id).remove();
+				removePara(id);
+			});
+			
+			this.$addCustomParameter.off('click');
+			this.$addCustomParameter.on('click', function(event){
+				if(that.$inpParameterName.val() != ""){
+					if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
+						parameterArr.push({"id":"lstItemProfessional-"+that.$inpParameterName.val(), "type":"Professional", "name":that.$inpParameterName.val()});
+						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ that.$inpParameterName.val() +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+					} else {
+						parameterArr.push({"id":"lstItemPersonal-"+that.$inpParameterName.val(), "type":"Personal", "name":that.$inpParameterName.val()});
+						that.$customPersonalList.append('<li id="lstItemPersonal-'+ that.$inpParameterName.val() +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+					}
+					that.$inpParameterName.val('');
+				}
+			});
+			
+			this.$saveCustomParameter.off('click');
+			this.$saveCustomParameter.on('click', function(event){
+				for(var i=0; i < addParameterArr.length; i++){
+					
+				}
+				for(var i=0; i < rmParameterArr.length; i++){
+					
+				}
+				addParameterArr = [];
+				rmParameterArr = [];
+			});
 		},
 		
 		home : function () {
@@ -44,10 +105,18 @@ var controller = function () {
 			this.$btnLogout = $('#btnLogout', this.$homePage);
 			this.$btnHome = $('#btnHome', this.$homePage);
 			
+			_self.getParameters();
+			
 			this.$btnLogout.off('click');
 			this.$btnLogout.on('click', _self.logout);
+			
+			$('#userOverallRating').raty({readOnly: true, score: 3});
 		},
-
+		
+		getParameters: function(){
+			
+		},
+		
 		logout : function () {
 			window.localStorage.removeItem('rmp_lobin_by');
 			window.localStorage.removeItem('rmplogin_refresh_token');
@@ -353,7 +422,7 @@ var controller = function () {
 					if (that.pic !== undefined) {
 						formData.append('profilePic', that.pic);
 					}
-					formData.append('skills', '');
+					//formData.append('skills', '');
 
 					$.ajax({
 						url : hostUrl + "/resources",
