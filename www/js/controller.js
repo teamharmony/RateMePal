@@ -40,10 +40,18 @@ var controller = function () {
 			$(document).delegate("#page-customRating", "pagebeforeshow", function () {
 				_self.customRating();
 			});
+			
+			$(document).delegate("#page-friends", "pagebeforeshow", function () {
+				_self.friends();
+			});
+		},
+		
+		friends: function(){
+			
 		},
 		
 		customRating: function(){
-			var that = this, addParameterArr = [], rmParameterArr = [];
+			var that = this, addParameterArr = [], rmParameterArr = [], parameterArr = [];
 			this.$customRatingPage = $('#page-customRating');
 			this.$addCustomParameter = $('#btnAddParameter', this.$customRatingPage);
 			this.$saveCustomParameter = $('#btnSaveParameter', this.$customRatingPage);
@@ -51,10 +59,34 @@ var controller = function () {
 			this.$customProfessionalList = $('#customProfessionalList', this.$customRatingPage);
 			this.$inpParameterName = $('#inpParameterName', this.$customRatingPage).val('');
 			
+			that.$customPersonalList.empty();
+			that.$customProfessionalList.empty();
+			
+			_self.loading(true);
+			$.ajax({
+				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function (data) {
+				_self.loading(false);
+				for(var i=0; i < data.length; i++){
+					if(data[i].type === "Personal"){
+						that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+					} else if(data[i].type === "Professional"){
+						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+					}
+				}
+				parameterArr = data;
+			});
+			
 			function removePara(paraId){
+				for(var i=0; i < parameterArr.length; i++){
+					if(paraId === "lstItemPersonal-"+parameterArr[i].id || paraId === "lstItemProfessional-"+parameterArr[i].id){
+						rmParameterArr.push(parameterArr[i]);
+						break;
+					}
+				}
 				for(var i=0; i < addParameterArr.length; i++){
 					if(paraId === addParameterArr[i].id){
-						rmParameterArr.push(addParameterArr[i]);
 						addParameterArr.splice(i, 1);
 						break;
 					}
@@ -75,28 +107,69 @@ var controller = function () {
 			
 			this.$addCustomParameter.off('click');
 			this.$addCustomParameter.on('click', function(event){
+				var inpParaName = that.$inpParameterName.val();
 				if(that.$inpParameterName.val() != ""){
-					if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
-						parameterArr.push({"id":"lstItemProfessional-"+that.$inpParameterName.val(), "type":"Professional", "name":that.$inpParameterName.val()});
-						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ that.$inpParameterName.val() +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+					if(!_self.arrayContains(inpParaName, parameterArr)){
+						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
+							addParameterArr.push({"id":"lstItemProfessional-"+inpParaName, "type":"2", "name":inpParaName});
+							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ inpParaName +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+						} else {
+							addParameterArr.push({"id":"lstItemPersonal-"+inpParaName, "type":"1", "name":inpParaName});
+							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+						}
 					} else {
-						parameterArr.push({"id":"lstItemPersonal-"+that.$inpParameterName.val(), "type":"Personal", "name":that.$inpParameterName.val()});
-						that.$customPersonalList.append('<li id="lstItemPersonal-'+ that.$inpParameterName.val() +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+						alert("Parameter Name is already added.");
 					}
 					that.$inpParameterName.val('');
+				} else {
+					alert("Enter a parameter.");
 				}
 			});
 			
 			this.$saveCustomParameter.off('click');
 			this.$saveCustomParameter.on('click', function(event){
-				for(var i=0; i < addParameterArr.length; i++){
+				var that = this;
+				this.removeCounter = rmParameterArr.length;
+				this.addCounter = addParameterArr.length;
 					
-				}
 				for(var i=0; i < rmParameterArr.length; i++){
-					
+					$.ajax({
+						url : hostUrl.concat("/parameters/"+ rmParameterArr[i].id +"?access_token=" + window.bearerToken),
+						type : 'DELETE'
+					}).done(function (data) {
+						that.removeCounter--;
+						console.log("Parameter removed.");
+						that.ajaxDoneCallback();
+					});
 				}
-				addParameterArr = [];
-				rmParameterArr = [];
+				
+				for(var i=0; i < addParameterArr.length; i++){
+					$.ajax({
+						url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+						type : 'POST',
+						data : {"name": addParameterArr[i].name, "type": addParameterArr[i].type}
+					}).done(function (data) {
+						that.addCounter--;
+						console.log("Parameter added.");
+						that.ajaxDoneCallback();
+					});
+				}
+				
+				this.ajaxDoneCallback = function(){
+					if(this.removeCounter == 0 && this.addCounter == 0){
+						console.log("done.");
+						$.ajax({
+							url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+							type : 'GET'
+						}).done(function (data) {
+							parameterArr = data;
+						});
+						addParameterArr = [];
+						rmParameterArr = [];
+					}
+				};
+				
+				
 			});
 		},
 		
@@ -105,16 +178,21 @@ var controller = function () {
 			this.$btnLogout = $('#btnLogout', this.$homePage);
 			this.$btnHome = $('#btnHome', this.$homePage);
 			
-			_self.getParameters();
+			//_self.getParameters();
 			
 			this.$btnLogout.off('click');
 			this.$btnLogout.on('click', _self.logout);
 			
 			$('#userOverallRating').raty({readOnly: true, score: 3});
 		},
-		
-		getParameters: function(){
-			
+				
+		arrayContains: function(val, arr){
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i].name === val) {
+					return true;
+				}
+			}
+			return false;
 		},
 		
 		logout : function () {
