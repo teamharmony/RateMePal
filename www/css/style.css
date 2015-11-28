@@ -18,7 +18,9 @@ body{
 .invalidState {
 	border: 2px solid red !important;
 }
-
+.display-none {
+	display: none;
+}
 #error {
    color: red;
     position: relative;

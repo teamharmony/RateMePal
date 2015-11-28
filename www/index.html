@@ -94,6 +94,12 @@
                     <div class="nameDiv">
                         <input type="text" id="inpName" name="name" placeholder="Name" autocomplete="off" >
                     </div>
+					<div class="designationDiv">
+                        <input type="text" id="inpDesignation" name="designation" placeholder="Designation" autocomplete="off" >
+                    </div>
+					<div class="DescriptionDiv">
+                        <input type="text" id="inpDescription" name="description" placeholder="Description" autocomplete="off" >
+                    </div>
                     <div class="emailDiv">
                         <input type="text" id="inpEmail" name="email" placeholder="Email" autocomplete="off" >
                     </div>
@@ -178,10 +184,10 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
-                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
+                        <!--<li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
                     </ul>
                 </div>
             </div>
@@ -247,148 +253,31 @@
                             </ul>
                         </div>
                         <div id="tabFriends" class="skillsTab tabFriends">
-                            <div class="searchResult">
-                                <input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
-                                <a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
-                            </div>
-                            <div class="searchResultCount">134 User Found</div>
-                            <ul data-role="listview" data-inset="true">
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+							<span id="noFriendsResult" class="display-none">No Friends</span>
+							<div id="friendsSearchDiv">
+								<div class="searchResult">
+									<input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
+									<a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
+								</div>
+								<div id="friendsCount" class="searchResultCount">134 User Found</div>
+								<ul id="friendsList" data-role="listview" data-inset="true">
+									
+								</ul>
+							</div>
+						</div>
                         <div id="tabPeopleSearch" class="skillsTab tabPeopleSearch">
-                            <div class="searchResult">
-                                <input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
-                                <a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
-                            </div>
-                            <div class="searchResultCount">134 User Found</div>
-                            <ul data-role="listview" data-inset="true">
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                            <span class="connect"> + Connect </span> 
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                            <span class="requestSent">  Request Sent </span> 
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                            <span class="connect"> + Connect </span> 
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                            <span class="requestSent">  Request Sent </span> 
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
-                                    <div class="UserProfileName">
-                                        <p class="UserName" id="txtName">Name</p>
-                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
-                                        <div class="UserRatingBar">
-                                            <div class="userRating"> User Rating bar </div>
-                                            <span class="connect"> + Connect </span> 
-                                        </div>
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+							<span id="noPeopleResult" class="display-none">No People</span>
+							<div id="peopleSearchDiv">
+								<div class="searchResult">
+									<input type="text" id="txtPeople" class="searchResultInput" placeholder="Search by Name">
+									<a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
+								</div>
+								<div id="peopleCount" class="searchResultCount">134 User Found</div>
+								<ul id="peopleList" data-role="listview" data-inset="true">
+									
+								</ul>
+							</div>
+						</div>
                     </div>
                 </div>
             </div>
@@ -396,14 +285,67 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
-                        <li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>
+                        <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
                     </ul>
                 </div>
             </div>
         </div>
+		
+		<div data-role="page" id="page-rate" class="ratePage">
+            <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
+                <ul>
+                    <li><a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a></li>
+                </ul>
+            </div>
+            <div data-role="header" class="headerDiv" data-position="fixed">
+                <a id="leftSideMenu" href="#side-menu" class="iconBtn backBtn" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span> </a>
+                <h1>RateMePal</h1>
+            </div>
+            <div data-role="main" class="ui-content" >
+                COMING SOON
+            </div>
+            <div data-role="footer" class="footerDiv" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                        <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
+		<div data-role="page" id="page-insta" class="instaPage">
+            <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
+                <ul>
+                    <li><a href="#" id="btnLogout" class="logoutBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse">LOGOUT</a></li>
+                </ul>
+            </div>
+            <div data-role="header" class="headerDiv" data-position="fixed">
+                <a id="leftSideMenu" href="#side-menu" class="iconBtn backBtn" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span> </a>
+                <h1>RateMePal</h1>
+            </div>
+            <div data-role="main" class="ui-content" >
+                COMING SOON
+            </div>
+            <div data-role="footer" class="footerDiv" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                        <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top" ><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
+                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
+                        <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
         <script>
             $("a[data-role=tab]").each(function () {
 				var anchor = $(this);

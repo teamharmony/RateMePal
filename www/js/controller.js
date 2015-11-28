@@ -47,7 +47,37 @@ var controller = function () {
 		},
 		
 		friends: function(){
+			this.$friendsPage = $('#page-friends');
+			this.$friendsList = $('#friendsList',this.$friendsPage);
+			this.$peopleList = $('#peopleList',this.$friendsPage);
+			this.$friendsList.empty();
+			this.$peopleList.empty();
 			
+			$.ajax({
+				url : hostUrl.concat("/friends?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				if(data.length > 0){
+					$('#noFriendsResult').addClass('display-none');
+					$('#friendsSearchDiv').removeClass('display-none');
+				}else{
+					$('#noFriendsResult').removeClass('display-none');
+					$('#friendsSearchDiv').addClass('display-none');
+				}
+			});
+			
+			$.ajax({
+				url : hostUrl.concat("/friends/notInvited?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				if(data.length > 0){
+					$('#noPeopleResult').addClass('display-none');
+					$('#peopleSearchDiv').removeClass('display-none');
+				}else{
+					$('#noPeopleResult').removeClass('display-none');
+					$('#peopleSearchDiv').addClass('display-none');
+				}
+			});
 		},
 		
 		customRating: function(){
@@ -55,6 +85,7 @@ var controller = function () {
 			this.$customRatingPage = $('#page-customRating');
 			this.$addCustomParameter = $('#btnAddParameter', this.$customRatingPage);
 			this.$saveCustomParameter = $('#btnSaveParameter', this.$customRatingPage);
+			
 			this.$customPersonalList = $('#customPersonalList', this.$customRatingPage);
 			this.$customProfessionalList = $('#customProfessionalList', this.$customRatingPage);
 			this.$inpParameterName = $('#inpParameterName', this.$customRatingPage).val('');
@@ -131,7 +162,8 @@ var controller = function () {
 				var that = this;
 				this.removeCounter = rmParameterArr.length;
 				this.addCounter = addParameterArr.length;
-					
+				_self.loading(true);
+				
 				for(var i=0; i < rmParameterArr.length; i++){
 					$.ajax({
 						url : hostUrl.concat("/parameters/"+ rmParameterArr[i].id +"?access_token=" + window.bearerToken),
@@ -157,12 +189,12 @@ var controller = function () {
 				
 				this.ajaxDoneCallback = function(){
 					if(this.removeCounter == 0 && this.addCounter == 0){
-						console.log("done.");
 						$.ajax({
 							url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
 							type : 'GET'
 						}).done(function (data) {
 							parameterArr = data;
+							_self.loading(false);
 						});
 						addParameterArr = [];
 						rmParameterArr = [];
@@ -182,6 +214,13 @@ var controller = function () {
 			
 			this.$btnLogout.off('click');
 			this.$btnLogout.on('click', _self.logout);
+			
+			$.ajax({
+				url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				console.log(data);
+			});
 			
 			$('#userOverallRating').raty({readOnly: true, score: 3});
 		},
