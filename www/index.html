@@ -139,11 +139,11 @@
             </div>
             <div data-role="main" class="ui-content" >
                 <div class="UserProfileDetails">
-                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic"  src='images/defaultImg.png'/></div>
+                    <div class="UserProfileImg"><img id="imgUHomeDisp" data-inline="true" class="UserProfilePic"  src='images/defaultImg.png'/></div>
                     <div class="UserProfileName">
-                        <p class="UserName" id="txtName">Name</p>
-                        <p class="UserDesignation" id="txtDesignation">Designation</p>
-                        <p class="UserProfileDesc" id="txtDesc">Description</p>
+                        <p class="UserName" id="txtUName"></p>
+                        <p class="UserDesignation" id="txtUDesignation"></p>
+                        <p class="UserProfileDesc" id="txtUDesc"></p>
                     </div>
                 </div>
                 <div class="UserRatingBar">
@@ -159,21 +159,13 @@
                             </ul>
                         </div>
                         <div id="tabPersonal" class="tabPersonal">
-                            <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Acura1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Audi1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> BMW1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Cadillac11</span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                            <ul id="lstPersonal" data-role="listview" data-inset="true">
+                                
                             </ul>
                         </div>
                         <div id="tabProfessional" class="tabProfessional">
-                            <ul data-role="listview" data-inset="true">
-                                <li> <span class="skills"> Professional Acura1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Audi1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional BMW1 </span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Cadillac11</span> <span class="skillRating"> rating bar</span></li>
-                                <li> <span class="skills"> Professional Ferrari1</span> <span class="skillRating"> rating bar</span></li>
+                            <ul id="lstProfessional" data-role="listview" data-inset="true">
+                                
                             </ul>
                         </div>
                     </div>
@@ -199,7 +191,7 @@
                 <a href="#" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"> <span aria-hidden="true" class="glyphicon glyphicon-cog"></span> </a>
             </div>
             <div data-role="main" class="ui-content" >
-                <div class="UserProfileDetails">
+                <!--<div class="UserProfileDetails">
                     <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic"  src='images/defaultImg.png'/></div>
                     <div class="UserProfileName">
                         <p class="UserName" id="txtName">Name</p>
@@ -207,7 +199,7 @@
                         <p class="UserProfileDesc" id="txtDesc">Description</p>
                     </div>
                 </div>
-                <div class="UserRatingBar"> User Rating bar</div>
+                <div class="UserRatingBar"> User Rating bar</div>-->
                 <div>
                     <div class="skillsTab" data-role="tabs" id="ratingTabs">
                         <div data-role="navbar">
@@ -233,6 +225,7 @@
                 </div>
             </div>
         </div>
+		
         <div data-role="page" id="page-friends" class="friendsPage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu">
                 <ul>
@@ -244,12 +237,12 @@
                 <h1>RateMePal</h1>
             </div>
             <div data-role="main" class="ui-content" >
-                <div>
+                
                     <div class="friendTabs" data-role="tabs" id="friendTabs">
                         <div data-role="navbar">
                             <ul>
-                                <li><a href="#tabFriends" class="ui-btn-active">Friends</a></li>
-                                <li><a href="#tabPeopleSearch" >People Search</a></li>
+                                <li><a href="#tabFriends" class="ui-btn-active" data-ajax="false">Friends</a></li>
+                                <li><a href="#tabPeopleSearch" data-ajax="false" >People Search</a></li>
                             </ul>
                         </div>
                         <div id="tabFriends" class="skillsTab tabFriends">
@@ -259,10 +252,8 @@
 									<input type="text" id="txtFriend" class="searchResultInput" placeholder="Search by Name">
 									<a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
 								</div>
-								<div id="friendsCount" class="searchResultCount">134 User Found</div>
-								<ul id="friendsList" data-role="listview" data-inset="true">
-									
-								</ul>
+								<div id="friendsCount" class="searchResultCount">0 User Found</div>
+								<ul id="friendsList" data-role="listview" data-inset="true"></ul>
 							</div>
 						</div>
                         <div id="tabPeopleSearch" class="skillsTab tabPeopleSearch">
@@ -272,14 +263,12 @@
 									<input type="text" id="txtPeople" class="searchResultInput" placeholder="Search by Name">
 									<a href="#" class="iconBtn searchIcon" data-iconpos="notext"> <span aria-hidden="true" class="glyphicon glyphicon-search"></span> </a>
 								</div>
-								<div id="peopleCount" class="searchResultCount">134 User Found</div>
-								<ul id="peopleList" data-role="listview" data-inset="true">
-									
-								</ul>
+								<div id="peopleCount" class="searchResultCount">0 User Found</div>
+								<ul id="peopleList" data-role="listview" data-inset="true"></ul>
 							</div>
 						</div>
                     </div>
-                </div>
+               
             </div>
             <div data-role="footer" class="footerDiv" data-position="fixed">
                 <div data-role="navbar">
@@ -347,6 +336,8 @@
         </div>
 		
         <script>
+			
+			
             $("a[data-role=tab]").each(function () {
 				var anchor = $(this);
 				anchor.bind("click", function () {

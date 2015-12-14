@@ -1,5 +1,6 @@
 var controller = function () {
 	var hostUrl = "http://localhost:8080/RateMePalMidTier",
+	//var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
 	clientId = "rateMePal";
 
 	var controller = {
@@ -50,35 +51,128 @@ var controller = function () {
 			this.$friendsPage = $('#page-friends');
 			this.$friendsList = $('#friendsList',this.$friendsPage);
 			this.$peopleList = $('#peopleList',this.$friendsPage);
-			this.$friendsList.empty();
-			this.$peopleList.empty();
+			this.$inpFriend = $('#txtFriend', this.$friendsPage);
+			this.$inpPeople = $('#txtPeople', this.$friendsPage);
 			
+			this.$inpFriend.off('change');
+			this.$inpFriend.on('change', function(event){
+				_self.loading(true);
+				$.ajax({
+					url : hostUrl.concat("/search/friends?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {'searchKey':event.currentTarget.value}
+				}).done(function(data) {
+					_self._showFriends(data);
+					_self.loading(false);					
+				});
+			});
+			
+			this.$inpPeople.off('change');
+			this.$inpPeople.on('change', function(event){
+				_self.loading(true);
+				$.ajax({
+					url : hostUrl.concat("/search/nonFriends?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {'searchKey':event.currentTarget.value}
+				}).done(function(data) {
+					_self._showNonFriends(data);	
+					_self.loading(false);
+				});
+			});
+			
+			_self.frdAjaxCounter = 2;
+			_self.loading(true);
 			$.ajax({
 				url : hostUrl.concat("/friends?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function(data) {
-				if(data.length > 0){
-					$('#noFriendsResult').addClass('display-none');
-					$('#friendsSearchDiv').removeClass('display-none');
-				}else{
-					$('#noFriendsResult').removeClass('display-none');
-					$('#friendsSearchDiv').addClass('display-none');
-				}
+				_self._showFriends(data);	
 			});
 			
 			$.ajax({
 				url : hostUrl.concat("/friends/notInvited?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function(data) {
-				if(data.length > 0){
-					$('#noPeopleResult').addClass('display-none');
-					$('#peopleSearchDiv').removeClass('display-none');
-				}else{
-					$('#noPeopleResult').removeClass('display-none');
-					$('#peopleSearchDiv').addClass('display-none');
-				}
+				_self._showNonFriends(data);
 			});
 		},
+		
+		_showNonFriends: function(nonFrdsData){
+			this.$friendsPage = $('#page-friends');
+			this.$peopleList = $('#peopleList',this.$friendsPage);
+			this.$peopleCount = $('#peopleCount',this.$friendsPage);
+			this.$peopleList.empty();
+			
+			if(nonFrdsData.length > 0){
+				this.$peopleCount.text(nonFrdsData.length + " User Found");
+				for(var i=0;i<nonFrdsData.length;i++){
+					if(nonFrdsData[i].status === null){
+						this.$peopleList.append("<li id='lst-"+nonFrdsData[i].name+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
+						
+						$('#lst-'+nonFrdsData[i].name).data(nonFrdsData[i]);
+					} else if(nonFrdsData[i].status === "1"){
+						this.$peopleList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
+						
+						$('#usrRate-'+nonFrdsData[i].name).raty({readOnly: true, score: 3});
+					}
+				}
+				this.$peopleList.off('click', 'li span');
+				this.$peopleList.on('click', 'li span.connect', function(event){
+					var sId = event.currentTarget.parentNode.parentNode.parentNode.parentNode.id,
+						data = $('#'+ sId).data();
+					
+					$.ajax({
+						url : hostUrl.concat("/friends/updateStatus?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data : {'friendUserName': data.username, 'status':'1'}
+					}).done(function(data) {
+						console.log('Friends status updated.');
+						_self.friends();
+					});
+					
+				});
+
+				$('#noPeopleResult').addClass('display-none');
+				$('#peopleSearchDiv').removeClass('display-none');
+			}else{
+				$('#noPeopleResult').removeClass('display-none');
+				$('#peopleSearchDiv').addClass('display-none');
+			}
+			
+			_self.frdAjaxCounter--;
+			if(_self.frdAjaxCounter === 0){
+				_self.loading(false);
+			}
+
+		},
+		
+		_showFriends: function(frdsData){
+			this.$friendsPage = $('#page-friends');
+			this.$friendsList = $('#friendsList',this.$friendsPage);
+			this.$friendsCount = $('#friendsCount',this.$friendsPage);
+			this.$friendsList.empty();
+			
+			if(frdsData.length > 0){
+				this.$friendsCount.text(frdsData.length + " User Found");
+				for(var i=0;i<frdsData.length;i++){
+					this.$friendsList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ frdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ frdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRate-"+frdsData[i].name+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					
+					$('#usrRate-'+frdsData[i].name).raty({readOnly: true, score: 3});
+				}
+				
+				$('#noFriendsResult').addClass('display-none');
+				$('#friendsSearchDiv').removeClass('display-none');
+			}else{
+				$('#noFriendsResult').removeClass('display-none');
+				$('#friendsSearchDiv').addClass('display-none');
+			}
+			
+			_self.frdAjaxCounter--;
+			if(_self.frdAjaxCounter === 0){
+				_self.loading(false);
+			}
+		},
+		
 		
 		customRating: function(){
 			var that = this, addParameterArr = [], rmParameterArr = [], parameterArr = [];
@@ -98,14 +192,14 @@ var controller = function () {
 				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function (data) {
-				_self.loading(false);
 				for(var i=0; i < data.length; i++){
 					if(data[i].type === "Personal"){
-						that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+						that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 					} else if(data[i].type === "Professional"){
-						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 					}
 				}
+				_self.loading(false);
 				parameterArr = data;
 			});
 			
@@ -140,13 +234,13 @@ var controller = function () {
 			this.$addCustomParameter.on('click', function(event){
 				var inpParaName = that.$inpParameterName.val();
 				if(that.$inpParameterName.val() != ""){
-					if(!_self.arrayContains(inpParaName, parameterArr)){
+					if(!_self.arrayContains(inpParaName, parameterArr) && !_self.arrayContains(inpParaName, addParameterArr)){
 						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
 							addParameterArr.push({"id":"lstItemProfessional-"+inpParaName, "type":"2", "name":inpParaName});
-							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ inpParaName +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ inpParaName +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						} else {
 							addParameterArr.push({"id":"lstItemPersonal-"+inpParaName, "type":"1", "name":inpParaName});
-							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>');
+							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						}
 					} else {
 						alert("Parameter Name is already added.");
@@ -206,25 +300,62 @@ var controller = function () {
 		},
 		
 		home : function () {
+			var that = this;
 			this.$homePage = $('#page-home');
 			this.$btnLogout = $('#btnLogout', this.$homePage);
 			this.$btnHome = $('#btnHome', this.$homePage);
 			
-			//_self.getParameters();
+			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$homePage);
+			this.$txtUName = $('#txtUName', this.$homePage);
+			this.$txtUDesignation = $('#txtUDesignation', this.$homePage);
+			this.$txtUDesc = $('#txtUDesc', this.$homePage);
+			
+			this.$lstPersonal = $('#lstPersonal', this.$homePage);
+			this.$lstProfessional = $('#lstProfessional', this.$homePage);
 			
 			this.$btnLogout.off('click');
 			this.$btnLogout.on('click', _self.logout);
 			
+			_self.loading(true);
 			$.ajax({
 				url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function(data) {
-				console.log(data);
+				that.$txtUName.text(data.name);
+				that.$txtUDesignation.text(data.designation);
+				that.$txtUDesc.text(data.description);
+				$('#userOverallRating').raty({readOnly: true, score: 3});
+				$.ajax(   {
+					url : hostUrl + "/profilePic/" + data.username,
+					type : 'GET',
+					async : true
+				}).done(function (dataURL) {
+					if (dataURL) {
+						that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
+					}
+				});
+				_self.loading(false);
 			});
 			
-			$('#userOverallRating').raty({readOnly: true, score: 3});
+			this.$lstPersonal.empty();
+			this.$lstProfessional.empty();
+			
+			$.ajax({
+				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function (data) {
+				for(var i=0; i < data.length; i++){
+					if(data[i].type === "Personal"){
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+					} else if(data[i].type === "Professional"){
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+					}
+					$('#usrRate-'+data[i].name).raty({readOnly: true, score: 3});
+				}
+			});
+			
 		},
-				
+			
 		arrayContains: function(val, arr){
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i].name === val) {
@@ -309,8 +440,10 @@ var controller = function () {
 		},
 
 		onLoginClickHandler : function (event) {
+			var that = this;
 			_self.loading(true);
 			function loginSuccess() {
+				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
 				_self.loading(false);
 				$.mobile.navigate("#page-home");
@@ -430,6 +563,8 @@ var controller = function () {
 			this.$frmSignup = $('#formSignup', this.$signup);
 			this.$username = $('#inpUsername', this.$signup).val('');
 			this.$email = $('#inpEmail', this.$signup).val('');
+			this.$designation = $('#inpDesignation', this.$signup).val('');
+			this.$description = $('#inpDescription', this.$signup).val('');
 			this.$name = $('#inpName', this.$signup).val('');
 			this.$password = $('#inpPassword', this.$signup).val('');
 			this.$confirmPass = $('#inpConfirmPass', this.$signup).val('');

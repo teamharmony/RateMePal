@@ -18,7 +18,9 @@ body{
 .invalidState {
 	border: 2px solid red !important;
 }
-
+.display-none {
+	display: none;
+}
 #error {
    color: red;
     position: relative;
@@ -429,7 +431,7 @@ h2.subTitle { font-size:1em; }
 .UserProfilePic { 
 width: 65px;
  height: 65px;
- border-radius: 50%;
+ border-radius: 50% !important;
  border: 1px solid #cecece;
 }
 .UserProfileName { 
@@ -438,6 +440,7 @@ width: 65px;
      padding: 0 10px;
 		 overflow: hidden
 }
+.ui-listview>li .UserProfileName > p,
 .UserProfileName > p { 
 padding:3px 0; 
 margin:0;  
@@ -447,8 +450,8 @@ white-space: nowrap;
 		}
 .UserName { 
 font-size: 1.25em;
-   
 }
+
 .UserDesignation { 
 font-size: .8em;
 color:#aaaaaa;
@@ -470,6 +473,35 @@ color:#bbbbbb;
 -webkit-flex-shrink:0;
 	flex-shrink:0;
 }
+/* search friends page */
+.ui-listview>li .UserProfileName .UserName  { 
+font-size: 1em;
+}
+.ui-listview>li .UserProfilePic { 
+width: 55px;
+ height: 55px;
+ }
+.connect {     
+  border: 1px solid #1b6aac;
+    color: #1b6aac;
+    padding: 2px 7px;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+ }
+.requestSent { 
+ color: green;
+ font-style:italic;
+    padding: 2px 7px;
+    font-size: 0.75rem;
+ }
+.searchResult { position:relative; }
+.searchResult .ui-input-text { border-radius:2rem; }
+.searchResultCount { 
+    color: #1b6aac;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+ }
+.searchIcon { position:absolute; top:8px; right:10px; }
 /* tabs */
 .ui-content .ui-navbar li > .ui-btn { 
      padding: .6em 1em;
