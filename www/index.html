@@ -177,7 +177,7 @@
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
                         <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+						<li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
                         <!--<li class="NavItem"><a href="#" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
                     </ul>
@@ -275,7 +275,7 @@
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
                         <li class="NavItem"><a href="#page-rate" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">RATE </span></a></li>
-                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+						<li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> FRIENDS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
                     </ul>
@@ -294,7 +294,115 @@
                 <h1>RateMePal</h1>
             </div>
             <div data-role="main" class="ui-content" >
-                COMING SOON
+				<div>
+					<a href="#" id="btnCustomRatingTab" class="btnCustomRatingTab" data-role="button"> <span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> Send New Request</a>
+                    <div class="rateTabs" data-role="tabs" id="rateTabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#tabReqRecieve" class="ui-btn-active">Request Recieve</a></li>
+                                <li><a href="#tabReqSent">Request Sent</a></li>
+                            </ul>
+                        </div>
+						<div id="tabReqRecieve" class="skillsTab tabReqRecieve">
+							<ul data-role="listview" data-inset="true">
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+						</div>
+						<div id="tabReqSent" class="skillsTab tabReqSent">
+							<div>Pending for Rating</div>
+							<ul data-role="listview" data-inset="true">
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                    </div>
+                                </li>
+							</ul>
+							<div>Recieved Rating</div>
+							<ul data-role="listview" data-inset="true">
+                                <li>
+                                    <div class="UserProfileImg"><img id="imgHomeDisp" data-inline="true" class="UserProfilePic" src="images/defaultImg.png"></div>
+                                    <div class="UserProfileName">
+                                        <p class="UserName" id="txtName">Name</p>
+                                        <p class="UserDesignation" id="txtDesignation">Designation</p>
+                                        <p class="RatingBarBlock" id="RatingBarBlock"> 
+                                        <div class="UserRatingBar">
+                                            <div class="userRating"> User Rating bar </div>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </li>
+							</ul>
+						</div>
+					</div>
+				</div>
             </div>
             <div data-role="footer" class="footerDiv" data-position="fixed">
                 <div data-role="navbar">
