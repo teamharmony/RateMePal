@@ -7,7 +7,9 @@ var controller = function () {
 		_self : null,
 		init : function () {
 			_self = this;
-
+			
+			$(document).on("backbutton", _self.backButtonHandler, false);
+			
 			$(document).delegate("#page-signup", "pagebeforeshow", function () {
 				_self.signup();
 			});
@@ -47,12 +49,27 @@ var controller = function () {
 			});
 		},
 		
+		backButtonHandler: function(event){
+			if($.mobile.activePage.is('#page-welcome')){
+				navigator.app.exitApp();
+			} else if($.mobile.activePage.is('#page-home')){
+				_self.logout();
+			} else {
+				navigator.app.backHistory();
+			}
+		},
+		
 		friends: function(){
 			this.$friendsPage = $('#page-friends');
+			this.$btnLogout = $('#btnLogout', this.$friendsPage);
+			
 			this.$friendsList = $('#friendsList',this.$friendsPage);
 			this.$peopleList = $('#peopleList',this.$friendsPage);
 			this.$inpFriend = $('#txtFriend', this.$friendsPage).val('');
 			this.$inpPeople = $('#txtPeople', this.$friendsPage).val('');
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
 			
 			this.$inpFriend.off('change');
 			this.$inpFriend.on('change', function(event){
@@ -107,13 +124,13 @@ var controller = function () {
 				this.$peopleCount.text(nonFrdsData.length + " User Found");
 				for(var i=0;i<nonFrdsData.length;i++){
 					if(nonFrdsData[i].status === null){
-						this.$peopleList.append("<li id='lst-"+nonFrdsData[i].name+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
+						this.$peopleList.append("<li id='lstItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
 						
-						$('#lst-'+nonFrdsData[i].name).data(nonFrdsData[i]);
+						$('#lstItem-'+i).data(nonFrdsData[i]);
 					} else if(nonFrdsData[i].status === "1"){
-						this.$peopleList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
+						this.$peopleList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 						
-						$('#usrRate-'+nonFrdsData[i].name).raty({readOnly: true, score: 3});
+						$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
 					}
 				}
 				this.$peopleList.off('click', 'li span');
@@ -155,9 +172,9 @@ var controller = function () {
 			if(frdsData.length > 0){
 				this.$friendsCount.text(frdsData.length + " User Found");
 				for(var i=0;i<frdsData.length;i++){
-					this.$friendsList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ frdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ frdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRate-"+frdsData[i].name+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					this.$friendsList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ frdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ frdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRate-frd"+i+"' class='userRating'></div></div></div></div></li>").listview('refresh');
 					
-					$('#usrRate-'+frdsData[i].name).raty({readOnly: true, score: 3});
+					$('#usrRate-frd'+i).raty({readOnly: true, score: 3});
 				}
 				
 				$('#noFriendsResult').addClass('display-none');
@@ -233,6 +250,7 @@ var controller = function () {
 			this.$addCustomParameter.off('click');
 			this.$addCustomParameter.on('click', function(event){
 				var inpParaName = that.$inpParameterName.val();
+				//inpParaName.replace(' ','');
 				if(that.$inpParameterName.val() != ""){
 					if(!_self.arrayContains(inpParaName, parameterArr) && !_self.arrayContains(inpParaName, addParameterArr)){
 						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
@@ -351,11 +369,11 @@ var controller = function () {
 			}).done(function (data) {
 				for(var i=0; i < data.length; i++){
 					if(data[i].type === "Personal"){
-						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					} else if(data[i].type === "Professional"){
-						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					}
-					$('#usrRate-'+data[i].name).raty({readOnly: true, score: 3});
+					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
 				}
 			});
 			
@@ -579,7 +597,13 @@ var controller = function () {
 			this.$btnSignup = $('#btnSignup', this.$signup);
 
 			this.$error = $('#error', this.$signup).text('');
-
+			
+			if(this.$username.val() === '' && this.$email.val() === '' && this.$designation.val() === '' && this.$description.val() === '' && this.$name.val() === '' && this.$password.val() === '' && this.$confirmPass.val() === '' && this.$contact.val() === ''){
+				_self._showAlert('All fields are mandatory.');
+			} else if(this.$password.val() !== this.$confirmPass.val()){
+				_self._showAlert('Password and confirm password needs to be same.');
+			}
+			
 			this.$username.off('focusout');
 			this.$username.on('focusout', function (event) {
 				that.$username.removeClass('invalidState');
@@ -730,6 +754,14 @@ var controller = function () {
 				var flag = showOrHide ? "show" : "hide";
 				$.mobile.loading(flag);
 			}, 0);
+		},
+		
+		_showAlert: function(message){
+			navigator.notification.alert(message, null, 'Rate Me Pal', ['OK'])
+		},
+		
+		_showConfirm: function(message, confirmCallback){
+			navigator.notification.confirm(message, confirmCallback, 'RateMePal', ['Yes','No'])
 		}
 	};
 

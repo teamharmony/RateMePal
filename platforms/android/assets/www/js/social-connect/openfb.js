@@ -197,7 +197,7 @@ var openFB = (function () {
         var logoutStatus = {};
 		
         if (token) {
-           
+			
             logoutStatus.status = 'success';
             logoutWindow = window.open(FB_LOGOUT_URL + '?access_token=' + token + '&next=' + logoutRedirectURL, '_blank', 'location=no');
 			tokenStore.removeItem('fbtoken');
