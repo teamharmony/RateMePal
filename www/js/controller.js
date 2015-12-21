@@ -1,13 +1,15 @@
 var controller = function () {
-	//var hostUrl = "http://localhost:8080/RateMePalMidTier",
-	var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
+	var hostUrl = "http://localhost:8080/RateMePalMidTier",
+	//var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
 	clientId = "rateMePal";
 
 	var controller = {
 		_self : null,
 		init : function () {
 			_self = this;
-
+			
+			$(document).on("backbutton", _self.backButtonHandler, false);
+			
 			$(document).delegate("#page-signup", "pagebeforeshow", function () {
 				_self.signup();
 			});
@@ -47,12 +49,66 @@ var controller = function () {
 			});
 		},
 		
+		backButtonHandler: function(event){
+			if($.mobile.activePage.is('#page-login')){
+				navigator.app.exitApp();
+			} else if($.mobile.activePage.is('#page-home')){
+				_self.logout();
+			} else {
+				navigator.app.backHistory();
+			}
+		},
+		
+		logout : function () {
+			function onConfirm(button){
+				if(button === 1){	
+					_self.loading('show');
+					$.ajax({
+						url : hostUrl.concat("/logout?access_token=" + window.bearerToken),
+						type : 'GET'
+					}).done(function () {
+						_self.loading('hide');
+						if (window.localStorage.rmp_lobin_by === "fb") {
+							openFB.logout(function () {
+								_self.clearAll();
+							});
+						} else if (window.localStorage.rmp_lobin_by === "gl") {
+							openGL.logout(function () {
+								_self.clearAll();
+							});
+						} else {
+							_self.clearAll();
+						}
+					});
+				}
+			}
+			navigator.notification.confirm(
+				'Are you sure you want to logout?',  // message
+				onConfirm,              // callback to invoke with index of button pressed
+				'Logout',            // title
+				['Yes','No']          // buttonLabels
+			);
+		},
+		
+		clearAll: function(){
+			$.mobile.navigate("#page-login");
+			window.localStorage.removeItem('rmp_lobin_by');
+			window.localStorage.removeItem('rmplogin_refresh_token');
+			window.localStorage.removeItem('fbtoken');
+			window.localStorage.removeItem('gltoken');
+		},
+		
 		friends: function(){
 			this.$friendsPage = $('#page-friends');
+			this.$btnLogout = $('#btnLogout', this.$friendsPage);
+			
 			this.$friendsList = $('#friendsList',this.$friendsPage);
 			this.$peopleList = $('#peopleList',this.$friendsPage);
 			this.$inpFriend = $('#txtFriend', this.$friendsPage).val('');
 			this.$inpPeople = $('#txtPeople', this.$friendsPage).val('');
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
 			
 			this.$inpFriend.off('change');
 			this.$inpFriend.on('change', function(event){
@@ -193,10 +249,14 @@ var controller = function () {
 				type : 'GET'
 			}).done(function (data) {
 				for(var i=0; i < data.length; i++){
-					if(data[i].type === "Personal"){
-						that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
-					} else if(data[i].type === "Professional"){
-						that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+					if(data[i].name === 'Honesty' || data[i].name === 'Personality' || data[i].name === 'Optimism' || data[i].name === 'Social' || data[i].name === 'Team player' || data[i].name === 'Leadership' || data[i].name === 'Communication' || data[i].name === 'Management'){
+						
+					} else {
+						if(data[i].type === "Personal"){
+							that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+						} else if(data[i].type === "Professional"){
+							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+						}
 					}
 				}
 				_self.loading(false);
@@ -233,6 +293,7 @@ var controller = function () {
 			this.$addCustomParameter.off('click');
 			this.$addCustomParameter.on('click', function(event){
 				var inpParaName = that.$inpParameterName.val();
+				
 				if(that.$inpParameterName.val() != ""){
 					if(!_self.arrayContains(inpParaName, parameterArr) && !_self.arrayContains(inpParaName, addParameterArr)){
 						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
@@ -243,12 +304,12 @@ var controller = function () {
 							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						}
 					} else {
-						alert("Parameter Name is already added.");
+						_self._showAlert("Parameter Name is already added.");
 					}
 					that.$inpParameterName.val('');
 					that.$inpParameterName.focus();
 				} else {
-					alert("Enter a parameter.");
+					_self._showAlert("Enter a parameter.");
 				}
 			});
 			
@@ -305,6 +366,7 @@ var controller = function () {
 		},
 		
 		home : function () {
+			_self.loading(false);
 			var that = this;
 			this.$homePage = $('#page-home');
 			this.$btnLogout = $('#btnLogout', this.$homePage);
@@ -351,11 +413,11 @@ var controller = function () {
 			}).done(function (data) {
 				for(var i=0; i < data.length; i++){
 					if(data[i].type === "Personal"){
-						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					} else if(data[i].type === "Professional"){
-						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].name +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					}
-					$('#usrRate-'+data[i].name).raty({readOnly: true, score: 3});
+					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
 				}
 			});
 			
@@ -369,15 +431,7 @@ var controller = function () {
 			}
 			return false;
 		},
-		
-		logout : function () {
-			window.localStorage.removeItem('rmp_lobin_by');
-			window.localStorage.removeItem('rmplogin_refresh_token');
-			window.localStorage.removeItem('fbtoken');
-			window.localStorage.removeItem('gltoken');
-			$.mobile.navigate("#page-login");
-		},
-		
+				
 		welcome : function () {
 			this.$login = $("#page-login");
 
@@ -389,10 +443,42 @@ var controller = function () {
 			this.$btnGL = $('#btnGL', this.$login);
 
 			this.$btnFB.off('click');
-			this.$btnFB.on('click', _self.fbLogin);
+			this.$btnFB.on('click', function(){
+				openFB.getLoginStatus(function (response) {
+					if (response.status === "connected") {
+						_self.getSocialData('fb');
+					} else {
+						openFB.login(function (response) {
+							if (response.status === 'connected') {
+								_self.getSocialData('fb');
+							} else {
+								alert('Facebook login failed: ' + response.error);
+							}
+						}, {
+							scope : 'email,read_stream,public_profile'
+						});
+					}
+				});
+			});
 
 			this.$btnGL.off('click');
-			this.$btnGL.on('click', _self.glLogin);
+			this.$btnGL.on('click', function(){
+				openGL.getLoginStatus(function (response) {
+					if (response.status === "connected") {
+						_self.getSocialData('gl');
+					} else {
+						openGL.login(function (response) {
+							if (response.status === 'connected') {
+								_self.getSocialData('gl');
+							} else {
+								alert('Google login failed: ' + response.error);
+							}
+						}, {
+							scope : 'openid profile email'
+						});
+					}
+				});
+			});
 
 			this.$btnLogin.off('click');
 			this.$btnLogin.on('click', jQuery.proxy(_self.onLoginClickHandler, this));
@@ -401,12 +487,12 @@ var controller = function () {
 		checkLogin : function () {
 			if (window.localStorage.rmp_lobin_by === "normal") {
 				if (window.localStorage.rmplogin_refresh_token) {
-					_self.directLoginApp();
+					_self.directLoginApp("normal");
 				}
 			} else if (window.localStorage.rmp_lobin_by === "fb") {
 				openFB.getLoginStatus(function (response) {
 					if (response.status === "connected") {
-						_self.directLoginApp();
+						_self.directLoginApp("fb");
 					} else {
 						$.mobile.navigate("#page-login");
 					}
@@ -414,7 +500,7 @@ var controller = function () {
 			} else if (window.localStorage.rmp_lobin_by === "gl") {
 				openGL.getLoginStatus(function (response) {
 					if (response.status === "connected") {
-						_self.directLoginApp();
+						_self.directLoginApp("gl");
 					} else {
 						$.mobile.navigate("#page-login");
 					}
@@ -424,10 +510,10 @@ var controller = function () {
 			}
 		},
 
-		directLoginApp : function () {
+		directLoginApp : function (loginBy) {
 			function loginSuccess() {
 				$.mobile.navigate('#page-home');
-				loginBy = "normal";
+				window.localStorage.rmp_lobin_by = loginBy;
 			}
 
 			function refreshTokenFailure() {
@@ -448,10 +534,9 @@ var controller = function () {
 			var that = this;
 			_self.loading(true);
 			function loginSuccess() {
+				_self.isResetPasswordRequired();
 				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
-				_self.loading(false);
-				$.mobile.navigate("#page-home");
 			};
 
 			function refreshTokenFailure() {
@@ -461,63 +546,63 @@ var controller = function () {
 
 			function passwordFailure() {
 				_self.loading(false);
-				alert('Invalid Username and Password');
+				_self._showAlert('Invalid Username and Password.');
 			};
 
 			var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
 			authentication.loginWithPassword(this.$username.val(), this.$password.val());
 		},
 
-		fbLogin : function () {
-			openFB.getLoginStatus(function (response) {
-				if (response.status === "connected") {
-					_self.socialLogin('fb');
-				} else {
-					openFB.login(function (response) {
-						if (response.status === 'connected') {
-							_self.socialLogin('fb');
-						} else {
-							alert('Facebook login failed: ' + response.error);
-						}
-					}, {
-						scope : 'email,read_stream'
-					});
-				}
-			});
-		},
-
-		glLogin : function () {
-			openGL.getLoginStatus(function (response) {
-				if (response.status === "connected") {
-					_self.socialLogin('gl');
-				} else {
-					openGL.login(function (response) {
-						if (response.status === 'connected') {
-							_self.socialLogin('gl');
-						} else {
-							alert('Google login failed: ' + response.error);
-						}
-					}, {
-						scope : 'openid profile email'
-					});
-				}
-			});
-		},
-
-		socialLogin : function (sValue) {
-			var username,
-			password;
-			if (sValue === 'fb') {
-				username = 'fbAdmin';
-				password = 'fbAdmin';
-			} else if (sValue === 'gl') {
-				username = 'glAdmin';
-				password = 'glAdmin';
+		getSocialData : function (social) {
+			if(social === 'fb'){
+				openFB.api({
+					path: '/me',
+					success: function (data) {
+						_self._checkIfSocialUserExist(data,'fb');
+					},
+					error: function (error) {
+						console.log(error.message);
+					}
+				});
+			} else if(social === 'gl'){
+				openGL.api({
+					path: '/userinfo',
+					success: function (data) {
+						_self._checkIfSocialUserExist(data,'gl');
+					},
+					error: function (error) {
+						alert(error.message);
+					}
+				});
 			}
-			_self.loading(true);
+		},
+		
+		_checkIfSocialUserExist: function(data, social){
+			var that = this;
+			this.socialData = data;
+			this.social = social;
+			$.ajax({
+				url : hostUrl + "/validate/username",
+				type : 'POST',
+				data : "username=" + data.email,
+				processData : false,
+				contentType : "application/x-www-form-urlencoded"
+			}).done(function (data) {
+				if (data === 1) {
+					_self.processSocialLogin(that.socialData, that.social);
+				} else {
+					_self.registerSocialUser(that.socialData, that.social);
+				}
+			});
+		},
+		
+		processSocialLogin: function(data, social){
+			var that = this;
+			this.data = data;
+			this.social = social;
 			function loginSuccess() {
-				loginBy = sValue;
-				window.localStorage.rmp_lobin_by = sValue;
+				_self.userLogin = that.social+'_'+that.data.email;
+				window.localStorage.rmp_lobin_by = that.social;
 				_self.loading(false);
 				$.mobile.navigate("#page-home");
 			};
@@ -529,13 +614,50 @@ var controller = function () {
 
 			function passwordFailure() {
 				_self.loading(false);
-				alert('Invalid Username and Password');
+				//_self._showAlert('Invalid Username and Password.');
 			};
 
 			var authentication = new AuthenticationProxy(hostUrl, clientId, loginSuccess, refreshTokenFailure, passwordFailure);
-			authentication.loginWithPassword(username, password);
+			if(this.social === 'fb'){
+				authentication.loginWithPassword('fb_'+data.email, 'fbUser');
+			} else if(this.social === 'gl'){
+				authentication.loginWithPassword('gl_'+data.email, 'glUser');
+			}
+			
 		},
-
+		
+		registerSocialUser: function(data, social){
+			var that = this, formData = new FormData();
+			this.data = data;
+			this.social = social;
+			
+			formData.append('name', data.name);
+			formData.append('email', data.email+'_'+new Date().getTime());
+			if(social === 'fb'){
+				formData.append('username', 'fb_'+data.email);
+				formData.append('password','fbUser');
+			} else if(social === 'gl'){
+				formData.append('username', 'gl_'+data.email);
+				formData.append('password','glUser');
+			}
+			formData.append('designation', '');
+			formData.append('description', '');
+			formData.append('contact', '');
+			formData.append('visible', '1');
+			
+			$.ajax({
+				url : hostUrl + "/resources",
+				type : 'POST',
+				data : formData,
+				processData : false,
+				contentType : false
+			}).done(function (data) {
+				_self.processSocialLogin(that.data, that.social);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				_self.loading(false);
+			});
+		},
+		
 		forgot : function () {
 			var that = this;
 			this.$forgotPass = $('#page-forgot');
@@ -544,7 +666,7 @@ var controller = function () {
 			$('#forgotPassForm').off('submit');
 			$('#forgotPassForm').submit(function (e) {
 				if (that.$inpForgotUsername.val() === "") {
-					alert("Enter username.");
+					_self._showAlert("Enter username.");
 				} else {
 					_self.loading("show");
 					$.ajax({
@@ -561,7 +683,61 @@ var controller = function () {
 				e.preventDefault();
 			});
 		},
+		
+		isResetPasswordRequired: function(){
+			$.ajax({
+				url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+				type : 'GET',
+				data : { "username" : _self.userLogin }
+			}).done(function (data) {
+				if (data == 0) {
+					$.mobile.navigate('#page-home');
+				} else {
+					$.mobile.navigate('#page-resetPassword');
+				}
+			});
+		},
+		
+		resetPassword: function(){
+			var that = this;
+			this.$resetPass = $('#page-resetPassword');
+			this.$oldPass = $('#oldPassword', this.$resetPass).val("");
+			this.$newPass = $('#newPassword', this.$resetPass).val("");
+			this.$confirmPass = $('#confirmPassword', this.$resetPass).val("");
 
+			$('#resetPassForm').off('submit');
+			$('#resetPassForm').submit(function (e) {
+				if (that.$oldPass === "") {
+					_self._showAlert("Old Password can not be empty.");
+				} else if (pass !== confirmPass) {
+					_self._showAlert("Password and Confirm Password needs to be same.");
+				} else {
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data : { "username" : _self.userLogin,	"password" : that.$newPass}
+					}).done(function (o) {
+						_self.loading(false);
+						$.mobile.navigate('#page-home');
+					});
+				}
+				e.preventDefault();
+			});
+		},
+		
+		_setInputState: function(control, message, data){
+			if(data === 1){
+				control.addClass('invalidState');
+				$('#error').text(message);
+				$('#error').removeClass('displayNone');
+			} else {
+				control.removeClass('invalidState');
+				$('#error').text("");
+				$('#error').addClass('displayNone');
+			}
+		},
+		
 		signup : function () {
 			var that = this;
 			this.$signup = $("#page-signup");
@@ -577,39 +753,82 @@ var controller = function () {
 			this.$imgSignupDisp = $('#imgSignupDisp', this.$signup).attr('src', './images/defaultImg.png');
 			this.$btnSignupUpload = $('#btnSignupUpload', this.$signup);
 			this.$btnSignup = $('#btnSignup', this.$signup);
-
+			
+			this.$contact.off('focusout');
+			this.$contact.on('focusout', function(){
+				_self._setInputState(that.$contact, " ", 0);
+				if(that.$contact.val() === ''){
+					_self._setInputState(that.$contact, "Contact cannot be empty.", 1);
+				}
+			});
+			
+			this.$password.off('focusout');
+			this.$password.on('focusout', function(){
+				_self._setInputState(that.$password, " ", 0);
+				if(that.$password.val() === ''){
+					_self._setInputState(that.$password, "Password cannot be empty.", 1);
+				}
+			});
+			
+			this.$confirmPass.off('focusout');
+			this.$confirmPass.on('focusout', function(){
+				_self._setInputState(that.$confirmPass, " ", 0);
+				if(that.$confirmPass.val() === ''){
+					_self._setInputState(that.$confirmPass, "Confirm password cannot be empty.", 1);
+				}
+			});
+			
 			this.$error = $('#error', this.$signup).text('');
-
+			this.$designation.off('focusout');
+			this.$designation.on('focusout', function(){
+				_self._setInputState(that.$designation, " ", 0);
+				if(that.$designation.val() === ''){
+					_self._setInputState(that.$designation, "Designation cannot be empty.", 1);
+				}
+			});
+			
+			this.$description.off('focusout');
+			this.$description.on('focusout', function(){
+				_self._setInputState(that.$description, " ", 0);
+				if(that.$description.val() === ''){
+					_self._setInputState(that.$description, "Description cannot be empty.", 1);
+				}
+			});
+			
+			this.$name.off('focusout');
+			this.$name.on('focusout', function(){
+				_self._setInputState(that.$name, " ", 0);
+				if(that.$name.val() === ''){
+					_self._setInputState(that.$name, "Name cannot be empty.", 1);
+				}
+			});
+			
 			this.$username.off('focusout');
 			this.$username.on('focusout', function (event) {
-				that.$username.removeClass('invalidState');
-				$.ajax({
-					url : hostUrl + "/validate/username",
-					type : 'POST',
-					data : "username=" + that.$username.val(),
-					processData : false,
-					contentType : "application/x-www-form-urlencoded"
-				}).done(function (data) {
-					if (data === 1) {
-						that.$username.addClass('invalidState');
-						that.$error.text("Invalid Username.");
-						that.$error.removeClass('displayNone');
-					} else {
-						that.$username.removeClass('invalidState');
-						that.$error.text("");
-						that.$error.addClass('displayNone');
-					}
-				});
+				_self._setInputState(that.$username, " ", 0);
+				if(that.$username.val() === ''){
+					_self._setInputState(that.$username, "Username cannot be empty.", 1);
+				} else {
+					$.ajax({
+						url : hostUrl + "/validate/username",
+						type : 'POST',
+						data : "username=" + that.$username.val(),
+						processData : false,
+						contentType : "application/x-www-form-urlencoded"
+					}).done(function (data) {
+						_self._setInputState(that.$username, "Invalid Username.", data);
+					});
+				}
 				event.preventDefault();
 			});
 
 			this.$email.off('focusout');
 			this.$email.on('focusout', function (event) {
-				that.$email.removeClass('invalidState');
-				if (!_self.validateEmail(that.$email.val())) {
-					that.$email.addClass('invalidState');
-					that.$error.text("Invalid Email.");
-					that.$error.removeClass('display');
+				_self._setInputState(that.$email, " ", 0)
+				if(that.$email.val() === ''){
+					_self._setInputState(that.$email, "Email cannot be empty.", 1);
+				} else if (!_self.validateEmail(that.$email.val())) {
+					_self._setInputState(that.$email, "Invalid Email.", 1);
 				} else {
 					$.ajax({
 						url : hostUrl + "/validate/email",
@@ -618,15 +837,7 @@ var controller = function () {
 						processData : false,
 						contentType : "application/x-www-form-urlencoded"
 					}).done(function (data) {
-						if (data === 1) {
-							that.$email.addClass('invalidState');
-							that.$error.text("Invalid Email.");
-							that.$error.removeClass('display');
-						} else {
-							that.$email.removeClass('invalidState');
-							that.$error.text("");
-							that.$error.addClass('display');
-						}
+						_self._setInputState(that.$email, "Invalid Email.", data);
 					});
 				}
 				event.preventDefault();
@@ -644,7 +855,6 @@ var controller = function () {
 				}
 
 				function gotFileEntry(fileEntry) {
-					//convert all file to base64 formats
 					fileEntry.file(function (file) {
 						var reader = new FileReader();
 						reader.onloadend = function (evt) {
@@ -671,16 +881,17 @@ var controller = function () {
 
 			this.$btnSignup.off('click');
 			this.$btnSignup.on('click', function (event) {
-				if (that.$password.val() !== that.$confirmPass.val()) {
-					alert("Password and Confirm Password needs to be same.");
-				} else if (that.$username.val() != "" && that.$name.val() != "" && that.$email.val() != "" && that.$password.val() != "" && that.$confirmPass.val() != "" && that.$contact.val() != "") {
+				if(that.$username.val() === '' && that.$email.val() === '' && that.$designation.val() === '' && that.$description.val() === '' && that.$name.val() === '' && that.$password.val() === '' && that.$confirmPass.val() === '' && that.$contact.val() === ''){
+					_self._showAlert('All fields are mandatory.');
+				} else if(this.$password.val() !== this.$confirmPass.val()){
+					_self._showAlert('Password and confirm password needs to be same.');
+				} else {
 					_self.loading(true);
 					var formData = new FormData(that.$frmSignup[0]);
 					if (that.pic !== undefined) {
 						formData.append('profilePic', that.pic);
 					}
-					//formData.append('skills', '');
-
+					
 					$.ajax({
 						url : hostUrl + "/resources",
 						type : 'POST',
@@ -692,12 +903,8 @@ var controller = function () {
 						$.mobile.navigate('#page-login');
 					}).fail(function (jqXHR, textStatus, errorThrown) {
 						_self.loading(false);
-						alert("Could not register user. Please contact your administrator.");
-						//alert(jqXHR + ":" + textStatus + ":" + errorThrown);
-						//alert(jqXHR.responseJSON);
+						_self._showAlert("Could not register user. Please contact your administrator.");
 					});
-				} else {
-					alert("Username, name, email, contact and password can not be empty.");
 				}
 				event.preventDefault();
 			});
@@ -730,6 +937,14 @@ var controller = function () {
 				var flag = showOrHide ? "show" : "hide";
 				$.mobile.loading(flag);
 			}, 0);
+		},
+		
+		_showAlert: function(message){
+			navigator.notification.alert(message, null, 'Rate Me Pal', 'OK')
+		},
+		
+		_showConfirm: function(message, confirmCallback){
+			navigator.notification.confirm(message, confirmCallback, 'RateMePal', ['Yes','No'])
 		}
 	};
 

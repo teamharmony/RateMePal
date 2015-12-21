@@ -193,6 +193,20 @@ module.exports = [
         "clobbers": [
             "navigator.splashscreen"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/android/notification.js",
+        "id": "cordova-plugin-dialogs.notification_android",
+        "merges": [
+            "navigator.notification"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -202,7 +216,8 @@ module.exports.metadata =
     "cordova-plugin-file": "3.0.0",
     "cordova-plugin-inappbrowser": "1.0.1",
     "cordova-plugin-camera": "1.2.0",
-    "cordova-plugin-splashscreen": "2.1.0"
+    "cordova-plugin-splashscreen": "2.1.0",
+    "cordova-plugin-dialogs": "1.2.0"
 }
 // BOTTOM OF METADATA
 });
