@@ -59,6 +59,45 @@ var controller = function () {
 			}
 		},
 		
+		logout : function () {
+			function onConfirm(button){
+				if(button === 1){	
+					_self.loading('show');
+					$.ajax({
+						url : hostUrl.concat("/logout?access_token=" + window.bearerToken),
+						type : 'GET'
+					}).done(function () {
+						_self.loading('hide');
+						if (window.localStorage.rmp_lobin_by === "fb") {
+							openFB.logout(function () {
+								_self.clearAll();
+							});
+						} else if (window.localStorage.rmp_lobin_by === "gl") {
+							openGL.logout(function () {
+								_self.clearAll();
+							});
+						} else {
+							_self.clearAll();
+						}
+					});
+				}
+			}
+			navigator.notification.confirm(
+				'Are you sure you want to logout?',  // message
+				onConfirm,              // callback to invoke with index of button pressed
+				'Logout',            // title
+				['Yes','No']          // buttonLabels
+			);
+		},
+		
+		clearAll: function(){
+			$.mobile.navigate("#page-login");
+			window.localStorage.removeItem('rmp_lobin_by');
+			window.localStorage.removeItem('rmplogin_refresh_token');
+			window.localStorage.removeItem('fbtoken');
+			window.localStorage.removeItem('gltoken');
+		},
+		
 		friends: function(){
 			this.$friendsPage = $('#page-friends');
 			this.$btnLogout = $('#btnLogout', this.$friendsPage);
@@ -254,7 +293,6 @@ var controller = function () {
 			this.$addCustomParameter.off('click');
 			this.$addCustomParameter.on('click', function(event){
 				var inpParaName = that.$inpParameterName.val();
-				//inpParaName.replace(' ','');
 				if(that.$inpParameterName.val() != ""){
 					if(!_self.arrayContains(inpParaName, parameterArr) && !_self.arrayContains(inpParaName, addParameterArr)){
 						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
@@ -265,12 +303,12 @@ var controller = function () {
 							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						}
 					} else {
-						alert("Parameter Name is already added.");
+						_self._showAlert("Parameter Name is already added.");
 					}
 					that.$inpParameterName.val('');
 					that.$inpParameterName.focus();
 				} else {
-					alert("Enter a parameter.");
+					_self._showAlert("Enter a parameter.");
 				}
 			});
 			
@@ -327,6 +365,7 @@ var controller = function () {
 		},
 		
 		home : function () {
+			_self.loading(false);
 			var that = this;
 			this.$homePage = $('#page-home');
 			this.$btnLogout = $('#btnLogout', this.$homePage);
@@ -391,15 +430,7 @@ var controller = function () {
 			}
 			return false;
 		},
-		
-		logout : function () {
-			window.localStorage.removeItem('rmp_lobin_by');
-			window.localStorage.removeItem('rmplogin_refresh_token');
-			window.localStorage.removeItem('fbtoken');
-			window.localStorage.removeItem('gltoken');
-			$.mobile.navigate("#page-login");
-		},
-		
+				
 		welcome : function () {
 			this.$login = $("#page-login");
 
@@ -455,12 +486,12 @@ var controller = function () {
 		checkLogin : function () {
 			if (window.localStorage.rmp_lobin_by === "normal") {
 				if (window.localStorage.rmplogin_refresh_token) {
-					_self.directLoginApp();
+					_self.directLoginApp("normal");
 				}
 			} else if (window.localStorage.rmp_lobin_by === "fb") {
 				openFB.getLoginStatus(function (response) {
 					if (response.status === "connected") {
-						_self.directLoginApp();
+						_self.directLoginApp("fb");
 					} else {
 						$.mobile.navigate("#page-login");
 					}
@@ -468,7 +499,7 @@ var controller = function () {
 			} else if (window.localStorage.rmp_lobin_by === "gl") {
 				openGL.getLoginStatus(function (response) {
 					if (response.status === "connected") {
-						_self.directLoginApp();
+						_self.directLoginApp("gl");
 					} else {
 						$.mobile.navigate("#page-login");
 					}
@@ -478,10 +509,10 @@ var controller = function () {
 			}
 		},
 
-		directLoginApp : function () {
+		directLoginApp : function (loginBy) {
 			function loginSuccess() {
 				$.mobile.navigate('#page-home');
-				loginBy = "normal";
+				window.localStorage.rmp_lobin_by = loginBy;
 			}
 
 			function refreshTokenFailure() {
@@ -502,10 +533,9 @@ var controller = function () {
 			var that = this;
 			_self.loading(true);
 			function loginSuccess() {
+				_self.isResetPasswordRequired();
 				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
-				_self.loading(false);
-				$.mobile.navigate("#page-home");
 			};
 
 			function refreshTokenFailure() {
@@ -647,6 +677,48 @@ var controller = function () {
 					}).done(function (data) {
 						_self.loading("hide");
 						$.mobile.navigate('#page-login');
+					});
+				}
+				e.preventDefault();
+			});
+		},
+
+		isResetPasswordRequired: function(){
+			$.ajax({
+				url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+				type : 'GET',
+				data : { "username" : _self.userLogin }
+			}).done(function (data) {
+				if (data == 0) {
+					$.mobile.navigate('#page-home');
+				} else {
+					$.mobile.navigate('#page-resetPassword');
+				}
+			});
+		},
+		
+		resetPassword: function(){
+			var that = this;
+			this.$resetPass = $('#page-resetPassword');
+			this.$oldPass = $('#oldPassword', this.$resetPass).val("");
+			this.$newPass = $('#newPassword', this.$resetPass).val("");
+			this.$confirmPass = $('#confirmPassword', this.$resetPass).val("");
+
+			$('#resetPassForm').off('submit');
+			$('#resetPassForm').submit(function (e) {
+				if (that.$oldPass === "") {
+					_self._showAlert("Old Password can not be empty.");
+				} else if (pass !== confirmPass) {
+					_self._showAlert("Password and Confirm Password needs to be same.");
+				} else {
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data : { "username" : _self.userLogin,	"password" : that.$newPass}
+					}).done(function (o) {
+						_self.loading(false);
+						$.mobile.navigate('#page-home');
 					});
 				}
 				e.preventDefault();
