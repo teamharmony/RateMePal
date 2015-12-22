@@ -14,7 +14,7 @@ var openFB = (function () {
             // By default we store fbtoken in sessionStorage. This can be overridden in init()
             tokenStore = window.sessionStorage,
             fbAppId,
-			baseURL = "http://localhost:8100/",
+			baseURL = "http://localhost:8100",
             //baseURL = "http://localhost:8081/ratemepal/www",
             oauthRedirectURL = baseURL + '/oauthcallback.html',
             logoutRedirectURL = baseURL + '/logoutcallback.html',

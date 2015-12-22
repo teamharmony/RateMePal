@@ -1,17 +1,17 @@
  function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+	if (input.files && input.files[0]) {
+		var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('#blah')
-                        .attr('src', e.target.result)
-                        .width(30)
-                        .height(30)
-                };
-				$('#blah').css("visibility","visible")
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+		reader.onload = function (e) {
+			$('#blah')
+				.attr('src', e.target.result)
+				.width(30)
+				.height(30)
+		};
+		$('#blah').css("visibility","visible")
+		reader.readAsDataURL(input.files[0]);
+	}
+}
 
 function showPopup(){
 	$("#forgotPassPopUpBody,#forgotPassPopUpBody p").fadeIn("slow");

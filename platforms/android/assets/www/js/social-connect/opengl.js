@@ -14,7 +14,7 @@ var openGL = (function () {
             // By default we store gltoken in sessionStorage. This can be overridden in init()
             tokenStore = window.sessionStorage,
             glAppId,
-			baseURL = "http://localhost:8100/",
+			baseURL = "http://localhost:8100",
             //baseURL = "http://localhost:8081/ratemepal/www",
             oauthRedirectURL = baseURL + '/oauthcallback1.html',
             logoutRedirectURL = baseURL + '/logoutcallback.html',
