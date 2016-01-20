@@ -48,6 +48,65 @@ var controller = function () {
 			$(document).delegate("#page-friends", "pagebeforeshow", function () {
 				_self.friends();
 			});
+			
+			$(document).delegate("#page-resetPassword", "pagebeforeshow", function () {
+				_self.resetPassword();
+			});
+		},
+		
+		resetPassword: function(){
+			var that = this;
+			this.$resetPasswordPage = $('#page-resetPassword');
+			this.$inpOldPass = $('#oldPassword', this.$resetPasswordPage);
+			this.$inpNewPass = $('#newPassword', this.$resetPasswordPage);
+			this.$inpConfirmNewPass = $('#confirmPassword', this.$resetPasswordPage);
+			this.$error1 = $('#error1', this.$resetPasswordPage);
+			this.$btnUpdate = $('#btnUpdate', this.$resetPasswordPage);
+			
+			this.$inpOldPass.val('');
+			this.$inpNewPass.val('');
+			this.$inpConfirmNewPass.val('');
+			this.$inpOldPass.off('focusout');
+			this.$inpOldPass.on('focusout', function(){
+				_self._setInputState(that.$inpOldPass, "", 0, that.$error1);
+				if(that.$inpOldPass.val() === ''){
+					_self._setInputState(that.$inpOldPass, "Old password cannot be empty.", 1, that.$error1);
+				}
+			});
+			this.$inpNewPass.off('focusout');
+			this.$inpNewPass.on('focusout', function(){
+				_self._setInputState(that.$inpNewPass, "", 0, that.$error1);
+				if(that.$inpNewPass.val() === ''){
+					_self._setInputState(that.$inpNewPass, "New password cannot be empty.", 1, that.$error1);
+				}
+			});
+			this.$inpConfirmNewPass.off('focusout');
+			this.$inpConfirmNewPass.on('focusout', function(){
+				_self._setInputState(that.$inpConfirmNewPass, "", 0, that.$error1);
+				if(that.$inpConfirmNewPass.val() === ''){
+					_self._setInputState(that.$inpConfirmNewPass, "Confrim new password cannot be empty.", 1, that.$error1);
+				}
+			});
+			
+			this.$btnUpdate.off('click');
+			this.$btnUpdate.on('click', function(){
+				if(that.$inpNewPass.val() !== that.$inpConfirmNewPass.val()){
+					_self._showAlert("New password and confirm password must match!");
+				} else {
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data : {
+							"username" : _self.userLogin,
+							"password" : that.$inpNewPass.val()
+						}
+					}).done(function (o) {
+						_self.loading(false);
+						$.mobile.navigate('#page-home');
+					});
+				}
+			});
 		},
 		
 		backButtonHandler: function(event){
@@ -705,43 +764,15 @@ var controller = function () {
 			});
 		},
 		
-		resetPassword: function(){
-			var that = this;
-			this.$resetPass = $('#page-resetPassword');
-			this.$oldPass = $('#oldPassword', this.$resetPass).val("");
-			this.$newPass = $('#newPassword', this.$resetPass).val("");
-			this.$confirmPass = $('#confirmPassword', this.$resetPass).val("");
-
-			$('#resetPassForm').off('submit');
-			$('#resetPassForm').submit(function (e) {
-				if (that.$oldPass === "") {
-					_self._showAlert("Old Password can not be empty.");
-				} else if (pass !== confirmPass) {
-					_self._showAlert("Password and Confirm Password needs to be same.");
-				} else {
-					_self.loading(true);
-					$.ajax({
-						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
-						type : 'PUT',
-						data : { "username" : _self.userLogin,	"password" : that.$newPass}
-					}).done(function (o) {
-						_self.loading(false);
-						$.mobile.navigate('#page-home');
-					});
-				}
-				e.preventDefault();
-			});
-		},
-		
-		_setInputState: function(control, message, data){
+		_setInputState: function(control, message, data, errorControl){
 			if(data === 1){
 				control.addClass('invalidState');
-				$('#error').text(message);
-				$('#error').removeClass('displayNone');
+				errorControl.text(message);
+				errorControl.removeClass('displayNone');
 			} else {
 				control.removeClass('invalidState');
-				$('#error').text("");
-				$('#error').addClass('displayNone');
+				errorControl.text("");
+				errorControl.addClass('displayNone');
 			}
 		},
 		
@@ -760,61 +791,62 @@ var controller = function () {
 			this.$imgSignupDisp = $('#imgSignupDisp', this.$signup).attr('src', './images/defaultImg.png');
 			this.$btnSignupUpload = $('#btnSignupUpload', this.$signup);
 			this.$btnSignup = $('#btnSignup', this.$signup);
+			this.$error = $('#error', this.$signup);
 			
 			this.$contact.off('focusout');
 			this.$contact.on('focusout', function(){
-				_self._setInputState(that.$contact, " ", 0);
+				_self._setInputState(that.$contact, " ", 0, that.$error);
 				if(that.$contact.val() === ''){
-					_self._setInputState(that.$contact, "Contact cannot be empty.", 1);
+					_self._setInputState(that.$contact, "Contact cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$password.off('focusout');
 			this.$password.on('focusout', function(){
-				_self._setInputState(that.$password, " ", 0);
+				_self._setInputState(that.$password, " ", 0, that.$error);
 				if(that.$password.val() === ''){
-					_self._setInputState(that.$password, "Password cannot be empty.", 1);
+					_self._setInputState(that.$password, "Password cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$confirmPass.off('focusout');
 			this.$confirmPass.on('focusout', function(){
-				_self._setInputState(that.$confirmPass, " ", 0);
+				_self._setInputState(that.$confirmPass, " ", 0, that.$error);
 				if(that.$confirmPass.val() === ''){
-					_self._setInputState(that.$confirmPass, "Confirm password cannot be empty.", 1);
+					_self._setInputState(that.$confirmPass, "Confirm password cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$error = $('#error', this.$signup).text('');
 			this.$designation.off('focusout');
 			this.$designation.on('focusout', function(){
-				_self._setInputState(that.$designation, " ", 0);
+				_self._setInputState(that.$designation, " ", 0, that.$error);
 				if(that.$designation.val() === ''){
-					_self._setInputState(that.$designation, "Designation cannot be empty.", 1);
+					_self._setInputState(that.$designation, "Designation cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$description.off('focusout');
 			this.$description.on('focusout', function(){
-				_self._setInputState(that.$description, " ", 0);
+				_self._setInputState(that.$description, " ", 0, that.$error);
 				if(that.$description.val() === ''){
-					_self._setInputState(that.$description, "Description cannot be empty.", 1);
+					_self._setInputState(that.$description, "Description cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$name.off('focusout');
 			this.$name.on('focusout', function(){
-				_self._setInputState(that.$name, " ", 0);
+				_self._setInputState(that.$name, " ", 0, that.$error);
 				if(that.$name.val() === ''){
-					_self._setInputState(that.$name, "Name cannot be empty.", 1);
+					_self._setInputState(that.$name, "Name cannot be empty.", 1, that.$error);
 				}
 			});
 			
 			this.$username.off('focusout');
 			this.$username.on('focusout', function (event) {
-				_self._setInputState(that.$username, " ", 0);
+				_self._setInputState(that.$username, " ", 0, that.$error);
 				if(that.$username.val() === ''){
-					_self._setInputState(that.$username, "Username cannot be empty.", 1);
+					_self._setInputState(that.$username, "Username cannot be empty.", 1, that.$error);
 				} else {
 					$.ajax({
 						url : hostUrl + "/validate/username",
@@ -823,7 +855,7 @@ var controller = function () {
 						processData : false,
 						contentType : "application/x-www-form-urlencoded"
 					}).done(function (data) {
-						_self._setInputState(that.$username, "Username is already taken.", data);
+						_self._setInputState(that.$username, "Username is already taken.", data, that.$error);
 					});
 				}
 				event.preventDefault();
@@ -831,11 +863,11 @@ var controller = function () {
 
 			this.$email.off('focusout');
 			this.$email.on('focusout', function (event) {
-				_self._setInputState(that.$email, " ", 0)
+				_self._setInputState(that.$email, " ", 0, that.$error)
 				if(that.$email.val() === ''){
-					_self._setInputState(that.$email, "Email cannot be empty.", 1);
+					_self._setInputState(that.$email, "Email cannot be empty.", 1, that.$error);
 				} else if (!_self.validateEmail(that.$email.val())) {
-					_self._setInputState(that.$email, "Email is already taken.", 1);
+					_self._setInputState(that.$email, "Email is already taken.", 1, that.$error);
 				} else {
 					$.ajax({
 						url : hostUrl + "/validate/email",
@@ -844,7 +876,7 @@ var controller = function () {
 						processData : false,
 						contentType : "application/x-www-form-urlencoded"
 					}).done(function (data) {
-						_self._setInputState(that.$email, "Invalid Email.", data);
+						_self._setInputState(that.$email, "Invalid Email.", data, that.$error);
 					});
 				}
 				event.preventDefault();
@@ -890,7 +922,7 @@ var controller = function () {
 				if(that.$username.val() === '' || that.$email.val() === '' || that.$designation.val() === '' || that.$description.val() === '' || that.$name.val() === '' || that.$password.val() === '' || that.$confirmPass.val() === '' || that.$contact.val() === ''){
 					_self._showAlert('All fields are mandatory.');
 				} else if(that.$password.val() !== that.$confirmPass.val()){
-					_self._showAlert('Password and confirm password needs to be same.');
+					_self._showAlert('Password and confirm password must match!');
 				} else {
 					_self.loading(true);
 					var formData = new FormData(that.$frmSignup[0]);

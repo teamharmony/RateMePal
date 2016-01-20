@@ -91,7 +91,7 @@ var controller = function () {
 			this.$btnUpdate.off('click');
 			this.$btnUpdate.on('click', function(){
 				if(that.$inpNewPass.val() !== that.$inpConfirmNewPass.val()){
-					_self._showAlert("New password and Confirm new password neds to be same.");
+					_self._showAlert("New password and confirm password must match!");
 				} else {
 					_self.loading(true);
 					$.ajax({
@@ -225,15 +225,21 @@ var controller = function () {
 					if(nonFrdsData[i].status === null){
 						this.$peopleList.append("<li id='lstItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
 						
-						$('#lstItem-'+i).data(nonFrdsData[i]);
+						//$('#lstItem-'+i).data(nonFrdsData[i]);
 					} else if(nonFrdsData[i].status === "1"){
-						this.$peopleList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
+						this.$peopleList.append("<li id='lstItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 						
 						$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
 					}
+					$('#lstItem-'+i).data(nonFrdsData[i]);
 				}
-				this.$peopleList.off('click', 'li span');
+				
+				this.$peopleList.off('click', 'li');
+				this.$peopleList.on('click', 'li', {from:'nonFrds'}, _self.showUserProfile);
+				
+				this.$peopleList.off('click', 'li span.connect');
 				this.$peopleList.on('click', 'li span.connect', function(event){
+					event.stopPropagation();
 					var sId = event.currentTarget.parentNode.parentNode.parentNode.parentNode.id,
 						data = $('#'+ sId).data();
 					
@@ -276,6 +282,9 @@ var controller = function () {
 					$('#usrRate-frd'+i).raty({readOnly: true, score: 3});
 				}
 				
+				this.$friendsList.off('click', 'li');
+				this.$friendsList.on('click', 'li', _self.showUserProfile);
+				
 				$('#noFriendsResult').addClass('display-none');
 				$('#friendsSearchDiv').removeClass('display-none');
 			}else{
@@ -289,6 +298,103 @@ var controller = function () {
 			}
 		},
 		
+		showUserProfile: function(event){
+			var data = $(this).data(), that = this;
+			this.$userProfilePage = $('#page-userProfile');
+			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$userProfilePage);
+			this.$txtUName = $('#txtUName', this.$userProfilePage);
+			this.$txtUDesignation = $('#txtUDesignation', this.$userProfilePage);
+			this.$txtUDesc = $('#txtUDesc', this.$userProfilePage);
+			this.$userOverallRating = $('#userOverallRating', this.$userProfilePage);
+			
+			this.$txtUName.text(data.name);
+			this.$txtUDesignation.text(data.designation);
+			this.$txtUDesc.text(data.description);
+			this.$userOverallRating.raty({readOnly: true, score: 3});
+			
+			this.$connect = $('#connect', this.$userProfilePage).hide();
+			this.$share = $('#shareRating', this.$userProfilePage).hide();
+			this.$requestSent = $('#requestSent', this.$userProfilePage).hide();
+			
+			if(event.data.from === "nonFrds"){
+				if(data.status === null){
+					this.$connect.show();
+				} else if(data.status === '1'){
+					this.$requestSent.show();
+				}
+			}
+			
+			
+			$.ajax({
+				url : hostUrl + "/profilePic/" + data.username,
+				type : 'GET',
+				async : true
+			}).done(function (dataURL) {
+				if (dataURL) {
+					that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
+				}
+			});
+			
+			$.mobile.navigate('#page-userProfile');
+		},
+		
+		home : function () {
+			_self.loading(false);
+			var that = this;
+			this.$homePage = $('#page-home');
+			this.$btnLogout = $('#btnLogout', this.$homePage);
+			this.$btnHome = $('#btnHome', this.$homePage);
+			
+			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$homePage);
+			this.$txtUName = $('#txtUName', this.$homePage);
+			this.$txtUDesignation = $('#txtUDesignation', this.$homePage);
+			this.$txtUDesc = $('#txtUDesc', this.$homePage);
+			
+			this.$lstPersonal = $('#lstPersonal', this.$homePage);
+			this.$lstProfessional = $('#lstProfessional', this.$homePage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
+			
+			_self.loading(true);
+			$.ajax({
+				url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				that.$txtUName.text(data.name);
+				that.$txtUDesignation.text(data.designation);
+				that.$txtUDesc.text(data.description);
+				$('#userOverallRating').raty({readOnly: true, score: 3});
+				$.ajax(   {
+					url : hostUrl + "/profilePic/" + data.username,
+					type : 'GET',
+					async : true
+				}).done(function (dataURL) {
+					if (dataURL) {
+						that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
+					}
+				});
+				_self.loading(false);
+			});
+			
+			this.$lstPersonal.empty();
+			this.$lstProfessional.empty();
+			
+			$.ajax({
+				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function (data) {
+				for(var i=0; i < data.length; i++){
+					if(data[i].type === "Personal"){
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+					} else if(data[i].type === "Professional"){
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+					}
+					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
+				}
+			});
+			
+		},
 		
 		customRating: function(){
 			var that = this, addParameterArr = [], rmParameterArr = [], parameterArr = [];
@@ -424,64 +530,6 @@ var controller = function () {
 			});
 		},
 		
-		home : function () {
-			_self.loading(false);
-			var that = this;
-			this.$homePage = $('#page-home');
-			this.$btnLogout = $('#btnLogout', this.$homePage);
-			this.$btnHome = $('#btnHome', this.$homePage);
-			
-			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$homePage);
-			this.$txtUName = $('#txtUName', this.$homePage);
-			this.$txtUDesignation = $('#txtUDesignation', this.$homePage);
-			this.$txtUDesc = $('#txtUDesc', this.$homePage);
-			
-			this.$lstPersonal = $('#lstPersonal', this.$homePage);
-			this.$lstProfessional = $('#lstProfessional', this.$homePage);
-			
-			this.$btnLogout.off('click');
-			this.$btnLogout.on('click', _self.logout);
-			
-			_self.loading(true);
-			$.ajax({
-				url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
-				type : 'GET'
-			}).done(function(data) {
-				that.$txtUName.text(data.name);
-				that.$txtUDesignation.text(data.designation);
-				that.$txtUDesc.text(data.description);
-				$('#userOverallRating').raty({readOnly: true, score: 3});
-				$.ajax(   {
-					url : hostUrl + "/profilePic/" + data.username,
-					type : 'GET',
-					async : true
-				}).done(function (dataURL) {
-					if (dataURL) {
-						that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
-					}
-				});
-				_self.loading(false);
-			});
-			
-			this.$lstPersonal.empty();
-			this.$lstProfessional.empty();
-			
-			$.ajax({
-				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
-				type : 'GET'
-			}).done(function (data) {
-				for(var i=0; i < data.length; i++){
-					if(data[i].type === "Personal"){
-						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
-					} else if(data[i].type === "Professional"){
-						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
-					}
-					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
-				}
-			});
-			
-		},
-			
 		arrayContains: function(val, arr){
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i].name === val) {
@@ -922,7 +970,7 @@ var controller = function () {
 				if(that.$username.val() === '' || that.$email.val() === '' || that.$designation.val() === '' || that.$description.val() === '' || that.$name.val() === '' || that.$password.val() === '' || that.$confirmPass.val() === '' || that.$contact.val() === ''){
 					_self._showAlert('All fields are mandatory.');
 				} else if(that.$password.val() !== that.$confirmPass.val()){
-					_self._showAlert('Password and confirm password needs to be same.');
+					_self._showAlert('Password and confirm password must match!');
 				} else {
 					_self.loading(true);
 					var formData = new FormData(that.$frmSignup[0]);
