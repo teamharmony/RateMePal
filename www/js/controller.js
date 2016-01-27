@@ -49,6 +49,10 @@ var controller = function () {
 				_self.friends();
 			});
 			
+			$(document).delegate("#page-userProfile", "pagebeforeshow", function () {
+				_self.userProfile();
+			});
+			
 			$(document).delegate("#page-resetPassword", "pagebeforeshow", function () {
 				_self.resetPassword();
 			});
@@ -283,7 +287,7 @@ var controller = function () {
 				}
 				
 				this.$friendsList.off('click', 'li');
-				this.$friendsList.on('click', 'li', _self.showUserProfile);
+				this.$friendsList.on('click', 'li', {from: 'frds'}, _self.showUserProfile);
 				
 				$('#noFriendsResult').addClass('display-none');
 				$('#friendsSearchDiv').removeClass('display-none');
@@ -299,7 +303,16 @@ var controller = function () {
 		},
 		
 		showUserProfile: function(event){
-			var data = $(this).data(), that = this;
+			var data = $(this).data();
+			this.$userProfilePage = $('#page-userProfile');
+			this.$userProfilePage.data(data);
+			$.mobile.navigate('#page-userProfile',{info: data});
+		},
+		
+		userProfile: function(){
+			var that = this,
+			data = $('#'+event.currentTarget.id).data();
+			
 			this.$userProfilePage = $('#page-userProfile');
 			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$userProfilePage);
 			this.$txtUName = $('#txtUName', this.$userProfilePage);
@@ -313,7 +326,6 @@ var controller = function () {
 			this.$userOverallRating.raty({readOnly: true, score: 3});
 			
 			this.$connect = $('#connect', this.$userProfilePage).hide();
-			this.$share = $('#shareRating', this.$userProfilePage).hide();
 			this.$requestSent = $('#requestSent', this.$userProfilePage).hide();
 			
 			if(event.data.from === "nonFrds"){
@@ -324,7 +336,6 @@ var controller = function () {
 				}
 			}
 			
-			
 			$.ajax({
 				url : hostUrl + "/profilePic/" + data.username,
 				type : 'GET',
@@ -334,8 +345,19 @@ var controller = function () {
 					that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
 				}
 			});
-			
-			$.mobile.navigate('#page-userProfile');
+						
+			this.$connect.off('click');
+			this.$connect.on('click', function(){
+				$.ajax({
+					url : hostUrl.concat("/friends?access_token=" + window.bearerToken),
+					type : 'POST',
+					data : {'friendUserName': data.username}
+				}).done(function(data) {
+					console.log('Friends status updated.');
+					this.$connect.hide();
+					this.$requestSent.show();
+				});
+			});
 		},
 		
 		home : function () {
