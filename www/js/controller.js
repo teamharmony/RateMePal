@@ -1,6 +1,6 @@
 var controller = function () {
-	//var hostUrl = "http://localhost:8080/RateMePalMidTier",
-	var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
+	var hostUrl = "http://localhost:8080/RateMePalMidTier",
+	//var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
 	clientId = "rateMePal";
 
 	var controller = {
@@ -9,7 +9,7 @@ var controller = function () {
 			_self = this;
 			_self.checkLogin();
 			//_self.welcome();
-			
+			_self.skipNextClick = false;
 			openFB.init({
 				appId : '975569862484922',
 				tokenStore : window.localStorage
@@ -49,117 +49,104 @@ var controller = function () {
 				_self.friends();
 			});
 			
-			$(document).delegate("#page-userProfile", "pagebeforeshow", function () {
-				_self.userProfile();
+			$(document).delegate("#page-userProfile", "pagebeforeshow", function (event, data) {
+				//_self.userProfile(event, data);
 			});
 			
 			$(document).delegate("#page-resetPassword", "pagebeforeshow", function () {
 				_self.resetPassword();
 			});
+			
+			$(document).delegate("#page-bulletin", "pagebeforeshow", function () {
+				_self.bulletin();
+			});
+			
+			$(document).delegate("#page-sendRatingRequest", "pagebeforeshow", function () {
+				_self.sendRatingRequest();
+			});
+			
 		},
 		
-		resetPassword: function(){
+		bulletin: function(){
+			_self._showPalRequest();
+			_self._showRatingRequest();
+		},
+		
+		_showRatingRequest: function(){
+			$.ajax({
+				url : hostUrl.concat("/dataRequest/byMe?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				console.log(data);
+			});
+			
+			$.ajax({
+				url : hostUrl.concat("/dataRequest/toMe?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				console.log(data);
+			});
+			
+		},
+		
+		_showPalRequest: function(){
 			var that = this;
-			this.$resetPasswordPage = $('#page-resetPassword');
-			this.$inpOldPass = $('#oldPassword', this.$resetPasswordPage);
-			this.$inpNewPass = $('#newPassword', this.$resetPasswordPage);
-			this.$inpConfirmNewPass = $('#confirmPassword', this.$resetPasswordPage);
-			this.$error1 = $('#error1', this.$resetPasswordPage);
-			this.$btnUpdate = $('#btnUpdate', this.$resetPasswordPage);
+			this.$bulletinPage = $('#page-bulletin');
+			this.$PalReqRecList = $('#palReqRecList',this.$bulletinPage);
+			this.$PalReqSentList = $('#palReqSentList',this.$bulletinPage);
+			this.$PalReqRecList.empty();
+			this.$PalReqSentList.empty();
 			
-			this.$inpOldPass.val('');
-			this.$inpNewPass.val('');
-			this.$inpConfirmNewPass.val('');
-			this.$inpOldPass.off('focusout');
-			this.$inpOldPass.on('focusout', function(){
-				_self._setInputState(that.$inpOldPass, "", 0, that.$error1);
-				if(that.$inpOldPass.val() === ''){
-					_self._setInputState(that.$inpOldPass, "Old password cannot be empty.", 1, that.$error1);
-				}
-			});
-			this.$inpNewPass.off('focusout');
-			this.$inpNewPass.on('focusout', function(){
-				_self._setInputState(that.$inpNewPass, "", 0, that.$error1);
-				if(that.$inpNewPass.val() === ''){
-					_self._setInputState(that.$inpNewPass, "New password cannot be empty.", 1, that.$error1);
-				}
-			});
-			this.$inpConfirmNewPass.off('focusout');
-			this.$inpConfirmNewPass.on('focusout', function(){
-				_self._setInputState(that.$inpConfirmNewPass, "", 0, that.$error1);
-				if(that.$inpConfirmNewPass.val() === ''){
-					_self._setInputState(that.$inpConfirmNewPass, "Confrim new password cannot be empty.", 1, that.$error1);
-				}
+			this.$btnFrdAccept = $('#btnFrdAccept', this.$bulletinPage);
+			this.$btnFrdReject = $('#btnFrdAccept', this.$bulletinPage);
+			
+			$.ajax({
+				url : hostUrl.concat("/friends/notInvited?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function(data) {
+				for(var i=0; i<data.length; i++){
+					var obj = data[i];
+					if(obj.status === "4"){
+						that.$PalReqRecList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+obj.name+"'></div><div class='UserActionDic'><a id='btnFrdAccept' href='#' class='button acceptBtn'>Accept</a><a id='btnFrdReject' href='#' class='button rejectBtn'>Reject</a></div></div></div></div></li>").listview('refresh');
+					} else if(obj.status === "1"){
+						that.$PalReqSentList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
+					}
+					$('#lstBullitenPalItem-'+i).data(obj);
+				}				
 			});
 			
-			this.$btnUpdate.off('click');
-			this.$btnUpdate.on('click', function(){
-				if(that.$inpNewPass.val() !== that.$inpConfirmNewPass.val()){
-					_self._showAlert("New password and confirm password must match!");
-				} else {
-					_self.loading(true);
+			this.$PalReqSentList.off('click', 'li');
+			this.$PalReqSentList.on('click', 'li', {from:'PalReqRecList'}, _self.showUserProfile);
+			
+			this.$PalReqRecList.off('click', 'li');
+			this.$PalReqRecList.on('click', 'li', {from:'PalReqRecList'}, function(){
+				var sId = event.target.id, that = this;
+				this.listItemData = $('#'+event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id).data();
+				
+				if(sId === "btnFrdAccept"){
 					$.ajax({
-						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+						url : hostUrl.concat("/friends/updateStatus?access_token=" + window.bearerToken),
 						type : 'PUT',
-						data : {
-							"username" : _self.userLogin,
-							"password" : that.$inpNewPass.val()
-						}
-					}).done(function (o) {
-						_self.loading(false);
-						$.mobile.navigate('#page-home');
+						data: {'friendUserName':that.listItemData.username, 'status':'2'}
+					}).done(function(data) {
+						_self._showPalRequest();
+						console.log(data);
 					});
+				} else if(sId === "btnFrdReject"){
+					$.ajax({
+						url : hostUrl.concat("/friends/updateStatus?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data: {'friendUserName':that.listItemData.username, 'status':'3'}
+					}).done(function(data) {
+						_self._showPalRequest();
+						console.log(data);
+					});
+				} else {
+					
 				}
 			});
-		},
-		
-		backButtonHandler: function(event){
-			if($.mobile.activePage.is('#page-login')){
-				navigator.app.exitApp();
-			} else if($.mobile.activePage.is('#page-home')){
-				_self.logout();
-			} else {
-				navigator.app.backHistory();
-			}
-		},
-		
-		logout : function () {
-			function onConfirm(button){
-				if(button === 1){	
-					_self.loading(true);
-					$.ajax({
-						url : hostUrl.concat("/logout?access_token=" + window.bearerToken),
-						type : 'GET'
-					}).done(function () {
-						_self.loading(false);
-						if (window.localStorage.rmp_lobin_by === "fb") {
-							openFB.logout(function () {
-								_self.clearAll();
-							});
-						} else if (window.localStorage.rmp_lobin_by === "gl") {
-							openGL.logout(function () {
-								_self.clearAll();
-							});
-						} else {
-							_self.clearAll();
-						}
-					});
-				}
-			}
-			navigator.notification.confirm(
-				'Are you sure you want to logout?',  // message
-				onConfirm,              // callback to invoke with index of button pressed
-				'Logout',            // title
-				['Yes','No']          // buttonLabels
-			);
-		},
-		
-		clearAll: function(){
-			$.mobile.navigate("#page-login");
-			window.localStorage.removeItem('rmp_lobin_by');
-			window.localStorage.removeItem('rmplogin_refresh_token');
-			window.localStorage.removeItem('fbtoken');
-			window.localStorage.removeItem('gltoken');
+			
+			
 		},
 		
 		friends: function(){
@@ -227,19 +214,17 @@ var controller = function () {
 				this.$peopleCount.text(nonFrdsData.length + " User Found");
 				for(var i=0;i<nonFrdsData.length;i++){
 					if(nonFrdsData[i].status === null){
-						this.$peopleList.append("<li id='lstItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+nonFrdsData[i].name+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
+						this.$peopleList.append("<li id='lstNonFrdItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
 						
-						//$('#lstItem-'+i).data(nonFrdsData[i]);
 					} else if(nonFrdsData[i].status === "1"){
-						this.$peopleList.append("<li id='lstItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
-						
-						$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
+						this.$peopleList.append("<li id='lstNonFrdItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
-					$('#lstItem-'+i).data(nonFrdsData[i]);
+					$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
+					$('#lstNonFrdItem-'+i).data(nonFrdsData[i]);
 				}
 				
 				this.$peopleList.off('click', 'li');
-				this.$peopleList.on('click', 'li', {from:'nonFrds'}, _self.showUserProfile);
+				this.$peopleList.on('click', 'li', {fromPage:'nonFrds'}, _self.showUserProfile);
 				
 				this.$peopleList.off('click', 'li span.connect');
 				this.$peopleList.on('click', 'li span.connect', function(event){
@@ -273,21 +258,23 @@ var controller = function () {
 		},
 		
 		_showFriends: function(frdsData){
+			var that = this;
 			this.$friendsPage = $('#page-friends');
 			this.$friendsList = $('#friendsList',this.$friendsPage);
 			this.$friendsCount = $('#friendsCount',this.$friendsPage);
 			this.$friendsList.empty();
-			
+			$('#sendRatingDiv', this.$friendsPage).addClass('display-none');
 			if(frdsData.length > 0){
 				this.$friendsCount.text(frdsData.length + " User Found");
 				for(var i=0;i<frdsData.length;i++){
-					this.$friendsList.append("<li><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ frdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ frdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRate-frd"+i+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					this.$friendsList.append("<li id='lstFrdItem-"+i+"'><input id='chkFriend' name='checkbox' class='chkFriend display-none' type='checkbox' value='false'/><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ frdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ frdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRate-frd"+i+"' class='userRating'></div></div></div></div></li>").listview('refresh');
 					
-					$('#usrRate-frd'+i).raty({readOnly: true, score: 3});
+					$('#lstFrdItem-'+i).data(frdsData[i]);
+					$('#usrRate-frd'+i).raty({readOnly: true, score: 0});
 				}
-				
-				this.$friendsList.off('click', 'li');
-				this.$friendsList.on('click', 'li', {from: 'frds'}, _self.showUserProfile);
+				$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
+				this.$friendsList.off('click taphold', 'li');
+				this.$friendsList.on('click taphold', 'li', {fromPage: 'frds'}, _self.showUserProfile);
 				
 				$('#noFriendsResult').addClass('display-none');
 				$('#friendsSearchDiv').removeClass('display-none');
@@ -303,63 +290,306 @@ var controller = function () {
 		},
 		
 		showUserProfile: function(event){
-			var data = $(this).data();
-			this.$userProfilePage = $('#page-userProfile');
-			this.$userProfilePage.data(data);
-			$.mobile.navigate('#page-userProfile',{info: data});
+			var data = $(this).data(), that = this,
+			fromPage = event.data.fromPage;
+			this.$friendsPage = $('#page-friends');
+			this.$friendsList = $('#friendsList',this.$friendsPage);
+			
+			var isClick = (event.type == 'click');
+
+			if (isClick && !_self.skipNextClick) {
+				//run your code for normal click events here...
+				if($(event.target).is('input')){
+					var target = $(event.target);
+					if(target.val() === 'false'){
+						$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
+						target.val('true');
+					} else {
+						target.val('false');
+					}
+					
+					var allChk = true;
+					that.$friendsList.find('li').each(function(){
+						if($(this).find('input').val() === 'false'){
+							allChk = false;
+							return false;
+						}
+					});
+					$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
+					if(allChk){
+						$('#chkSelectall').prop('checked', true).checkboxradio("refresh");
+					}
+					
+					return;
+				}
+				$.mobile.navigate('#page-userProfile');
+			
+				this.$userProfilePage = $('#page-userProfile');
+				this.$imgUHomeDisp = $('#imgUHomeDisp', this.$userProfilePage);
+				this.$txtUName = $('#txtUName', this.$userProfilePage);
+				this.$txtUDesignation = $('#txtUDesignation', this.$userProfilePage);
+				this.$txtUDesc = $('#txtUDesc', this.$userProfilePage);
+				this.$userOverallRating = $('#userOverallRating', this.$userProfilePage);
+				
+				this.$lstUPersonal = $('#lstUPersonal', this.$userProfilePage);
+				this.$lstUProfessional = $('#lstUProfessional', this.$userProfilePage);
+				
+				this.$txtUName.text(data.name);
+				this.$txtUDesignation.text(data.designation);
+				this.$txtUDesc.text(data.description);
+				this.$userOverallRating.raty({readOnly: true, score: 0});
+				
+				this.$connect = $('#connect', this.$userProfilePage).hide();
+				this.$requestSent = $('#requestSent', this.$userProfilePage).hide();
+				this.$btnRateSubmit = $('#btnRateSubmit', this.$userProfilePage).hide();
+				
+				if(fromPage === "nonFrds"){
+					if(data.status === null){
+						this.$connect.show();
+					} else if(data.status === '1'){
+						this.$requestSent.show();
+					}
+				} else if(fromPage === "frds"){
+					this.$btnRateSubmit.show();
+				}
+				
+				$.ajax({
+					url : hostUrl + "/profilePic/" + data.username,
+					type : 'GET',
+					async : true
+				}).done(function (dataURL) {
+					if (dataURL) {
+						that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
+					}
+				});
+							
+				this.$connect.off('click');
+				this.$connect.on('click', function(){
+					$.ajax({
+						url : hostUrl.concat("/friends?access_token=" + window.bearerToken),
+						type : 'POST',
+						data : {'friendUserName': data.username}
+					}).done(function(data) {
+						console.log('Friends status updated.');
+						this.$connect.hide();
+						this.$requestSent.show();
+					});
+				});
+				
+				_self.loading(true);
+				$.ajax({
+					url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {'name': data.username}
+				}).done(function (data) {
+					_self.loading(false);
+					that.$lstUPersonal.empty();
+					that.$lstUProfessional.empty();
+					var lstParaId = [];
+					for(var i=0; i<data.length; i++){
+						if(data[i].type === "Personal"){
+							that.$lstUPersonal.append('<li id="lstItemUPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+							$("#lstItemUPersonal-"+data[i].id).data(data[i]);
+						} else if(data[i].type === "Professional"){
+							that.$lstUProfessional.append('<li id="lstItemUProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+							$("#lstItemUProfessional-"+data[i].id).data(data[i]);
+						}
+						$('#usrRate-'+data[i].id).raty({score: 0});
+						lstParaId.push(data[i].id);
+					}
+					
+					$.ajax({
+						url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+						type : 'GET',
+						data : {"paramIds":lstParaId.toString()}
+					}).done(function (data) {
+						console.log(data);
+						if(data.length === 0){
+							
+						}
+					});
+					
+					
+				});
+				
+				this.$btnRateSubmit.off('click');
+				this.$btnRateSubmit.on('click', function(){
+					var paraIds = "";
+					that.$lstUPersonal.find('li').each(function(){
+						var data = $(this).data();
+						paraIds = paraIds.concat("{\"id\":"+data.id+"}"+ ',');
+					});
+					that.$lstUProfessional.find('li').each(function(){
+						var data = $(this).data();
+						paraIds = paraIds.concat("{\"id\":"+data.id+"}"+ ',');
+					});
+					
+					var reqObj = "{\"requestName\":\"FriendRated\",\"friendCreated\":1,\"paramIds\":["+paraIds.substring(0, paraIds.length-1)+"],\"friends\":[{\"username\":\""+data.username+"\"}]}";
+					$.ajax({
+						url : hostUrl.concat("/dataRequest?access_token=" + window.bearerToken),
+						type : 'POST',
+						beforeSend: function(req) {
+							req.setRequestHeader("Accept", "application/json; charset=UTF-8");
+						},
+						data: reqObj,
+						contentType : 'application/json; charset=UTF-8'
+					}).done(function (data) {
+						console.log("Data Request Send.");
+						
+					});
+				});
+			}
+			else if (isClick && _self.skipNextClick) {
+				//this is where skipped click events will end up...
+
+				//we need to reset our skipNextClick flag here,
+				//this way, our next click will not be ignored
+				_self.skipNextClick = false;
+			}
+			else {
+				//taphold event
+
+				//to ignore the click event that fires when you release your taphold,
+				//we set the skipNextClick flag to true here.
+				_self.skipNextClick = false;
+				this.$friendsList.find('li').each(function(){
+					$(this).find('input').removeClass('display-none');
+				});
+				$('#sendRatingDiv', this.$friendsPage).removeClass('display-none');
+				this.$chkSelectall = $('#chkSelectall', this.$friendsPage);
+				this.$btnReset = $('#btnReset', this.$friendsPage);
+				this.$btnSendRatingRequest = $('#btnSendRatingRequest', this.$friendsPage);
+				
+				this.$chkSelectall.on('click', function(event){
+					that.$friendsList.find('li').each(function(){
+						if($(this).find('input').val() === "false"){
+							$(this).find('input').val(true);
+							$(this).find('input').prop('checked', true);
+						} else {
+							$(this).find('input').val(false);
+							$(this).find('input').prop('checked', false);
+						}
+					});
+				});
+				
+				/*this.$btnReset.on('click', function(event){
+					that.$friendsList.find('li').each(function(){
+						if($(this).find('input').val() === "true"){
+							$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
+							$(this).find('input').val(false);
+							$(this).find('input').prop('checked', false);
+						}
+					});
+				});*/
+				
+				this.$btnSendRatingRequest.on('click', function(event){
+					$.mobile.navigate('#page-sendRatingRequest');
+				});
+				//run your code for taphold events here...
+
+			}
 		},
 		
-		userProfile: function(){
-			var that = this,
-			data = $('#'+event.currentTarget.id).data();
+		sendRatingRequest: function(){
+			var that = this;
+			this.$sendRatingRequest = $('#page-sendRatingRequest');
+			this.$lstSelectParameter = $('#lstSelectParameter', this.$sendRatingRequest);
+			this.$chkSendRatingSelectall = $('#chkSendRatingSelectall', this.$sendRatingRequest);
+			this.$btnSendRatingReq = $('#btnSendRatingReq', this.$sendRatingRequest);
 			
-			this.$userProfilePage = $('#page-userProfile');
-			this.$imgUHomeDisp = $('#imgUHomeDisp', this.$userProfilePage);
-			this.$txtUName = $('#txtUName', this.$userProfilePage);
-			this.$txtUDesignation = $('#txtUDesignation', this.$userProfilePage);
-			this.$txtUDesc = $('#txtUDesc', this.$userProfilePage);
-			this.$userOverallRating = $('#userOverallRating', this.$userProfilePage);
+			this.$friendsPage = $('#page-friends');
+			this.$friendsList = $('#friendsList',this.$friendsPage);
 			
-			this.$txtUName.text(data.name);
-			this.$txtUDesignation.text(data.designation);
-			this.$txtUDesc.text(data.description);
-			this.$userOverallRating.raty({readOnly: true, score: 3});
-			
-			this.$connect = $('#connect', this.$userProfilePage).hide();
-			this.$requestSent = $('#requestSent', this.$userProfilePage).hide();
-			
-			if(event.data.from === "nonFrds"){
-				if(data.status === null){
-					this.$connect.show();
-				} else if(data.status === '1'){
-					this.$requestSent.show();
-				}
-			}
-			
+			_self.loading(true);
 			$.ajax({
-				url : hostUrl + "/profilePic/" + data.username,
-				type : 'GET',
-				async : true
-			}).done(function (dataURL) {
-				if (dataURL) {
-					that.$imgUHomeDisp.attr('src', 'data:image/png;base64,' + dataURL);
+				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
+				type : 'GET'
+			}).done(function (data) {
+				that.$lstSelectParameter.empty();
+				for(var i=0; i < data.length; i++){
+					that.$lstSelectParameter.append('<li id="lstSelPersonal-'+ data[i].id +'"> <input type="checkbox" value="false" > <span class="skills">' + data[i].name + '</span> </span></li>').listview('refresh');
+					
+					$('#lstSelPersonal-'+data[i].id).data(data[i]);
+				}
+				_self.loading(false);
+			});
+			
+			this.$lstSelectParameter.off('click', 'li');
+			this.$lstSelectParameter.on('click', 'li', function(event){
+				var target = $(this).find('input');
+				if(target.val() === 'false'){
+					that.$chkSendRatingSelectall.prop('checked', false).checkboxradio("refresh");
+					target.val('true');
+					//target.prop('checked', true).checkboxradio("refresh");
+				} else {
+					target.val('false');
+					//target.prop('checked', false).checkboxradio("refresh");
+				}
+				
+				var allChk = true;
+				that.$lstSelectParameter.find('li').each(function(){
+					if($(this).find('input').val() === 'false'){
+						allChk = false;
+						return false;
+					}
+				});
+				that.$chkSendRatingSelectall.prop('checked', false).checkboxradio("refresh");
+				if(allChk){
+					that.$chkSendRatingSelectall.prop('checked', true).checkboxradio("refresh");
 				}
 			});
-						
-			this.$connect.off('click');
-			this.$connect.on('click', function(){
+			
+			this.$chkSendRatingSelectall.off('click');
+			this.$chkSendRatingSelectall.on('click', function(){
+				that.$lstSelectParameter.find('li').each(function(){
+					if($(this).find('input').val() === "false"){
+						$(this).find('input').val(true);
+						$(this).find('input').prop('checked', true);
+					} else {
+						$(this).find('input').val(false);
+						$(this).find('input').prop('checked', false);
+					}
+				});
+			});
+			
+			this.$btnSendRatingReq.off('click');
+			this.$btnSendRatingReq.on('click', function(event){
+				var paraIds = "", frdsUsername = "";
+				that.$lstSelectParameter.find('li').each(function(){
+					if($(this).find('input').val() === 'true'){
+						var data = $(this).data();
+						paraIds = paraIds.concat("{\"id\":"+data.id+"}"+ ',');
+					}
+				});
+				
+				that.$friendsList.find('li').each(function(){
+					if($(this).find('input').val() === 'true'){
+						var data = $(this).data();
+						frdsUsername = frdsUsername.concat("{\"username\":\""+data.username+"\"}"+ ',');
+					}
+				});
+				
+				var reqObj = "{\"requestName\":\"SendFriendReq\",\"friendCreated\":0,\"paramIds\":["+paraIds.substring(0, paraIds.length-1)+"],\"friends\":["+frdsUsername.substring(0,frdsUsername.length-1)+"]}";
 				$.ajax({
-					url : hostUrl.concat("/friends?access_token=" + window.bearerToken),
+					url : hostUrl.concat("/dataRequest?access_token=" + window.bearerToken),
 					type : 'POST',
-					data : {'friendUserName': data.username}
-				}).done(function(data) {
-					console.log('Friends status updated.');
-					this.$connect.hide();
-					this.$requestSent.show();
+					beforeSend: function(req) {
+						req.setRequestHeader("Accept", "application/json; charset=UTF-8");
+					},
+					data: reqObj,
+					contentType : 'application/json; charset=UTF-8'
+				}).done(function (data) {
+					console.log("Data Request Send.");
+					$.ajax({
+						url : hostUrl.concat("/dataRequest/byMe?access_token=" + window.bearerToken),
+						type : 'GET'
+					}).done(function(data) {
+						console.log(data);
+					});
 				});
 			});
 		},
-		
+				
 		home : function () {
 			_self.loading(false);
 			var that = this;
@@ -560,7 +790,111 @@ var controller = function () {
 			}
 			return false;
 		},
-				
+		
+		resetPassword: function(){
+			var that = this;
+			this.$resetPasswordPage = $('#page-resetPassword');
+			this.$inpOldPass = $('#oldPassword', this.$resetPasswordPage);
+			this.$inpNewPass = $('#newPassword', this.$resetPasswordPage);
+			this.$inpConfirmNewPass = $('#confirmPassword', this.$resetPasswordPage);
+			this.$error1 = $('#error1', this.$resetPasswordPage);
+			this.$btnUpdate = $('#btnUpdate', this.$resetPasswordPage);
+			
+			this.$inpOldPass.val('');
+			this.$inpNewPass.val('');
+			this.$inpConfirmNewPass.val('');
+			this.$inpOldPass.off('focusout');
+			this.$inpOldPass.on('focusout', function(){
+				_self._setInputState(that.$inpOldPass, "", 0, that.$error1);
+				if(that.$inpOldPass.val() === ''){
+					_self._setInputState(that.$inpOldPass, "Old password cannot be empty.", 1, that.$error1);
+				}
+			});
+			this.$inpNewPass.off('focusout');
+			this.$inpNewPass.on('focusout', function(){
+				_self._setInputState(that.$inpNewPass, "", 0, that.$error1);
+				if(that.$inpNewPass.val() === ''){
+					_self._setInputState(that.$inpNewPass, "New password cannot be empty.", 1, that.$error1);
+				}
+			});
+			this.$inpConfirmNewPass.off('focusout');
+			this.$inpConfirmNewPass.on('focusout', function(){
+				_self._setInputState(that.$inpConfirmNewPass, "", 0, that.$error1);
+				if(that.$inpConfirmNewPass.val() === ''){
+					_self._setInputState(that.$inpConfirmNewPass, "Confrim new password cannot be empty.", 1, that.$error1);
+				}
+			});
+			
+			this.$btnUpdate.off('click');
+			this.$btnUpdate.on('click', function(){
+				if(that.$inpNewPass.val() !== that.$inpConfirmNewPass.val()){
+					_self._showAlert("New password and confirm password must match!");
+				} else {
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/password/reset?access_token=" + window.bearerToken),
+						type : 'PUT',
+						data : {
+							"username" : _self.userLogin,
+							"password" : that.$inpNewPass.val()
+						}
+					}).done(function (o) {
+						_self.loading(false);
+						$.mobile.navigate('#page-home');
+					});
+				}
+			});
+		},
+		
+		backButtonHandler: function(event){
+			if($.mobile.activePage.is('#page-login')){
+				navigator.app.exitApp();
+			} else if($.mobile.activePage.is('#page-home')){
+				_self.logout();
+			} else {
+				navigator.app.backHistory();
+			}
+		},
+		
+		logout : function () {
+			function onConfirm(button){
+				if(button === 1){	
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/logout?access_token=" + window.bearerToken),
+						type : 'GET'
+					}).done(function () {
+						_self.loading(false);
+						if (window.localStorage.rmp_lobin_by === "fb") {
+							openFB.logout(function () {
+								_self.clearAll();
+							});
+						} else if (window.localStorage.rmp_lobin_by === "gl") {
+							openGL.logout(function () {
+								_self.clearAll();
+							});
+						} else {
+							_self.clearAll();
+						}
+					});
+				}
+			}
+			navigator.notification.confirm(
+				'Are you sure you want to logout?',  // message
+				onConfirm,              // callback to invoke with index of button pressed
+				'Logout',            // title
+				['Yes','No']          // buttonLabels
+			);
+		},
+		
+		clearAll: function(){
+			$.mobile.navigate("#page-login");
+			window.localStorage.removeItem('rmp_lobin_by');
+			window.localStorage.removeItem('rmplogin_refresh_token');
+			window.localStorage.removeItem('fbtoken');
+			window.localStorage.removeItem('gltoken');
+		},
+		
 		welcome : function () {
 			this.$login = $("#page-login");
 
@@ -735,6 +1069,23 @@ var controller = function () {
 				_self.userLogin = that.social+'_'+that.data.email;
 				window.localStorage.rmp_lobin_by = that.social;
 				_self.loading(false);
+				/*pushNotification.setTags({username:_self.userLogin, deviceId:10},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
+				pushNotification.registerDevice(
+					function(status) {
+						var pushToken = status;
+						console.warn('push token: ' + pushToken);
+					},
+					function(status) {
+						console.warn(JSON.stringify(['failed to register ', status]));
+					}
+				);*/
 				$.mobile.navigate("#page-home");
 			};
 
@@ -1053,7 +1404,40 @@ var controller = function () {
 		
 		_showConfirm: function(message, confirmCallback){
 			navigator.notification.confirm(message, confirmCallback, 'RateMePal', ['Yes','No'])
+		},
+		
+		initPushwoosh: function()
+		{
+			var pushNotification = cordova.require("com.pushwoosh.plugins.pushwoosh.PushNotification");
+		 
+			//set push notifications handler
+			document.addEventListener('push-notification', function(event) {
+				var title = event.notification.title;
+				var userData = event.notification.userdata;
+										 
+				if(typeof(userData) != "undefined") {
+					console.warn('user data: ' + JSON.stringify(userData));
+				}
+											 
+				console.log(event.notification);
+			});
+		 
+			//initialize Pushwoosh with projectid: "GOOGLE_PROJECT_NUMBER", pw_appid : "PUSHWOOSH_APP_ID". This will trigger all pending push notifications on start.
+			pushNotification.onDeviceReady({ projectid: "192806734171", pw_appid : "79F49-2DEB6"});
+		 
+			//register for pushes
+			/*pushNotification.registerDevice(
+				function(status) {
+					var pushToken = status;
+					console.warn('push token: ' + pushToken);
+				},
+				function(status) {
+					console.warn(JSON.stringify(['failed to register ', status]));
+				}
+			);*/
 		}
+		
+		
 	};
 
 	controller.init();

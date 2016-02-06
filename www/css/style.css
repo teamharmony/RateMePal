@@ -206,14 +206,14 @@ font-size: 1em;
 /* header */
 .ui-header.headerDiv {     
 height: 55px;
-    padding: 10px;
+    padding: .3em .85em;
     box-sizing: border-box; 
 		background:#1b6aac;
 } 
 .ui-header .ui-title { 
 	color:#fff; 
 	text-shadow: 0 1px 0 #333;
-    font-size: 1em;
+    font-size: 1.25em;
     line-height: 1;
     letter-spacing: .02em;
 		text-align: left;
@@ -224,9 +224,8 @@ height: 55px;
     border-color: transparent;
     color: #fff;
     text-shadow: 0 1px 0 #333;
-		    margin-top: 5px;
     margin-left: 5px;
-    font-size: 1rem;
+    font-size: 1.25rem;
     padding: .5rem .7rem;
 		box-shadow:none;
 }
@@ -544,6 +543,25 @@ border-top-right-radius: 25px;
  color: red;
 }
 
+/* Tabs > Tabs */
+.skillsTab ul.tabs { 
+	margin: 0; 
+	padding: 0;
+ border-bottom: 1px solid #ddd;
+}
+.skillsTab ul.tabs li { 
+	    display: inline-block;
+}
+.skillsTab ul.tabs li > a.ui-link { 
+display: block;
+    padding: 0.35rem;
+		text-decoration: none;
+    font-weight: normal;
+}
+.skillsTab ul.tabs li > a.ui-link.active{ 
+border-bottom: 3px solid #059;
+color:#059;
+}
 
 /* footer */
 .footerDiv .navLink { 
