@@ -11,6 +11,7 @@
     <plugin name="cordova-plugin-whitelist" version="1" />
 	<allow-navigation href="*" />
     <access origin="*" />
+	<access origin="*.pushwoosh.com" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

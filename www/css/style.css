@@ -572,3 +572,25 @@ color:#059;
 .footerDiv .NavItem .glyphicon{ 
  font-size:1.5em;
 }
+
+/* Select box */
+.sendRatingDiv .ui-checkbox,
+.sendRatingRequestPage .ui-checkbox { 
+ display:inline-block;
+}
+.sendRatingDiv .ui-checkbox .ui-btn,
+.sendRatingRequestPage .ui-checkbox .ui-btn { 
+	background: #f9f9f9;
+	border:1px solid transparent;
+}
+.sendRatingRequestBtn ,  .acceptBtn, .rejectBtn, .submitBtn,
+.btnSendRatingReq  { 
+    display: inline-block;
+    padding: .5rem 1rem;
+    vertical-align: top;
+    margin: 0.5em;
+		background-color: #f6f6f6;
+    border: 1px solid #ddd;
+		text-decoration: none;
+    border-radius: 2rem;
+}

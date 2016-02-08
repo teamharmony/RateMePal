@@ -112,6 +112,7 @@ var controller = function () {
 						that.$PalReqSentList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
 					$('#lstBullitenPalItem-'+i).data(obj);
+					_self._getAverageRating($('#lstBullitenPalItem-'+i), obj.username);
 				}				
 			});
 			
@@ -209,20 +210,24 @@ var controller = function () {
 			this.$peopleList = $('#peopleList',this.$friendsPage);
 			this.$peopleCount = $('#peopleCount',this.$friendsPage);
 			this.$peopleList.empty();
-			
+			var count = 0;
 			if(nonFrdsData.length > 0){
-				this.$peopleCount.text(nonFrdsData.length + " User Found");
 				for(var i=0;i<nonFrdsData.length;i++){
 					if(nonFrdsData[i].status === null){
+						count++;
 						this.$peopleList.append("<li id='lstNonFrdItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='connect'> + Connect </span></div></div></div></li>").listview('refresh');
 						
 					} else if(nonFrdsData[i].status === "1"){
+						count++;
 						this.$peopleList.append("<li id='lstNonFrdItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
-					$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
+					$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 0});
 					$('#lstNonFrdItem-'+i).data(nonFrdsData[i]);
+					
+					_self._getAverageRating($('#lstNonFrdItem-'+i), nonFrdsData[i].username);
+					
 				}
-				
+				this.$peopleCount.text(count + " User Found");
 				this.$peopleList.off('click', 'li');
 				this.$peopleList.on('click', 'li', {fromPage:'nonFrds'}, _self.showUserProfile);
 				
@@ -257,6 +262,36 @@ var controller = function () {
 
 		},
 		
+		_getAverageRating: function(context, username){
+			$.ajax({
+				url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+				type : 'GET',
+				context : context,
+				data : {'name': username}
+			}).done(function (data) {
+				var lstParamIds = [];
+				for(var i=0; i<data.length; i++){
+					lstParamIds.push(data[i].id);
+				}
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+					type : 'GET',
+					context : this,
+					data : {"paramIds":lstParamIds.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						$('#usrHomeRate-'+data[i].paramId).raty({score: data[i].rating});
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					this.find('.userRating').raty({score: avgHomeRate});
+				});
+			});
+		},
+		
 		_showFriends: function(frdsData){
 			var that = this;
 			this.$friendsPage = $('#page-friends');
@@ -271,6 +306,8 @@ var controller = function () {
 					
 					$('#lstFrdItem-'+i).data(frdsData[i]);
 					$('#usrRate-frd'+i).raty({readOnly: true, score: 0});
+					
+					_self._getAverageRating($('#lstFrdItem-'+i), frdsData[i].username);
 				}
 				$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
 				this.$friendsList.off('click taphold', 'li');
@@ -394,7 +431,7 @@ var controller = function () {
 							that.$lstUProfessional.append('<li id="lstItemUProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 							$("#lstItemUProfessional-"+data[i].id).data(data[i]);
 						}
-						$('#usrRate-'+data[i].id).raty({score: 0});
+						$('#usrRate-'+data[i].id).raty({score: 0, readOnly: true});
 						lstParaId.push(data[i].id);
 					}
 					
@@ -403,10 +440,14 @@ var controller = function () {
 						type : 'GET',
 						data : {"paramIds":lstParaId.toString()}
 					}).done(function (data) {
-						console.log(data);
-						if(data.length === 0){
-							
+						var avgHomeRate = 0;
+						for(var i=0; i < data.length; i++){
+							$('#usrRate-'+data[i].paramId).raty({score: data[i].rating});
+							avgHomeRate += data[i].rating;
 						}
+						avgHomeRate = avgHomeRate/data.length;
+						
+						that.$userOverallRating.raty({score: avgHomeRate, readOnly: true});
 					});
 					
 					
@@ -601,6 +642,7 @@ var controller = function () {
 			this.$txtUName = $('#txtUName', this.$homePage);
 			this.$txtUDesignation = $('#txtUDesignation', this.$homePage);
 			this.$txtUDesc = $('#txtUDesc', this.$homePage);
+			this.$userHomeAvgRate = $('#userHomeAvgRate',this.$homePage);
 			
 			this.$lstPersonal = $('#lstPersonal', this.$homePage);
 			this.$lstProfessional = $('#lstProfessional', this.$homePage);
@@ -616,7 +658,7 @@ var controller = function () {
 				that.$txtUName.text(data.name);
 				that.$txtUDesignation.text(data.designation);
 				that.$txtUDesc.text(data.description);
-				$('#userOverallRating').raty({readOnly: true, score: 3});
+				that.$userHomeAvgRate.raty({readOnly: true, score: 0});
 				$.ajax(   {
 					url : hostUrl + "/profilePic/" + data.username,
 					type : 'GET',
@@ -636,15 +678,34 @@ var controller = function () {
 				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function (data) {
+				var lstParaId = [];
 				for(var i=0; i < data.length; i++){
 					if(data[i].type === "Personal"){
-						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrHomeRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					} else if(data[i].type === "Professional"){
-						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrHomeRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					}
-					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
+					$('#usrHomeRate-'+data[i].id).raty({readOnly: true, score: 0});
+					lstParaId.push(data[i].id);
 				}
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {"paramIds":lstParaId.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						$('#usrHomeRate-'+data[i].paramId).raty({score: data[i].rating});
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					that.$userHomeAvgRate.raty({score: avgHomeRate});
+				});
 			});
+			
+			
 			
 		},
 		
@@ -893,6 +954,24 @@ var controller = function () {
 			window.localStorage.removeItem('rmplogin_refresh_token');
 			window.localStorage.removeItem('fbtoken');
 			window.localStorage.removeItem('gltoken');
+			pushNotification.unregisterDevice(
+				function(status) {
+					var pushToken = status;
+					console.warn('push token: ' + pushToken);
+				},
+				function(status) {
+					console.warn(JSON.stringify(['failed to register ', status]));
+				}
+			);
+			
+			pushNotification.setTags({username:null},
+				function(status) {
+					console.warn('setTags success');
+				},
+				function(status) {
+					console.warn('setTags failed');
+				}
+			);
 		},
 		
 		welcome : function () {
@@ -1001,6 +1080,24 @@ var controller = function () {
 				_self.isResetPasswordRequired();
 				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
+				pushNotification.registerDevice(
+					function(status) {
+						var pushToken = status;
+						console.warn('push token: ' + pushToken);
+					},
+					function(status) {
+						console.warn(JSON.stringify(['failed to register ', status]));
+					}
+				);
+				
+				pushNotification.setTags({username:_self.userLogin},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
 			};
 
 			function refreshTokenFailure() {
@@ -1069,14 +1166,7 @@ var controller = function () {
 				_self.userLogin = that.social+'_'+that.data.email;
 				window.localStorage.rmp_lobin_by = that.social;
 				_self.loading(false);
-				/*pushNotification.setTags({username:_self.userLogin, deviceId:10},
-					function(status) {
-						console.warn('setTags success');
-					},
-					function(status) {
-						console.warn('setTags failed');
-					}
-				);
+				$.mobile.navigate("#page-home");
 				pushNotification.registerDevice(
 					function(status) {
 						var pushToken = status;
@@ -1085,8 +1175,16 @@ var controller = function () {
 					function(status) {
 						console.warn(JSON.stringify(['failed to register ', status]));
 					}
-				);*/
-				$.mobile.navigate("#page-home");
+				);
+				
+				pushNotification.setTags({username:_self.userLogin},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
 			};
 
 			function refreshTokenFailure() {
