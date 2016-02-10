@@ -61,6 +61,10 @@ var controller = function () {
 				_self.bulletin();
 			});
 			
+			$(document).delegate("#page-rateUserProfile", "pagebeforeshow", function () {
+				
+			});
+			
 			$(document).delegate("#page-sendRatingRequest", "pagebeforeshow", function () {
 				_self.sendRatingRequest();
 			});
@@ -89,18 +93,18 @@ var controller = function () {
 					var obj = data[i];
 					
 					if(obj.friendCreated === 0){
-						if(!objRateReqSent[obj.friends[0].username]){
-							objRateReqSent[obj.friends[0].username] = [];
+						if(!objRateReqSent[obj.requestId]){
+							objRateReqSent[obj.requestId] = [];
 						}
-						objRateReqSent[obj.friends[0].username].push(obj);
+						objRateReqSent[obj.requestId].push(obj);
 					}
 				}
 				
 				$.each(objRateReqSent, function(key, value){
 					//console.log( key + ": " + value );
-					that.$RateReqSentList.append("<li id='lstRateReqSent-"+value[0].friends[0].username+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					that.$RateReqSentList.append("<li id='lstRateReqSent-"+value[0].requestId+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
 					
-					$("#lstRateReqSent-"+value[0].friends[0].username).data(value);
+					$("#lstRateReqSent-"+value[0].requestId).data(value);
 					var listParam = [];
 					for(var i=0; i<value.length; i++){
 						listParam.push(value[i].detailId);
@@ -109,7 +113,7 @@ var controller = function () {
 					$.ajax({
 						url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
 						type : 'GET',
-						context : $("#lstRateReqSent-"+value[0].friends[0].username),
+						context : $("#lstRateReqSent-"+value[0].requestId),
 						data : {"detailIds":listParam.toString()}
 					}).done(function (data) {
 						var avgHomeRate = 0;
@@ -122,7 +126,8 @@ var controller = function () {
 					});
 				});
 				
-				
+				that.$RateReqSentList.off('click');
+				that.$RateReqSentList.on('click', 'li', {info:"rateByMe"}, _self._showRateUserProfile);
 			});
 			
 			$.ajax({
@@ -133,18 +138,18 @@ var controller = function () {
 					var obj = data[i];
 					
 					if(obj.friendCreated === 0){
-						if(!objRateReqRec[obj.friends[0].username]){
-							objRateReqRec[obj.friends[0].username] = [];
+						if(!objRateReqRec[obj.requestId]){
+							objRateReqRec[obj.requestId] = [];
 						}
-						objRateReqRec[obj.friends[0].username].push(obj);
+						objRateReqRec[obj.requestId].push(obj);
 					}
 				}
 				
 				$.each(objRateReqRec, function(key, value){
 					//console.log( key + ": " + value );
-					that.$RateReqRecList.append("<li id='lstRateReqSent-"+value[0].friends[0].username+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					that.$RateReqRecList.append("<li id='lstRateReqSent-"+value[0].requestId+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
 					
-					$("#lstRateReqSent-"+value[0].friends[0].username).data(value);
+					$("#lstRateReqSent-"+value[0].requestId).data(value);
 					var listParam = [];
 					for(var i=0; i<value.length; i++){
 						listParam.push(value[i].detailId);
@@ -153,7 +158,7 @@ var controller = function () {
 					$.ajax({
 						url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
 						type : 'GET',
-						context : $("#lstRateReqSent-"+value[0].friends[0].username),
+						context : $("#lstRateReqSent-"+value[0].requestId),
 						data : {"detailIds":listParam.toString()}
 					}).done(function (data) {
 						var avgHomeRate = 0;
@@ -165,8 +170,123 @@ var controller = function () {
 						this.find('.userRating').raty({score: avgHomeRate, readOnly: true});
 					});
 				});
+				
+				that.$RateReqRecList.off('click');
+				that.$RateReqRecList.on('click', 'li', {info:"rateToMe"}, _self._showRateUserProfile);
 			});
 			
+		},
+		
+		_showRateUserProfile: function(event){
+			var that = this;
+			this.info = event.data.info;
+			this.$rateUserProfile = $('#page-rateUserProfile');
+			this.$txtRUName = $('#txtRUName', this.$rateUserProfile);
+			this.$txtRUDesignation = $('#txtRUDesignation', this.$rateUserProfile);
+			this.$txtRUDesc = $('#txtRUDesc', this.$rateUserProfile);
+			this.$rUserOverallRating = $('#rUserOverallRating', this.$rateUserProfile);
+			this.$btnRateUSubmit = $('#btnRateUSubmit', this.$rateUserProfile).hide();
+			
+			this.$lstURatePersonal = $('#lstURatePersonal', this.$rateUserProfile);
+			this.$lstURateProfessional = $('#lstURateProfessional', this.$rateUserProfile);
+			
+			var data = $(this).data();
+			this.dataObj = data;
+			
+			this.$txtRUName.text(data[0].friends[0].name);
+			this.$txtRUDesignation.text(data[0].friends[0].designation);
+			this.$txtRUDesc.text(data[0].friends[0].description);
+			
+			var detailId = [];
+			$.each(data, function(){
+				detailId.push(this.detailId);
+			});
+			
+			this.detailId = detailId;
+			
+			$.ajax({
+				url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+				type : 'GET',
+				data : {'name': data[0].friends[0].username}
+			}).done(function (data) {
+				
+				that.$lstURatePersonal.empty();
+				that.$lstURateProfessional.empty();
+				
+				for(var i=0; i<data.length; i++){
+					if(data[i].type === "Personal"){
+						that.$lstURatePersonal.append('<li id="lstItemURatePersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						$("#lstItemURatePersonal-"+data[i].id).data(data[i]);
+					} else if(data[i].type === "Professional"){
+						that.$lstURateProfessional.append('<li id="lstItemURateProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						$("#lstItemURateProfessional-"+data[i].id).data(data[i]);
+					}
+					
+					if(that.info === "rateByMe"){
+						$('#usrRating-'+data[i].id).raty({score: 0, readOnly:true});
+					} else {
+						$('#usrRating-'+data[i].id).raty({score: 0});
+					}					
+				}	
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
+					type : 'GET',
+					context : $("#lstRateReqSent-"+data[0].requestId),
+					data : {"detailIds": that.detailId.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						if(that.info === "rateByMe"){
+							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
+						} else {
+							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating});
+						}
+						
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					that.$rUserOverallRating.raty({score: avgHomeRate, readOnly: true});
+				});
+			});
+			
+			if(this.info === "rateToMe"){
+				this.$btnRateUSubmit.show();
+			} else if(this.info === "rateByMe"){
+				this.$btnRateUSubmit.hide();
+			}
+			
+			$.mobile.navigate('#page-rateUserProfile');
+			
+			this.$btnRateUSubmit.off('click');
+			this.$btnRateUSubmit.on('click', function(event){
+				var data = that.dataObj, rateObj = "[";
+				$.each(data, function(){
+					var detailId = this.detailId,
+						paramId = this.paramIds[0].id,
+						rating = $('#usrRating-'+paramId).find('input').val();
+					
+					if(!rating){
+						rating = 0;
+					}
+					rateObj = rateObj.concat("{\"detailId\":"+detailId+",\"paramId\":"+paramId+",\"rating\":"+rating+"},");
+				});
+				
+				rateObj = rateObj.substring(0, rateObj.length-1) + "]";
+				$.ajax({
+					url : hostUrl.concat("/rating?access_token=" + window.bearerToken),
+					type : 'POST',
+					beforeSend: function(req) {
+						req.setRequestHeader("Accept", "application/json; charset=UTF-8");
+					},
+					data : rateObj,
+					contentType : 'application/json; charset=UTF-8'
+				}).done(function (data) {
+					//console.log(data);
+					$.mobile.navigate('#page-bulletin');
+				});
+			});
 		},
 		
 		_showPalRequest: function(){
@@ -724,7 +844,7 @@ var controller = function () {
 					contentType : 'application/json; charset=UTF-8'
 				}).done(function (data) {
 					console.log("Data Request Send.");
-					
+					$.mobile.navigate('#page-friends');
 				});
 			});
 		},

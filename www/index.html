@@ -439,6 +439,58 @@
             </div>
         </div>
 		
+		<div data-role="page" id="page-rateUserProfile" class="rateUserProfilePage">
+            <div data-role="header" class="headerDiv" data-position="fixed">
+				<a href="#page-bulletin" class="backBtn" data-iconpos="notext" data-transition="slide" data-direction="reverse"><span aria-hidden="true" class="glyphicon glyphicon-chevron-left"></span> </a>
+                <h1>RateMePal</h1>
+            </div>
+            <div data-role="main" class="ui-content" >
+				<div class="UserProfileDetails">
+                    <div class="UserProfileImg"><img id="imgUHomeDisp" data-inline="true" class="UserProfilePic"  src='images/defaultImg.png'/></div>
+                    <div class="UserProfileName">
+                        <p class="UserName" id="txtRUName"></p>
+                        <p class="UserDesignation" id="txtRUDesignation"></p>
+                        <p class="UserProfileDesc" id="txtRUDesc"></p>
+                    </div>
+                </div>
+                <div class="UserRatingBar">
+                    <div id="rUserOverallRating" class="userRating"></div>
+					<a id='btnRateUSubmit' href='#' class='button submitBtn'>Submit</a>
+                </div>
+                <div>
+                    <div class="skillsTab" data-role="tabs" id="tabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#tabURatePersonal" class="ui-btn-active" data-ajax="false">Personal</a></li>
+                                <li><a href="#tabURateProfessional" data-ajax="false">Professional</a></li>
+                            </ul>
+                        </div>
+                        <div id="tabURatePersonal" class="tabPersonal">
+                            <ul id="lstURatePersonal" data-role="listview" data-inset="true">
+                                
+                            </ul>
+                        </div>
+                        <div id="tabURateProfessional" class="tabProfessional">
+                            <ul id="lstURateProfessional" data-role="listview" data-inset="true">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div data-role="footer" class="footerDiv" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                        <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
+                        <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
+                        <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+		
 		<div data-role="page" id="page-insta" class="instaPage">
             <div class="panel" data-role="panel" data-position="left" data-display="push" id="side-menu3">
                 <ul>
