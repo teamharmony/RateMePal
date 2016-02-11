@@ -61,32 +61,250 @@ var controller = function () {
 				_self.bulletin();
 			});
 			
+			$(document).delegate("#page-rateUserProfile", "pagebeforeshow", function () {
+				
+			});
+			
 			$(document).delegate("#page-sendRatingRequest", "pagebeforeshow", function () {
 				_self.sendRatingRequest();
 			});
 			
+			$(document).delegate("#page-insta", "pagebeforeshow", function () {
+				_self.insta();
+			});
+			
+		},
+		
+		insta: function(){
+			this.$instaPage = $('#page-insta');
+			this.$btnLogout = $('#btnLogout', this.$instaPage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
 		},
 		
 		bulletin: function(){
+			this.$bulletinPage = $('#page-bulletin');
+			this.$btnLogout = $('#btnLogout', this.$bulletinPage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
+			
 			_self._showPalRequest();
 			_self._showRatingRequest();
 		},
 		
 		_showRatingRequest: function(){
+			var that = this;
+			this.$bulletinPage = $('#page-bulletin');
+			this.$RateReqRecList = $('#rateReqRecList',this.$bulletinPage);
+			this.$RateReqSentList = $('#rateReqSentList',this.$bulletinPage);
+			this.$RateReqRecList.empty();
+			this.$RateReqSentList.empty();
+			
+			var objRateReqSent = {}, objRateReqRec = {};
 			$.ajax({
 				url : hostUrl.concat("/dataRequest/byMe?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function(data) {
-				console.log(data);
+				for(var i=0; i<data.length; i++){
+					var obj = data[i];
+					
+					if(obj.friendCreated === 0){
+						if(!objRateReqSent[obj.requestId]){
+							objRateReqSent[obj.requestId] = [];
+						}
+						objRateReqSent[obj.requestId].push(obj);
+					}
+				}
+				
+				$.each(objRateReqSent, function(key, value){
+					//console.log( key + ": " + value );
+					that.$RateReqSentList.append("<li id='lstRateReqSent-"+value[0].requestId+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					
+					$("#lstRateReqSent-"+value[0].requestId).data(value);
+					var listParam = [];
+					for(var i=0; i<value.length; i++){
+						listParam.push(value[i].detailId);
+					}
+					
+					$.ajax({
+						url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
+						type : 'GET',
+						context : $("#lstRateReqSent-"+value[0].requestId),
+						data : {"detailIds":listParam.toString()}
+					}).done(function (data) {
+						var avgHomeRate = 0;
+						for(var i=0; i < data.length; i++){
+							avgHomeRate += data[i].rating;
+						}
+						avgHomeRate = avgHomeRate/data.length;
+						
+						this.find('.userRating').raty({score: avgHomeRate, readOnly: true});
+					});
+				});
+				
+				that.$RateReqSentList.off('click');
+				that.$RateReqSentList.on('click', 'li', {info:"rateByMe"}, _self._showRateUserProfile);
 			});
 			
 			$.ajax({
 				url : hostUrl.concat("/dataRequest/toMe?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function(data) {
-				console.log(data);
+				for(var i=0; i<data.length; i++){
+					var obj = data[i];
+					
+					if(obj.friendCreated === 0){
+						if(!objRateReqRec[obj.requestId]){
+							objRateReqRec[obj.requestId] = [];
+						}
+						objRateReqRec[obj.requestId].push(obj);
+					}
+				}
+				
+				$.each(objRateReqRec, function(key, value){
+					//console.log( key + ": " + value );
+					that.$RateReqRecList.append("<li id='lstRateReqSent-"+value[0].requestId+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ value[0].friends[0].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ value[0].friends[0].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div id='usrRateReqSent"+value[0].friends[0].username+"' class='userRating'></div></div></div></div></li>").listview('refresh');
+					
+					$("#lstRateReqSent-"+value[0].requestId).data(value);
+					var listParam = [];
+					for(var i=0; i<value.length; i++){
+						listParam.push(value[i].detailId);
+					}
+					
+					$.ajax({
+						url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
+						type : 'GET',
+						context : $("#lstRateReqSent-"+value[0].requestId),
+						data : {"detailIds":listParam.toString()}
+					}).done(function (data) {
+						var avgHomeRate = 0;
+						for(var i=0; i < data.length; i++){
+							avgHomeRate += data[i].rating;
+						}
+						avgHomeRate = avgHomeRate/data.length;
+						
+						this.find('.userRating').raty({score: avgHomeRate, readOnly: true});
+					});
+				});
+				
+				that.$RateReqRecList.off('click');
+				that.$RateReqRecList.on('click', 'li', {info:"rateToMe"}, _self._showRateUserProfile);
 			});
 			
+		},
+		
+		_showRateUserProfile: function(event){
+			var that = this;
+			this.info = event.data.info;
+			this.$rateUserProfile = $('#page-rateUserProfile');
+			this.$txtRUName = $('#txtRUName', this.$rateUserProfile);
+			this.$txtRUDesignation = $('#txtRUDesignation', this.$rateUserProfile);
+			this.$txtRUDesc = $('#txtRUDesc', this.$rateUserProfile);
+			this.$rUserOverallRating = $('#rUserOverallRating', this.$rateUserProfile);
+			this.$btnRateUSubmit = $('#btnRateUSubmit', this.$rateUserProfile).hide();
+			
+			this.$lstURatePersonal = $('#lstURatePersonal', this.$rateUserProfile);
+			this.$lstURateProfessional = $('#lstURateProfessional', this.$rateUserProfile);
+			
+			var data = $(this).data();
+			this.dataObj = data;
+			
+			this.$txtRUName.text(data[0].friends[0].name);
+			this.$txtRUDesignation.text(data[0].friends[0].designation);
+			this.$txtRUDesc.text(data[0].friends[0].description);
+			
+			var detailId = [];
+			$.each(data, function(){
+				detailId.push(this.detailId);
+			});
+			
+			this.detailId = detailId;
+			
+			$.ajax({
+				url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+				type : 'GET',
+				data : {'name': data[0].friends[0].username}
+			}).done(function (data) {
+				
+				that.$lstURatePersonal.empty();
+				that.$lstURateProfessional.empty();
+				
+				for(var i=0; i<data.length; i++){
+					if(data[i].type === "Personal"){
+						that.$lstURatePersonal.append('<li id="lstItemURatePersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						$("#lstItemURatePersonal-"+data[i].id).data(data[i]);
+					} else if(data[i].type === "Professional"){
+						that.$lstURateProfessional.append('<li id="lstItemURateProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						$("#lstItemURateProfessional-"+data[i].id).data(data[i]);
+					}
+					
+					if(that.info === "rateByMe"){
+						$('#usrRating-'+data[i].id).raty({score: 0, readOnly:true});
+					} else {
+						$('#usrRating-'+data[i].id).raty({score: 0});
+					}					
+				}	
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
+					type : 'GET',
+					context : $("#lstRateReqSent-"+data[0].requestId),
+					data : {"detailIds": that.detailId.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						if(that.info === "rateByMe"){
+							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
+						} else {
+							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating});
+						}
+						
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					that.$rUserOverallRating.raty({score: avgHomeRate, readOnly: true});
+				});
+			});
+			
+			if(this.info === "rateToMe"){
+				this.$btnRateUSubmit.show();
+			} else if(this.info === "rateByMe"){
+				this.$btnRateUSubmit.hide();
+			}
+			
+			$.mobile.navigate('#page-rateUserProfile');
+			
+			this.$btnRateUSubmit.off('click');
+			this.$btnRateUSubmit.on('click', function(event){
+				var data = that.dataObj, rateObj = "[";
+				$.each(data, function(){
+					var detailId = this.detailId,
+						paramId = this.paramIds[0].id,
+						rating = $('#usrRating-'+paramId).find('input').val();
+					
+					if(!rating){
+						rating = 0;
+					}
+					rateObj = rateObj.concat("{\"detailId\":"+detailId+",\"paramId\":"+paramId+",\"rating\":"+rating+"},");
+				});
+				
+				rateObj = rateObj.substring(0, rateObj.length-1) + "]";
+				$.ajax({
+					url : hostUrl.concat("/rating?access_token=" + window.bearerToken),
+					type : 'POST',
+					beforeSend: function(req) {
+						req.setRequestHeader("Accept", "application/json; charset=UTF-8");
+					},
+					data : rateObj,
+					contentType : 'application/json; charset=UTF-8'
+				}).done(function (data) {
+					//console.log(data);
+					$.mobile.navigate('#page-bulletin');
+				});
+			});
 		},
 		
 		_showPalRequest: function(){
@@ -107,11 +325,12 @@ var controller = function () {
 				for(var i=0; i<data.length; i++){
 					var obj = data[i];
 					if(obj.status === "4"){
-						that.$PalReqRecList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+obj.name+"'></div><div class='UserActionDic'><a id='btnFrdAccept' href='#' class='button acceptBtn'>Accept</a><a id='btnFrdReject' href='#' class='button rejectBtn'>Reject</a></div></div></div></div></li>").listview('refresh');
+						that.$PalReqRecList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+obj.name+"'></div><div class='UserActionDic'><a id='btnFrdAccept' class='acceptReject acceptIcon'><span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span> </a><a id='btnFrdReject' class='acceptReject rejectIcon'><span class='glyphicon glyphicon-thumbs-down' aria-hidden='true'></span> </a></div></div></div></div></li>").listview('refresh');
 					} else if(obj.status === "1"){
 						that.$PalReqSentList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
 					$('#lstBullitenPalItem-'+i).data(obj);
+					_self._getAverageRating($('#lstBullitenPalItem-'+i), obj.username);
 				}				
 			});
 			
@@ -120,8 +339,8 @@ var controller = function () {
 			
 			this.$PalReqRecList.off('click', 'li');
 			this.$PalReqRecList.on('click', 'li', {from:'PalReqRecList'}, function(){
-				var sId = event.target.id, that = this;
-				this.listItemData = $('#'+event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id).data();
+				var sId = event.target.parentElement.id, that = this;
+				this.listItemData = $('#'+event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id).data();
 				
 				if(sId === "btnFrdAccept"){
 					$.ajax({
@@ -220,8 +439,11 @@ var controller = function () {
 						count++;
 						this.$peopleList.append("<li id='lstNonFrdItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ nonFrdsData[i].name +"</p><p class='UserDesignation' id='txtDesignation'>"+ nonFrdsData[i].designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
-					$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 3});
+					$('#usrRate-nonFrd'+i).raty({readOnly: true, score: 0});
 					$('#lstNonFrdItem-'+i).data(nonFrdsData[i]);
+					
+					_self._getAverageRating($('#lstNonFrdItem-'+i), nonFrdsData[i].username);
+					
 				}
 				this.$peopleCount.text(count + " User Found");
 				this.$peopleList.off('click', 'li');
@@ -258,6 +480,36 @@ var controller = function () {
 
 		},
 		
+		_getAverageRating: function(context, username){
+			$.ajax({
+				url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+				type : 'GET',
+				context : context,
+				data : {'name': username}
+			}).done(function (data) {
+				var lstParamIds = [];
+				for(var i=0; i<data.length; i++){
+					lstParamIds.push(data[i].id);
+				}
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+					type : 'GET',
+					context : this,
+					data : {"paramIds":lstParamIds.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						//$('#usrHomeRate-'+data[i].paramId).raty({score: data[i].rating});
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					this.find('.userRating').raty({score: avgHomeRate, readOnly: true});
+				});
+			});
+		},
+		
 		_showFriends: function(frdsData){
 			var that = this;
 			this.$friendsPage = $('#page-friends');
@@ -272,6 +524,8 @@ var controller = function () {
 					
 					$('#lstFrdItem-'+i).data(frdsData[i]);
 					$('#usrRate-frd'+i).raty({readOnly: true, score: 0});
+					
+					_self._getAverageRating($('#lstFrdItem-'+i), frdsData[i].username);
 				}
 				$('#chkSelectall').prop('checked', false).checkboxradio("refresh");
 				this.$friendsList.off('click taphold', 'li');
@@ -404,10 +658,14 @@ var controller = function () {
 						type : 'GET',
 						data : {"paramIds":lstParaId.toString()}
 					}).done(function (data) {
-						console.log(data);
-						if(data.length === 0){
-							
+						var avgHomeRate = 0;
+						for(var i=0; i < data.length; i++){
+							$('#usrRate-'+data[i].paramId).raty({score: data[i].rating});
+							avgHomeRate += data[i].rating;
 						}
+						avgHomeRate = avgHomeRate/data.length;
+						
+						that.$userOverallRating.raty({score: avgHomeRate, readOnly: true});
 					});
 					
 					
@@ -425,7 +683,7 @@ var controller = function () {
 						paraIds = paraIds.concat("{\"id\":"+data.id+"}"+ ',');
 					});
 					
-					var reqObj = "{\"requestName\":\"FriendRated\",\"friendCreated\":1,\"paramIds\":["+paraIds.substring(0, paraIds.length-1)+"],\"friends\":[{\"username\":\""+data.username+"\"}]}";
+					var reqObj = "{\"requestName\":\"FriendRated\",\"friendCreated\":1,\"paramIds\":["+paraIds.substring(0, paraIds.length-1)+"],\"friends\":[{\"username\":\""+_self.userLogin+"\"}]}";
 					$.ajax({
 						url : hostUrl.concat("/dataRequest?access_token=" + window.bearerToken),
 						type : 'POST',
@@ -435,8 +693,31 @@ var controller = function () {
 						data: reqObj,
 						contentType : 'application/json; charset=UTF-8'
 					}).done(function (data) {
+						var rateObj = "[";
 						console.log("Data Request Send.");
-						
+						for(var i=0; i<data.length; i++){
+							var detailId = data[i].detailId,
+								paramId = data[i].paramIds[0].id,
+								rating = $('#usrRate-'+paramId).find('input').val();
+							
+							if(!rating){
+								rating = 0;
+							}
+							rateObj = rateObj.concat("{\"detailId\":"+detailId+",\"paramId\":"+paramId+",\"rating\":"+rating+"},");
+						}
+						rateObj = rateObj.substring(0, rateObj.length-1) + "]";
+						$.ajax({
+							url : hostUrl.concat("/rating?access_token=" + window.bearerToken),
+							type : 'POST',
+							beforeSend: function(req) {
+								req.setRequestHeader("Accept", "application/json; charset=UTF-8");
+							},
+							data : rateObj,
+							contentType : 'application/json; charset=UTF-8'
+						}).done(function (data) {
+							//console.log(data);
+							$.mobile.navigate('#page-friends');
+						});
 					});
 				});
 			}
@@ -581,12 +862,7 @@ var controller = function () {
 					contentType : 'application/json; charset=UTF-8'
 				}).done(function (data) {
 					console.log("Data Request Send.");
-					$.ajax({
-						url : hostUrl.concat("/dataRequest/byMe?access_token=" + window.bearerToken),
-						type : 'GET'
-					}).done(function(data) {
-						console.log(data);
-					});
+					$.mobile.navigate('#page-friends');
 				});
 			});
 		},
@@ -602,6 +878,7 @@ var controller = function () {
 			this.$txtUName = $('#txtUName', this.$homePage);
 			this.$txtUDesignation = $('#txtUDesignation', this.$homePage);
 			this.$txtUDesc = $('#txtUDesc', this.$homePage);
+			this.$userHomeAvgRate = $('#userHomeAvgRate',this.$homePage);
 			
 			this.$lstPersonal = $('#lstPersonal', this.$homePage);
 			this.$lstProfessional = $('#lstProfessional', this.$homePage);
@@ -617,7 +894,7 @@ var controller = function () {
 				that.$txtUName.text(data.name);
 				that.$txtUDesignation.text(data.designation);
 				that.$txtUDesc.text(data.description);
-				$('#userOverallRating').raty({readOnly: true, score: 3});
+				that.$userHomeAvgRate.raty({readOnly: true, score: 0});
 				$.ajax(   {
 					url : hostUrl + "/profilePic/" + data.username,
 					type : 'GET',
@@ -637,15 +914,34 @@ var controller = function () {
 				url : hostUrl.concat("/parameters?access_token=" + window.bearerToken),
 				type : 'GET'
 			}).done(function (data) {
+				var lstParaId = [];
 				for(var i=0; i < data.length; i++){
 					if(data[i].type === "Personal"){
-						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstPersonal.append('<li id="lstItemPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrHomeRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					} else if(data[i].type === "Professional"){
-						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+						that.$lstProfessional.append('<li id="lstItemProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrHomeRate-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
 					}
-					$('#usrRate-'+data[i].id).raty({readOnly: true, score: 3});
+					$('#usrHomeRate-'+data[i].id).raty({readOnly: true, score: 0});
+					lstParaId.push(data[i].id);
 				}
+				
+				$.ajax({
+					url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {"paramIds":lstParaId.toString()}
+				}).done(function (data) {
+					var avgHomeRate = 0;
+					for(var i=0; i < data.length; i++){
+						$('#usrHomeRate-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
+						avgHomeRate += data[i].rating;
+					}
+					avgHomeRate = avgHomeRate/data.length;
+					
+					that.$userHomeAvgRate.raty({score: avgHomeRate, readOnly: true});
+				});
 			});
+			
+			
 			
 		},
 		
@@ -894,7 +1190,7 @@ var controller = function () {
 			window.localStorage.removeItem('rmplogin_refresh_token');
 			window.localStorage.removeItem('fbtoken');
 			window.localStorage.removeItem('gltoken');
-			pushNotification.unregisterDevice(
+			_self.pushNotification.unregisterDevice(
 				function(status) {
 					var pushToken = status;
 					console.warn('push token: ' + pushToken);
@@ -904,7 +1200,7 @@ var controller = function () {
 				}
 			);
 			
-			pushNotification.setTags({username:null},
+			_self.pushNotification.setTags({"username":null},
 				function(status) {
 					console.warn('setTags success');
 				},
@@ -970,6 +1266,7 @@ var controller = function () {
 
 		checkLogin : function () {
 			_self.welcome();
+			_self.initPushwoosh();
 			if (window.localStorage.rmp_lobin_by === "normal") {
 				if (window.localStorage.rmplogin_refresh_token) {
 					_self.directLoginApp("normal");
@@ -995,8 +1292,32 @@ var controller = function () {
 
 		directLoginApp : function (loginBy) {
 			function loginSuccess() {
+				$.ajax({
+					url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
+					type : 'GET'
+				}).done(function(data) {
+					_self.userLogin = data.username;
+				});
 				$.mobile.navigate('#page-home');
 				window.localStorage.rmp_lobin_by = loginBy;
+				_self.pushNotification.registerDevice(
+					function(status) {
+						var pushToken = status;
+						console.warn('push token: ' + pushToken);
+					},
+					function(status) {
+						console.warn(JSON.stringify(['failed to register ', status]));
+					}
+				);
+				
+				_self.pushNotification.setTags({"username":_self.userLogin},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
 			}
 
 			function refreshTokenFailure() {
@@ -1014,13 +1335,15 @@ var controller = function () {
 		},
 
 		onLoginClickHandler : function (event) {
+			console.log("Inside onLoginclick");
 			var that = this;
 			_self.loading(true);
 			function loginSuccess() {
+				console.log("Inside login success");
 				_self.isResetPasswordRequired();
 				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
-				pushNotification.registerDevice(
+				_self.pushNotification.registerDevice(
 					function(status) {
 						var pushToken = status;
 						console.warn('push token: ' + pushToken);
@@ -1030,7 +1353,7 @@ var controller = function () {
 					}
 				);
 				
-				pushNotification.setTags({username:_self.userLogin},
+				_self.pushNotification.setTags({"username":_self.userLogin},
 					function(status) {
 						console.warn('setTags success');
 					},
@@ -1107,7 +1430,7 @@ var controller = function () {
 				window.localStorage.rmp_lobin_by = that.social;
 				_self.loading(false);
 				$.mobile.navigate("#page-home");
-				pushNotification.registerDevice(
+				_self.pushNotification.registerDevice(
 					function(status) {
 						var pushToken = status;
 						console.warn('push token: ' + pushToken);
@@ -1117,7 +1440,7 @@ var controller = function () {
 					}
 				);
 				
-				pushNotification.setTags({username:_self.userLogin},
+				_self.pushNotification.setTags({"username":_self.userLogin},
 					function(status) {
 						console.warn('setTags success');
 					},
@@ -1444,10 +1767,10 @@ var controller = function () {
 			navigator.notification.confirm(message, confirmCallback, 'RateMePal', ['Yes','No'])
 		},
 		
-		initPushwoosh: function()
-		{
+		initPushwoosh: function(){
+			console.log("Inside initPushwoosh");
 			var pushNotification = cordova.require("com.pushwoosh.plugins.pushwoosh.PushNotification");
-		 
+			_self.pushNotification = pushNotification;
 			//set push notifications handler
 			document.addEventListener('push-notification', function(event) {
 				var title = event.notification.title;

@@ -594,3 +594,13 @@ color:#059;
 		text-decoration: none;
     border-radius: 2rem;
 }
+
+.acceptReject .glyphicon { 
+ font-size: 1.5em;
+}
+.acceptIcon .glyphicon{ 
+color: green;
+}
+.rejectIcon .glyphicon{ 
+color: red
+}

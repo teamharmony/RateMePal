@@ -1,6 +1,6 @@
 var controller = function () {
-	var hostUrl = "http://localhost:8080/RateMePalMidTier",
-	//var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
+	//var hostUrl = "http://localhost:8080/RateMePalMidTier",
+	var hostUrl = "http://vps.hilfe.website:8080/RateMePalMidTier",
 	clientId = "rateMePal";
 
 	var controller = {
@@ -69,9 +69,27 @@ var controller = function () {
 				_self.sendRatingRequest();
 			});
 			
+			$(document).delegate("#page-insta", "pagebeforeshow", function () {
+				_self.insta();
+			});
+			
+		},
+		
+		insta: function(){
+			this.$instaPage = $('#page-insta');
+			this.$btnLogout = $('#btnLogout', this.$instaPage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
 		},
 		
 		bulletin: function(){
+			this.$bulletinPage = $('#page-bulletin');
+			this.$btnLogout = $('#btnLogout', this.$bulletinPage);
+			
+			this.$btnLogout.off('click');
+			this.$btnLogout.on('click', _self.logout);
+			
 			_self._showPalRequest();
 			_self._showRatingRequest();
 		},
@@ -307,7 +325,7 @@ var controller = function () {
 				for(var i=0; i<data.length; i++){
 					var obj = data[i];
 					if(obj.status === "4"){
-						that.$PalReqRecList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+obj.name+"'></div><div class='UserActionDic'><a id='btnFrdAccept' href='#' class='button acceptBtn'>Accept</a><a id='btnFrdReject' href='#' class='button rejectBtn'>Reject</a></div></div></div></div></li>").listview('refresh');
+						that.$PalReqRecList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-"+obj.name+"'></div><div class='UserActionDic'><a id='btnFrdAccept' class='acceptReject acceptIcon'><span class='glyphicon glyphicon-thumbs-up' aria-hidden='true'></span> </a><a id='btnFrdReject' class='acceptReject rejectIcon'><span class='glyphicon glyphicon-thumbs-down' aria-hidden='true'></span> </a></div></div></div></div></li>").listview('refresh');
 					} else if(obj.status === "1"){
 						that.$PalReqSentList.append("<li id='lstBullitenPalItem-"+i+"'><div class='UserProfileImg'><img id='imgHomeDisp' data-inline='true' class='UserProfilePic' src='images/defaultImg.png'></div><div class='UserProfileName'><p class='UserName' id='txtName'>"+ obj.name +"</p><p class='UserDesignation' id='txtDesignation'>"+ obj.designation +"</p><div class='RatingBarBlock' id='RatingBarBlock'><div class='UserRatingBar'><div class='userRating' id='usrRate-nonFrd"+i+"'></div><span class='requestSent'> Request Sent </span></div></div></div></li>").listview('refresh');
 					}
@@ -321,8 +339,8 @@ var controller = function () {
 			
 			this.$PalReqRecList.off('click', 'li');
 			this.$PalReqRecList.on('click', 'li', {from:'PalReqRecList'}, function(){
-				var sId = event.target.id, that = this;
-				this.listItemData = $('#'+event.target.parentNode.parentNode.parentNode.parentNode.parentNode.id).data();
+				var sId = event.target.parentElement.id, that = this;
+				this.listItemData = $('#'+event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id).data();
 				
 				if(sId === "btnFrdAccept"){
 					$.ajax({
@@ -1172,7 +1190,7 @@ var controller = function () {
 			window.localStorage.removeItem('rmplogin_refresh_token');
 			window.localStorage.removeItem('fbtoken');
 			window.localStorage.removeItem('gltoken');
-			pushNotification.unregisterDevice(
+			_self.pushNotification.unregisterDevice(
 				function(status) {
 					var pushToken = status;
 					console.warn('push token: ' + pushToken);
@@ -1182,7 +1200,7 @@ var controller = function () {
 				}
 			);
 			
-			pushNotification.setTags({username:null},
+			_self.pushNotification.setTags({"username":null},
 				function(status) {
 					console.warn('setTags success');
 				},
@@ -1248,6 +1266,7 @@ var controller = function () {
 
 		checkLogin : function () {
 			_self.welcome();
+			_self.initPushwoosh();
 			if (window.localStorage.rmp_lobin_by === "normal") {
 				if (window.localStorage.rmplogin_refresh_token) {
 					_self.directLoginApp("normal");
@@ -1281,7 +1300,24 @@ var controller = function () {
 				});
 				$.mobile.navigate('#page-home');
 				window.localStorage.rmp_lobin_by = loginBy;
+				_self.pushNotification.registerDevice(
+					function(status) {
+						var pushToken = status;
+						console.warn('push token: ' + pushToken);
+					},
+					function(status) {
+						console.warn(JSON.stringify(['failed to register ', status]));
+					}
+				);
 				
+				_self.pushNotification.setTags({"username":_self.userLogin},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
 			}
 
 			function refreshTokenFailure() {
@@ -1299,13 +1335,15 @@ var controller = function () {
 		},
 
 		onLoginClickHandler : function (event) {
+			console.log("Inside onLoginclick");
 			var that = this;
 			_self.loading(true);
 			function loginSuccess() {
+				console.log("Inside login success");
 				_self.isResetPasswordRequired();
 				_self.userLogin = that.$username.val();
 				window.localStorage.rmp_lobin_by = "normal";
-				pushNotification.registerDevice(
+				_self.pushNotification.registerDevice(
 					function(status) {
 						var pushToken = status;
 						console.warn('push token: ' + pushToken);
@@ -1315,7 +1353,7 @@ var controller = function () {
 					}
 				);
 				
-				pushNotification.setTags({username:_self.userLogin},
+				_self.pushNotification.setTags({"username":_self.userLogin},
 					function(status) {
 						console.warn('setTags success');
 					},
@@ -1392,7 +1430,7 @@ var controller = function () {
 				window.localStorage.rmp_lobin_by = that.social;
 				_self.loading(false);
 				$.mobile.navigate("#page-home");
-				pushNotification.registerDevice(
+				_self.pushNotification.registerDevice(
 					function(status) {
 						var pushToken = status;
 						console.warn('push token: ' + pushToken);
@@ -1402,7 +1440,7 @@ var controller = function () {
 					}
 				);
 				
-				pushNotification.setTags({username:_self.userLogin},
+				_self.pushNotification.setTags({"username":_self.userLogin},
 					function(status) {
 						console.warn('setTags success');
 					},
@@ -1729,10 +1767,10 @@ var controller = function () {
 			navigator.notification.confirm(message, confirmCallback, 'RateMePal', ['Yes','No'])
 		},
 		
-		initPushwoosh: function()
-		{
+		initPushwoosh: function(){
+			console.log("Inside initPushwoosh");
 			var pushNotification = cordova.require("com.pushwoosh.plugins.pushwoosh.PushNotification");
-		 
+			_self.pushNotification = pushNotification;
 			//set push notifications handler
 			document.addEventListener('push-notification', function(event) {
 				var title = event.notification.title;

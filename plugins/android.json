@@ -33,11 +33,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushNotification\"><param name=\"android-package\" onload=\"true\" value=\"com.pushwoosh.plugin.pushnotifications.PushNotifications\" /></feature>",
+                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
+                            "xml": "<feature name=\"PushNotification\"><param name=\"android-package\" onload=\"true\" value=\"com.pushwoosh.plugin.pushnotifications.PushNotifications\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -73,6 +73,18 @@
                             "count": 1
                         },
                         {
+                            "xml": "<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
+                            "count": 1
+                        },
+                        {
                             "xml": "<permission android:name=\"com.prj.ratemepal.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
                             "count": 1
                         },
@@ -83,41 +95,80 @@
                         {
                             "xml": "<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />",
                             "count": 1
-                        }
-                    ],
-                    "/manifest/application/activity": [
+                        },
                         {
-                            "xml": "<intent-filter><action android:name=\"com.prj.ratemepal.MESSAGE\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter>",
+                            "xml": "<uses-permission android:name=\"com.sec.android.provider.badge.permission.READ\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.sec.android.provider.badge.permission.WRITE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.htc.launcher.permission.READ_SETTINGS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.htc.launcher.permission.UPDATE_SHORTCUT\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.sonyericsson.home.permission.BROADCAST_BADGE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.anddoes.launcher.permission.UPDATE_COUNT\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"com.majeur.launcher.permission.UPDATE_BADGE\" />",
                             "count": 1
                         }
                     ],
+                    "/manifest/application/activity": [],
                     "/manifest/application": [
                         {
-                            "xml": "<activity android:name=\"com.arellomobile.android.push.PushWebview\" />",
+                            "xml": "<meta-data android:name=\"com.google.android.gms.version\" android:value=\"@integer/google_play_services_version\" />",
                             "count": 1
                         },
                         {
-                            "xml": "<activity android:name=\"com.arellomobile.android.push.MessageActivity\" />",
+                            "xml": "<activity android:name=\"com.pushwoosh.MessageActivity\" />",
                             "count": 1
                         },
                         {
-                            "xml": "<activity android:name=\"com.arellomobile.android.push.PushHandlerActivity\" />",
+                            "xml": "<activity android:name=\"com.pushwoosh.PushHandlerActivity\" />",
                             "count": 1
                         },
                         {
-                            "xml": "<receiver android:name=\"com.google.android.gcm.GCMBroadcastReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><action android:name=\"com.google.android.c2dm.intent.REGISTRATION\" /><category android:name=\"com.prj.ratemepal\" /></intent-filter></receiver>",
+                            "xml": "<receiver android:exported=\"true\" android:name=\"com.google.android.gms.gcm.GcmReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><category android:name=\"PACKAGE_NAME\" /></intent-filter></receiver>",
                             "count": 1
                         },
                         {
-                            "xml": "<service android:name=\"com.arellomobile.android.push.PushGCMIntentService\" />",
+                            "xml": "<service android:exported=\"false\" android:name=\"com.pushwoosh.GCMListenerService\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /></intent-filter></service>",
                             "count": 1
                         },
                         {
-                            "xml": "<service android:name=\"com.arellomobile.android.push.GeoLocationService\" />",
+                            "xml": "<service android:exported=\"false\" android:name=\"com.pushwoosh.GCMInstanceIDListenerService\"><intent-filter><action android:name=\"com.google.android.gms.iid.InstanceID\" /></intent-filter></service>",
                             "count": 1
                         },
                         {
-                            "xml": "<receiver android:name=\"com.arellomobile.android.push.AlarmReceiver\" />",
+                            "xml": "<service android:exported=\"false\" android:name=\"com.pushwoosh.GCMRegistrationService\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<receiver android:enabled=\"true\" android:name=\"com.pushwoosh.local.BootReceiver\" android:permission=\"android.permission.RECEIVE_BOOT_COMPLETED\"><intent-filter><action android:name=\"android.intent.action.BOOT_COMPLETED\" /><category android:name=\"android.intent.category.DEFAULT\" /></intent-filter></receiver>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<receiver android:name=\"com.pushwoosh.local.AlarmReceiver\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<activity android:name=\"com.pushwoosh.richpages.RichPageActivity\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<service android:name=\"com.pushwoosh.location.GeoLocationService\" />",
                             "count": 1
                         }
                     ]
@@ -164,10 +215,10 @@
         "cordova-plugin-dialogs": {
             "PACKAGE_NAME": "com.prj.ratemepal"
         },
-        "com.pushwoosh.plugins.pushwoosh": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "com.prj.ratemepal"
         },
-        "cordova-plugin-device": {
+        "com.pushwoosh.plugins.pushwoosh": {
             "PACKAGE_NAME": "com.prj.ratemepal"
         }
     },

@@ -209,17 +209,17 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/com.pushwoosh.plugins.pushwoosh/www/PushNotification.js",
-        "id": "com.pushwoosh.plugins.pushwoosh.PushNotification",
-        "clobbers": [
-            "plugins.pushNotification"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-device/www/device.js",
         "id": "cordova-plugin-device.device",
         "clobbers": [
             "device"
+        ]
+    },
+    {
+        "file": "plugins/com.pushwoosh.plugins.pushwoosh/www/PushNotification.js",
+        "id": "com.pushwoosh.plugins.pushwoosh.PushNotification",
+        "clobbers": [
+            "plugins.pushNotification"
         ]
     }
 ];
@@ -232,8 +232,8 @@ module.exports.metadata =
     "cordova-plugin-camera": "1.2.0",
     "cordova-plugin-splashscreen": "2.1.0",
     "cordova-plugin-dialogs": "1.2.0",
-    "com.pushwoosh.plugins.pushwoosh": "3.5.4",
-    "cordova-plugin-device": "1.1.1"
+    "cordova-plugin-device": "1.1.1",
+    "com.pushwoosh.plugins.pushwoosh": "4.2.0"
 }
 // BOTTOM OF METADATA
 });

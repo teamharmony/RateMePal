@@ -7,7 +7,7 @@ $(document).on("deviceready", function() {
 });
 
 $(document).on("mobileinit", function () {
-	init();
+	//init();
 	jqmReadyDeferred.resolve();
 });
 

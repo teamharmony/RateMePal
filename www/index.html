@@ -195,7 +195,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                     </ul>
@@ -283,7 +283,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
@@ -337,7 +337,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
@@ -364,7 +364,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
@@ -393,8 +393,8 @@
 					</div>
 					<div id="tabPals" class="skillsTab tabPals">
 						<ul class="tabs">   <!-- Add tabs here -->
-							<li><a href="#tabReqRec">Request Recieved</a></li>
-							<li><a href="#tabReqSent">Request Sent</a></li>
+							<li><a href="#tabReqRec" class="receivedRequestIcon"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+							 <li><a href="#tabReqSent" class="sendRequestIcon"><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> </a>
 						</ul>
 						<div id="tabReqRec">
 							<ul id="palReqRecList" data-role="listview" data-inset="true" > 
@@ -407,9 +407,9 @@
 					</div>
 					<div id="tabRating" class="skillsTab tabRating">
 						<ul class="tabs">   <!-- Add tabs here -->
-							<li><a href="#tabRateReqRec">Request Recieved</a></li>
-							<li><a href="#tabRateReqSent">Request Sent</a></li>
-							<li><a href="#tabRatingRec">Ratings received</a></li>
+							<li><a href="#tabRateReqRec" class="receivedRequestIcon"><span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a>
+							<li><a href="#tabRateReqSent" class="sendRequestIcon"><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span> </a>
+							<li><a href="#tabRatingRec" class="ratingReceivedIcon"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>
 						</ul>
 						<div id="tabRateReqRec">
 							<ul id="rateReqRecList" data-role="listview" data-inset="true" > 
@@ -420,6 +420,7 @@
 							</ul>
 						</div>
 						<div id="tabRatingRec">
+							COMING SOON
 							<!--<ul id="palReqRecList" data-role="listview" data-inset="true" > 
 							</ul>-->
 						</div>
@@ -430,7 +431,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" class="ui-btn-active"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
@@ -482,7 +483,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" class="ui-btn-active"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
@@ -508,7 +509,7 @@
                 <div data-role="navbar">
                     <ul>
                         <li class="NavItem"><a href="#page-home" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-home"></span> <span class="navLink"> HOME </span></a></li>
-                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" ><span aria-hidden="true" class="glyphicon glyphicon-star"></span> <span class="navLink">BULLETIN </span></a></li>
+                        <li class="NavItem"><a href="#page-bulletin" data-role="tab" data-iconpos="top" ><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="navLink">BULLETIN </span></a></li>
                         <li class="NavItem"><a href="#page-insta" data-role="tab" data-iconpos="top" class="ui-btn-active"><span aria-hidden="true" class="glyphicon glyphicon-flash"></span> <span class="navLink"> INSTA </span></a></li>
                         <li class="NavItem"><a href="#page-friends" data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> <span class="navLink"> PALS </span></a></li>
                         <!--<li class="NavItem"><a href="#"data-role="tab" data-iconpos="top"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> <span class="navLink"> INVITE </span></a></li>-->
