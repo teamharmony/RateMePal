@@ -463,10 +463,29 @@ color:#bbbbbb;
 	/*border:1px solid green;*/
 	display: -webkit-flex;
 	display: flex; 
+	-webkit-align-items: center;
+	align-items: center;
 }
-.userRating { 
- -webkit-flex:auto;
+
+.UserRatingBar  .userRating { 
+-webkit-flex-shrink:0;
+	flex-shrink:0;
+	-webkit-flex: initial;
+	flex: initial;
+}
+.RatingBarBlock .UserRatingBar .userRating { 
+	-webkit-flex:auto;
  flex:auto;
+}
+.rateByCountAvg { 
+-webkit-flex:auto;
+ flex:auto;
+ padding: .2em .5em;
+    font-size: 0.85em;
+}
+.rateByCount {
+    font-size: 0.85em;
+    padding: .15em .5em;
 }
 .shareRating { 
 -webkit-flex-shrink:0;
@@ -484,8 +503,9 @@ width: 55px;
   border: 1px solid #1b6aac;
     color: #1b6aac;
     padding: 2px 7px;
-    border-radius: 1rem;
+    border-radius: 1em;
     font-size: 0.75rem;
+	cursor: pointer;
  }
 .requestSent { 
  color: green;
@@ -541,6 +561,8 @@ border-top-right-radius: 25px;
 
 .skillsTab .ui-listview .skillRating .glyphicon { 
  color: red;
+     font-size: 1.25em;
+    cursor: pointer;
 }
 
 /* Tabs > Tabs */
@@ -554,9 +576,10 @@ border-top-right-radius: 25px;
 }
 .skillsTab ul.tabs li > a.ui-link { 
 display: block;
-    padding: 0.35rem;
+    padding: 0.25em 1em;
 		text-decoration: none;
     font-weight: normal;
+		    font-size: 1.5em;
 }
 .skillsTab ul.tabs li > a.ui-link.active{ 
 border-bottom: 3px solid #059;
@@ -595,6 +618,12 @@ color:#059;
     border-radius: 2rem;
 }
 
+.acceptReject {
+     padding: 2px 6px;
+    display: inline-block;
+    box-sizing: border-box;
+    cursor: pointer;
+}
 .acceptReject .glyphicon { 
  font-size: 1.5em;
 }
