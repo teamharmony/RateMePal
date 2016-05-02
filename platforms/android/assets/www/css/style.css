@@ -633,6 +633,15 @@ color: green;
 .rejectIcon .glyphicon{ 
 color: red
 }
+.UserRatingBar .submitBtn { 
+    padding: .25rem 1em;
+    width: auto;
+    height: auto;
+    font-size: 1em;
+    font-weight: normal;
+	margin:0;
+}
 
-[data-role=page]{position:relative !important;}
-[data-role=footer]{bottom:0; position:absolute !important; top: auto !important; width:100%;}
+.ui-input-text input.searchResultInput{ 
+padding: .4em 2em .4em 1em;
+}

@@ -239,11 +239,13 @@ var controller = function () {
 			this.$imgRateUHomeDisp = $('#imgRateUHomeDisp', this.$rateUserProfile);
 			this.$rUserOverallRating = $('#rUserOverallRating', this.$rateUserProfile);
 			this.$btnRateUSubmit = $('#btnRateUSubmit', this.$rateUserProfile).hide();
-			
+			this.$btnRateURateMe = $('#btnRateURateMe', this.$rateUserProfile).hide();
 			
 			this.$lstURatePersonal = $('#lstURatePersonal', this.$rateUserProfile);
 			this.$lstURateProfessional = $('#lstURateProfessional', this.$rateUserProfile);
 			
+			this.$imgRateUHomeDisp.attr('src', 'images/defaultImg.png');
+
 			var data = $(this).data();
 			this.dataObj = data;
 			
@@ -272,13 +274,13 @@ var controller = function () {
 			});
 			
 			this.detailId = detailId;
-			
+			_self.loading(true);
 			$.ajax({
 				url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
 				type : 'GET',
 				data : {'name': data[0].friends[0].username}
 			}).done(function (data) {
-				
+				_self.loading(false);
 				that.$lstURatePersonal.empty();
 				that.$lstURateProfessional.empty();
 				
@@ -291,11 +293,11 @@ var controller = function () {
 						$("#lstItemURateProfessional-"+data[i].id).data(data[i]);
 					}
 					
-					if(that.info === "rateByMe"){
-						$('#usrRating-'+data[i].id).raty({score: 0, readOnly:true});
-					} else {
+					//if(that.info === "rateByMe"){
+					$('#usrRating-'+data[i].id).raty({score: 0, readOnly:true});
+					/*} else {
 						$('#usrRating-'+data[i].id).raty({score: 0});
-					}
+					}*/
 				}	
 				
 				$.ajax({
@@ -306,11 +308,11 @@ var controller = function () {
 				}).done(function (data) {
 					var avgHomeRate = 0;
 					for(var i=0; i < data.length; i++){
-						if(that.info === "rateByMe"){
-							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
-						} else {
-							$('#usrRating-'+data[i].paramId).raty({score: data[i].rating});
-						}
+						//if(that.info === "rateByMe"){
+						$('#usrRating-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
+						//} else {
+						//	$('#usrRating-'+data[i].paramId).raty({score: data[i].rating});
+						//}
 						
 						avgHomeRate += data[i].rating;
 					}
@@ -321,13 +323,69 @@ var controller = function () {
 			});
 			
 			if(this.info === "rateToMe"){
-				this.$btnRateUSubmit.show();
+				this.$btnRateURateMe.show();
 			} else if(this.info === "rateByMe"){
-				this.$btnRateUSubmit.hide();
+				this.$btnRateURateMe.hide();
 			}
 			
 			$.mobile.navigate('#page-rateUserProfile');
 			
+			this.$btnRateURateMe.off('click');
+			this.$btnRateURateMe.on('click', function(event){
+				that.$btnRateURateMe.hide();
+				that.$btnRateUSubmit.show();
+
+				_self.loading(true);
+				$.ajax({
+					url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+					type : 'GET',
+					data : {'name': data[0].friends[0].username}
+				}).done(function (data) {
+					
+					that.$lstURatePersonal.empty();
+					that.$lstURateProfessional.empty();
+					
+					for(var i=0; i<data.length; i++){
+						if(data[i].type === "Personal"){
+							that.$lstURatePersonal.append('<li id="lstItemURatePersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+							$("#lstItemURatePersonal-"+data[i].id).data(data[i]);
+						} else if(data[i].type === "Professional"){
+							that.$lstURateProfessional.append('<li id="lstItemURateProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRating-'+ data[i].id +'" class="skillRating"> </span></li>').listview('refresh');
+							$("#lstItemURateProfessional-"+data[i].id).data(data[i]);
+						}
+						
+						if(that.info === "rateByMe"){
+							$('#usrRating-'+data[i].id).raty({score: 0, readOnly:true});
+						} else {
+							$('#usrRating-'+data[i].id).raty({score: 0});
+						}
+					}	
+					
+					_self.loading(false);
+					$.ajax({
+						url : hostUrl.concat("/rating/individualRating?access_token=" + window.bearerToken),
+						type : 'GET',
+						context : $("#lstRateReqSent-"+data[0].requestId),
+						data : {"detailIds": that.detailId.toString()}
+					}).done(function (data) {
+						var avgHomeRate = 0;
+						for(var i=0; i < data.length; i++){
+							/*if(that.info === "rateByMe"){
+								$('#usrRating-'+data[i].paramId).raty({score: data[i].rating, readOnly: true});
+							} else {
+								$('#usrRating-'+data[i].paramId).raty({score: data[i].rating});
+							}*/
+							
+							avgHomeRate += data[i].rating;
+						}
+						avgHomeRate = avgHomeRate/data.length;
+						
+						that.$rUserOverallRating.raty({score: avgHomeRate, readOnly: true});
+					});
+				});
+
+			});
+
 			this.$btnRateUSubmit.off('click');
 			this.$btnRateUSubmit.on('click', function(event){
 				var data = that.dataObj, rateObj = "[";
@@ -652,12 +710,12 @@ var controller = function () {
 				this.$txtUDesignation = $('#txtUDesignation', this.$userProfilePage);
 				this.$txtUDesc = $('#txtUDesc', this.$userProfilePage);
 				this.$rateByCountAvg = $('#rateByCountAvg', this.$userProfilePage);
-				
 				this.$userOverallRating = $('#userOverallRating', this.$userProfilePage);
 				
 				this.$lstUPersonal = $('#lstUPersonal', this.$userProfilePage);
 				this.$lstUProfessional = $('#lstUProfessional', this.$userProfilePage);
 				
+				this.$imgUHomeDisp.attr('src', 'images/defaultImg.png');
 				this.$txtUName.text(data.name);
 				this.$txtUDesignation.text(data.designation);
 				this.$txtUDesc.text(data.description);
@@ -665,6 +723,7 @@ var controller = function () {
 				
 				this.$connect = $('#connect', this.$userProfilePage).hide();
 				this.$requestSent = $('#requestSent', this.$userProfilePage).hide();
+				this.$btnRateMe = $('#btnRateMe', this.$userProfilePage).hide();
 				this.$btnRateSubmit = $('#btnRateSubmit', this.$userProfilePage).hide();
 				
 				if(fromPage === "nonFrds"){
@@ -674,7 +733,7 @@ var controller = function () {
 						this.$requestSent.show();
 					}
 				} else if(fromPage === "frds"){
-					this.$btnRateSubmit.show();
+					this.$btnRateMe.show();
 				}
 				
 				if(data.username.indexOf('fb') !==-1 || data.username.indexOf('gl') !==-1){
@@ -699,8 +758,8 @@ var controller = function () {
 						data : {'friendUserName': data.username}
 					}).done(function(data) {
 						console.log('Friends status updated.');
-						this.$connect.hide();
-						this.$requestSent.show();
+						that.$connect.hide();
+						that.$requestSent.show();
 					});
 				});
 				
@@ -710,7 +769,7 @@ var controller = function () {
 					type : 'GET',
 					data : {'name': data.username}
 				}).done(function (data) {
-					_self.loading(false);
+					
 					that.$lstUPersonal.empty();
 					that.$lstUProfessional.empty();
 					var lstParaId = [];
@@ -722,10 +781,11 @@ var controller = function () {
 							that.$lstUProfessional.append('<li id="lstItemUProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span><span id="rateByCount-'+ data[i].id +'" class="rateByCount"></span></li>').listview('refresh');
 							$("#lstItemUProfessional-"+data[i].id).data(data[i]);
 						}
-						$('#usrRate-'+data[i].id).raty({score: 0});
+						$('#usrRate-'+data[i].id).raty({score: 0, readOnly:true});
 						lstParaId.push(data[i].id);
 					}
 					
+					_self.loading(false);
 					$.ajax({
 						url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
 						type : 'GET',
@@ -733,8 +793,8 @@ var controller = function () {
 					}).done(function (data) {
 						var avgHomeRate = 0, avgCount = 0;
 						for(var i=0; i < data.length; i++){
-							$('#usrRate-'+data[i].paramId).raty({score: data[i].rating});
-							$('#rateByCount-'+data[i].paramId).text('(' + data[i].count + ' ratings)');
+							$('#usrRate-'+data[i].paramId, that.$userProfilePage).raty({score: data[i].rating, readOnly:true});
+							$('#rateByCount-'+data[i].paramId, that.$userProfilePage).text('(' + data[i].count + ' ratings)');
 							avgHomeRate += data[i].rating;
 							avgCount += data[i].count;
 						}
@@ -750,8 +810,61 @@ var controller = function () {
 					
 				});
 				
+				this.$btnRateMe.off('click');
+				this.$btnRateMe.on('click', function(){
+					that.$btnRateMe.hide();
+					that.$btnRateSubmit.show();
+
+					_self.loading(true);
+					$.ajax({
+						url : hostUrl.concat("/parameters/showUserParameters?access_token=" + window.bearerToken),
+						type : 'GET',
+						data : {'name': data.username}
+					}).done(function (data) {
+						
+						that.$lstUPersonal.empty();
+						that.$lstUProfessional.empty();
+						var lstParaId = [];
+						for(var i=0; i<data.length; i++){
+							if(data[i].type === "Personal"){
+								that.$lstUPersonal.append('<li id="lstItemUPersonal-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span><span id="rateByCount-'+ data[i].id +'" class="rateByCount"></span></li>').listview('refresh');
+								$("#lstItemUPersonal-"+data[i].id).data(data[i]);
+							} else if(data[i].type === "Professional"){
+								that.$lstUProfessional.append('<li id="lstItemUProfessional-'+ data[i].id +'"> <span class="skills">' + data[i].name + '</span> <span id="usrRate-'+ data[i].id +'" class="skillRating"> </span><span id="rateByCount-'+ data[i].id +'" class="rateByCount"></span></li>').listview('refresh');
+								$("#lstItemUProfessional-"+data[i].id).data(data[i]);
+							}
+							$('#usrRate-'+data[i].id).raty({score: 0});
+							lstParaId.push(data[i].id);
+						}
+						_self.loading(false);
+						$.ajax({
+							url : hostUrl.concat("/rating/averageForParams?access_token=" + window.bearerToken),
+							type : 'GET',
+							data : {"paramIds":lstParaId.toString()}
+						}).done(function (data) {
+							var avgHomeRate = 0, avgCount = 0;
+							for(var i=0; i < data.length; i++){
+								//$('#usrRate-'+data[i].paramId, that.$userProfilePage).raty({score: data[i].rating});
+								$('#rateByCount-'+data[i].paramId, that.$userProfilePage).text('(' + data[i].count + ' ratings)');
+								avgHomeRate += data[i].rating;
+								avgCount += data[i].count;
+							}
+							avgHomeRate = avgHomeRate/data.length;
+							if(avgCount !== 0){
+								avgCount = Math.round(avgCount/data.length);
+							}
+							
+							that.$userOverallRating.raty({score: avgHomeRate, readOnly: true});
+							that.$rateByCountAvg.text('('+ avgCount + ' ratings)');
+						});
+						
+						
+					});
+				});
+
 				this.$btnRateSubmit.off('click');
 				this.$btnRateSubmit.on('click', function(){
+					_self.loading(true);
 					var paraIds = "";
 					that.$lstUPersonal.find('li').each(function(){
 						var data = $(this).data();
@@ -794,6 +907,7 @@ var controller = function () {
 							data : rateObj,
 							contentType : 'application/json; charset=UTF-8'
 						}).done(function (data) {
+							_self.loading(false);
 							//console.log(data);
 							$.mobile.navigate('#page-friends');
 						});
@@ -999,6 +1113,17 @@ var controller = function () {
 			this.$btnLogout.off('click');
 			this.$btnLogout.on('click', _self.logout);
 			
+			if(_self.pushNotification){
+				_self.pushNotification.setTags({"username":_self.userLogin},
+					function(status) {
+						console.warn('setTags success');
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);	
+			}
+			
 			_self.loading(true);
 			$.ajax({
 				url : hostUrl.concat("/resources/fetch?access_token=" + window.bearerToken),
@@ -1091,9 +1216,9 @@ var controller = function () {
 						
 					} else {
 						if(data[i].type === "Personal"){
-							that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].id.replace(" ", "") +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+							that.$customPersonalList.append('<li id="lstItemPersonal-'+ data[i].name.replace(/\s/g, '') +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						} else if(data[i].type === "Professional"){
-							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].id.replace(" ", "") +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ data[i].name.replace(/\s/g, '') +'"> <span class="skills">' + data[i].name + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						}
 					}
 				}
@@ -1103,13 +1228,13 @@ var controller = function () {
 			
 			function removePara(paraId){
 				for(var i=0; i < parameterArr.length; i++){
-					if(paraId === "lstItemPersonal-"+parameterArr[i].id || paraId === "lstItemProfessional-"+parameterArr[i].id){
+					if(paraId === "lstItemPersonal-"+parameterArr[i].name.replace(/\s/g, '') || paraId === "lstItemProfessional-"+parameterArr[i].name.replace(/\s/g, '')){
 						rmParameterArr.push(parameterArr[i]);
 						break;
 					}
 				}
 				for(var i=0; i < addParameterArr.length; i++){
-					if(paraId === addParameterArr[i].id){
+					if(paraId === addParameterArr[i].name.replace(/\s/g, '')){
 						addParameterArr.splice(i, 1);
 						break;
 					}
@@ -1134,11 +1259,11 @@ var controller = function () {
 				if(that.$inpParameterName.val() != ""){
 					if(!_self.arrayContains(inpParaName, parameterArr) && !_self.arrayContains(inpParaName, addParameterArr)){
 						if($('#btnCustomProfessionalTab').hasClass('ui-btn-active')){
-							addParameterArr.push({"id":"lstItemProfessional-"+inpParaName, "type":"2", "name":inpParaName});
-							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ inpParaName.replace(" ", "") +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+							addParameterArr.push({"id":"lstItemProfessional-"+inpParaName.replace(/\s/g, ''), "type":"2", "name":inpParaName});
+							that.$customProfessionalList.append('<li id="lstItemProfessional-'+ inpParaName.replace(/\s/g, '') +'"> <span class="skills">' + that.$inpParameterName.val() + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						} else {
-							addParameterArr.push({"id":"lstItemPersonal-"+inpParaName, "type":"1", "name":inpParaName});
-							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName.replace(" ", "") +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
+							addParameterArr.push({"id":"lstItemPersonal-"+inpParaName.replace(/\s/g, ''), "type":"1", "name":inpParaName});
+							that.$customPersonalList.append('<li id="lstItemPersonal-'+ inpParaName.replace(/\s/g, '') +'"> <span class="skills">' + inpParaName + '</span> <span class="skillRating"> <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> </span></li>').listview('refresh');
 						}
 					} else {
 						_self._showAlert("Parameter Name is already added.");
@@ -1316,23 +1441,23 @@ var controller = function () {
 			
 			if(_self.pushNotification){
 				_self.pushNotification.setTags({"username":null},
-				function(status) {
-					console.warn('setTags success');
-					_self.pushNotification.unregisterDevice(
-						function(status) {
-							var pushToken = status;
-							console.warn('push token: ' + pushToken);
-							
-						},
-						function(status) {
-							console.warn(JSON.stringify(['failed to register ', status]));
-						}
-					);
-				},
-				function(status) {
-					console.warn('setTags failed');
-				}
-			);
+					function(status) {
+						console.warn('setTags success');
+						_self.pushNotification.unregisterDevice(
+							function(status) {
+								var pushToken = status;
+								console.warn('push token: ' + pushToken);
+								
+							},
+							function(status) {
+								console.warn(JSON.stringify(['failed to register ', status]));
+							}
+						);
+					},
+					function(status) {
+						console.warn('setTags failed');
+					}
+				);
 			}
 			
 			
